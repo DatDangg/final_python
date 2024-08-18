@@ -1,0 +1,15 @@
+{
+    "product": [
+        {
+            "id": 1,
+            "title": "Apple iPhone 14 Pro Max",
+            "brand": "Apple",
+            "images": "http://127.0.0.1:8000/media/products/54189b8ee3104a701ea71c524e6521e4_Knxco60.png",
+            "description": "Just as a book is judged by its cover, the first thing you notice when you pick up a modern smartphone is the display. Nothing surprising, because advanced technologies allow you to practically level the display frames and cutouts for the front camera and speaker, leaving no room for bold design solutions. And how good that in such realities Apple everything is fine with displays. Both critics and mass consumers always praise the quality of the picture provided by the products of the Californian brand. And last year's 6.7-inch Retina panels, which had ProMotion, caused real admiration for many.",
+            "cost_price": "1349.00",
+            "listed_price": "1349.00",
+            "SKU": "123",
+            "quantity": 1000
+        }
+    ]
+}
