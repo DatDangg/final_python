@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "./style.css";
 
 function Categories({ onCategorySelect }) {
   const [categories, setCategories] = useState([]);
   const categoriesRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(6); // Default to 6
+  const [itemsPerPage, setItemsPerPage] = useState(6);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:8000/api/categories/")
@@ -17,7 +19,9 @@ function Categories({ onCategorySelect }) {
   const scrollLeft = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
-      categoriesRef.current.style.transform = `translateX(-${(currentIndex - 1) * 190}px)`;
+      categoriesRef.current.style.transform = `translateX(-${
+        (currentIndex - 1) * 190
+      }px)`;
     }
   };
 
@@ -25,12 +29,17 @@ function Categories({ onCategorySelect }) {
     const totalItems = categories.length;
     if (currentIndex < totalItems - itemsPerPage) {
       setCurrentIndex(currentIndex + 1);
-      categoriesRef.current.style.transform = `translateX(-${(currentIndex + 1) * 190}px)`;
+      categoriesRef.current.style.transform = `translateX(-${
+        (currentIndex + 1) * 190
+      }px)`;
     }
   };
 
   const handleCategoryClick = (category) => {
-    onCategorySelect(category); // Notify the parent component
+    onCategorySelect(category);
+    navigate(`/category/${category.id}`, {
+      state: { categoryName: category.name },
+    });
   };
 
   return (
@@ -72,7 +81,11 @@ function Categories({ onCategorySelect }) {
 
       <div className="categories" ref={categoriesRef}>
         {categories.map((category) => (
-          <div key={category.id} className="category-card" onClick={() => handleCategoryClick(category)}>
+          <div
+            key={category.id}
+            className="category-card"
+            onClick={() => handleCategoryClick(category)}
+          >
             <img
               src={category.image}
               alt={category.name}
