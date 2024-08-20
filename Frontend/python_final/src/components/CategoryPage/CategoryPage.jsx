@@ -13,20 +13,19 @@ function CategoryPage() {
   const [totalProducts, setTotalProducts] = useState(0);
 
   useEffect(() => {
-    // kiểm tra về breadcrumb lấy địa chỉ của category nào
+    // Lấy tên danh mục nếu chưa có trong state
     if (!location.state?.categoryName) {
       fetch(`http://127.0.0.1:8000/api/categories/${id}/`)
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           setCategoryName(data.name);
         })
-        .catch(error => console.error('Error fetching category name:', error));
+        .catch((error) => console.error('Error fetching category name:', error));
     }
   }, [id, location.state]);
 
-
   useEffect(() => {
-    // reset về page 1
+    // Reset về trang 1 khi thay đổi danh mục
     setCurrentPage(1);
   }, [id]);
 
@@ -38,8 +37,6 @@ function CategoryPage() {
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    const ellipsis = <span className="pagination-ellipsis">...</span>;
-
     if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(
@@ -53,6 +50,7 @@ function CategoryPage() {
         );
       }
     } else {
+      // Render số trang với dấu "..."
       pageNumbers.push(
         <button
           key={1}
@@ -71,11 +69,7 @@ function CategoryPage() {
         );
       }
 
-      for (
-        let i = Math.max(2, currentPage - 1);
-        i <= Math.min(currentPage + 1, totalPages - 1);
-        i++
-      ) {
+      for (let i = Math.max(2, currentPage - 1); i <= Math.min(currentPage + 1, totalPages - 1); i++) {
         pageNumbers.push(
           <button
             key={i}
@@ -117,10 +111,10 @@ function CategoryPage() {
       <div className="content-container flex">
         <div className="main-content">
           <ProductList
-            selectedCategory={{ id: parseInt(id) }}
+            selectedCategory={{ id: parseInt(id) }} // Truyền ID category để lọc sản phẩm
             currentPage={currentPage}
             productsPerPage={productsPerPage}
-            setTotalProducts={setTotalProducts}
+            setTotalProducts={setTotalProducts} // Đếm tổng số sản phẩm để phân trang
           />
           <div className="pagination">
             <button

@@ -7,7 +7,9 @@ function ProductList({
   currentPage,
   productsPerPage,
   setTotalProducts,
+  searchQuery,
 }) {
+  console.log('Search Query:', searchQuery); // Kiểm tra giá trị của searchQuery
   const [productList, setProductList] = useState([]);
 
   useEffect(() => {
@@ -16,20 +18,33 @@ function ProductList({
       .then((data) => {
         let filteredProducts = data;
 
-        if (selectedCategory) {
-          filteredProducts = data.filter(
-            (product) => product.category.id === selectedCategory.id
-          );
+        // Kiểm tra nếu data là một mảng
+        if (Array.isArray(data)) {
+          // Nếu có selectedCategory, lọc theo category
+          if (selectedCategory) {
+            filteredProducts = data.filter(
+              (product) => product.category.id === selectedCategory.id
+            );
+          }
+
+          // Nếu có searchQuery, lọc theo searchQuery
+          if (searchQuery) {
+            filteredProducts = filteredProducts.filter((product) =>
+              product.title.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+          }
+
+          setTotalProducts(filteredProducts.length);
+
+          const startIndex = (currentPage - 1) * productsPerPage;
+          const endIndex = startIndex + productsPerPage;
+          setProductList(filteredProducts.slice(startIndex, endIndex));
+        } else {
+          console.error("Expected data to be an array, but got:", typeof data);
         }
-
-        setTotalProducts(filteredProducts.length);
-
-        const startIndex = (currentPage - 1) * productsPerPage;
-        const endIndex = startIndex + productsPerPage;
-        setProductList(filteredProducts.slice(startIndex, endIndex));
       })
       .catch((error) => console.error("Error fetching products:", error));
-  }, [selectedCategory, currentPage, productsPerPage]);
+  }, [selectedCategory, currentPage, productsPerPage, searchQuery, setTotalProducts]);
 
   return (
     <div className="product-container">
