@@ -6,6 +6,7 @@ function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
+  // console.log(product.category.name)
 
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/api/products/${id}/`)

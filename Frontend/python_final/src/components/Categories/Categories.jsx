@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./style.css";
 
-function Categories({ onCategorySelect }) {
+function Categories() {
   const [categories, setCategories] = useState([]);
   const categoriesRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -36,11 +36,11 @@ function Categories({ onCategorySelect }) {
   };
 
   const handleCategoryClick = (category) => {
-    onCategorySelect(category);
     navigate(`/category/${category.id}`, {
       state: { categoryName: category.name },
     });
   };
+  
 
   return (
     <div className="categories-container">

@@ -7,10 +7,23 @@ import "./style.css";
 function CategoryPage() {
   const { id } = useParams();
   const location = useLocation();
-  const categoryName = location.state?.categoryName || "Category";
+  const [categoryName, setCategoryName] = useState(location.state?.categoryName || "Category");
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(1); // chỉnh sửa số lượng sản phẩm trên 1 trang
+  const [productsPerPage] = useState(5); // chỉnh sửa số lượng sản phẩm trên 1 trang
   const [totalProducts, setTotalProducts] = useState(0);
+
+  useEffect(() => {
+    // kiểm tra về breadcrumb lấy địa chỉ của category nào
+    if (!location.state?.categoryName) {
+      fetch(`http://127.0.0.1:8000/api/categories/${id}/`)
+        .then(response => response.json())
+        .then(data => {
+          setCategoryName(data.name);
+        })
+        .catch(error => console.error('Error fetching category name:', error));
+    }
+  }, [id, location.state]);
+
 
   useEffect(() => {
     // reset về page 1

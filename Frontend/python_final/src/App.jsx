@@ -1,38 +1,26 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "./index.css";
-import ProductList from "./components/ProductList/ProductList";
 import Header from "./components/Header/Header";
 import ProductDetail from "./components/ProductDetail/ProductDetail";
 import Categories from "./components/Categories/Categories";
 import Banner from "./components/Banner/Banner";
-import { useState } from "react";
 import CategoryPage from "./components/CategoryPage/CategoryPage";
+import "./index.css";
 
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-  };
 
   return (
     <BrowserRouter>
       <div className="app">
         <Header />
         <Routes>
-          <Route
-            path="/"
-            element={
+          <Route path="/" element={
               <>
                 <Banner />
-                <Categories onCategorySelect={handleCategorySelect} />
-                <div className="product_list flex justify-between">
-                  <ProductList selectedCategory={selectedCategory} />
-                </div>
+                <Categories/>
                 <Banner />
               </>
-            }
-          />
+            }/>
           <Route path="/category/:id" element={<CategoryPage />} />
           <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
