@@ -11,7 +11,8 @@ router.register(r'categories', views.CategoryListView, basename='category')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path('api/', include(router.urls)),  # Đường dẫn cho các API viewsets
+    path('auth/', include('api.urls')),  # Đường dẫn cho các API xác thực và người dùng
 ]
 
 # Serve media files during development

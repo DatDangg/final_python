@@ -13,7 +13,9 @@ function CategoryPage() {
   const [totalProducts, setTotalProducts] = useState(0);
 
   useEffect(() => {
-    // Lấy tên danh mục nếu chưa có trong state
+    const token = localStorage.getItem("token");
+
+    if (token) {
     if (!location.state?.categoryName) {
       fetch(`http://127.0.0.1:8000/api/categories/${id}/`)
         .then((response) => response.json())
@@ -22,6 +24,9 @@ function CategoryPage() {
         })
         .catch((error) => console.error('Error fetching category name:', error));
     }
+  } else {
+    setError('No token found');
+  }
   }, [id, location.state]);
 
   useEffect(() => {

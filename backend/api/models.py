@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -20,16 +21,12 @@ class Api(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    date_of_birth = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')], blank=True)
+    phone_number = models.CharField(max_length=15, blank=True)
 
-
-
-# class Banner(models.Model):
-#     headline = models.CharField(max_length=255)
-#     headlinetype = models.CharField(max_length=255)
-#     description = models.TextField()
-#     image = models.ImageField(upload_to='banner/')
-
-#     def __str__(self):
-#         return self.name
-
-# mỗi lần thêm 1 model mới thì cần chạy makemigration -> migrate
+    def __str__(self):
+        return self.user.username

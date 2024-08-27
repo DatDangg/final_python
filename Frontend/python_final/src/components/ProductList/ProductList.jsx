@@ -13,6 +13,9 @@ function ProductList({
   const [productList, setProductList] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
     fetch("http://localhost:8000/api/products/")
       .then((response) => response.json())
       .then((data) => {
@@ -44,6 +47,9 @@ function ProductList({
         }
       })
       .catch((error) => console.error("Error fetching products:", error));
+    } else {
+      setError('No token found');
+    }
   }, [selectedCategory, currentPage, productsPerPage, searchQuery, setTotalProducts]);
 
   return (

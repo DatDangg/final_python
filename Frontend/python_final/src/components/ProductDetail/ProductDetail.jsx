@@ -9,6 +9,9 @@ function ProductDetail() {
   // console.log(product.category.name)
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
     fetch(`http://127.0.0.1:8000/api/products/${id}/`)
       .then((response) => response.json())
       .then((data) => {
@@ -16,6 +19,9 @@ function ProductDetail() {
         setSelectedImage(data.images);
       })
       .catch((error) => console.error("Error fetching product:", error));
+    } else {
+      setError('No token found');
+    }
   }, [id]);
 
   if (!product) {

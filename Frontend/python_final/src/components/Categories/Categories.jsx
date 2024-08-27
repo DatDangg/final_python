@@ -10,10 +10,16 @@ function Categories() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
     fetch("http://localhost:8000/api/categories/")
       .then((response) => response.json())
       .then((data) => setCategories(data))
       .catch((error) => console.error("Error fetching categories:", error));
+    } else {
+      setError('No token found');
+    }
   }, []);
 
   const scrollLeft = () => {

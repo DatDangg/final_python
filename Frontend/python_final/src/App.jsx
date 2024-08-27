@@ -1,34 +1,61 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useContext } from 'react';
+import "./index.css";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthContext, AuthProvider } from './context/AuthContext';
 import Header from "./components/Header/Header";
 import Banner from "./components/Banner/Banner";
 import Categories from "./components/Categories/Categories";
 import CategoryPage from "./components/CategoryPage/CategoryPage";
 import ProductDetail from "./components/ProductDetail/ProductDetail";
 import SearchPage from "./components/SearchPage/SearchPage";
-import "./index.css";
+import AuthPage from './components/Auth/AuthPage'; 
+import Login from './components/Auth/Login';
+import Signup from './components/Auth/Signup';
+import UserProfile from './components/UserProfile/UserProfile';
+
+function ProtectedRoute({ children }) {
+  const { isAuthenticated } = useContext(AuthContext);
+  return isAuthenticated ? children : <Navigate to="/auth" />;
+}
+
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="app">
-        <Header />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Banner />
-                <Categories />
-                <Banner />
-              </>
-            }
-          />
-          <Route path="/category/:id" element={<CategoryPage />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/search" element={<SearchPage />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <div className="app">
+          <Routes>
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/auth/login" element={<Login />} />
+            <Route path="/auth/signup" element={<Signup />} />
+            <Route
+              path="/*"
+              element={
+                <ProtectedRoute>
+                  <Header />
+                  <Routes>
+                    <Route
+                      path="/"
+                      element={
+                        <>
+                          <Banner />
+                          <Categories />
+                          <Banner />
+                        </>
+                      }
+                    />
+                    <Route path="/category/:id" element={<CategoryPage />} />
+                    <Route path="/product/:id" element={<ProductDetail />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/profile" element={<UserProfile />} />
+                  </Routes>
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
