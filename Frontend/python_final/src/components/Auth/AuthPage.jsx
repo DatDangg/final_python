@@ -5,7 +5,7 @@ import './authpage.css';
 
 const AuthPage = () => {
   return (
-    <div>
+    <div className="authpage">
       <h2>Welcome to Our App</h2>
       <p>Please choose an option:</p>
       <Link to="/auth/login">

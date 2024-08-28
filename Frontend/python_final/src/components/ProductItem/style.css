@@ -1,73 +1,84 @@
-.item-product {
-    position: relative;
-    display: block;
-    background-color: #F6F6F6;
-    border-radius: 10px;
-    transition: transform 0.1s linear;
-    text-decoration: none;
-    border: 1px solid #F6F6F6;
-    padding: 16px;
-    text-align: center;
+.product-item {
+  position: relative;
+  padding: 20px;
+  background-color: #f8f9fa; /* Màu nền sáng hơn */
+  border: 1px solid #e0e0e0; /* Viền nhẹ hơn */
+  border-radius: 12px; /* Tăng độ bo tròn */
+  text-align: center;
+  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Thêm hiệu ứng khi hover */
 }
 
-.item-product:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.2);
+.product-item:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px); /* Nhấc item lên khi hover */
 }
 
-.wishlist-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
+.product-item .item-product-link {
+  text-decoration: none;
+  color: #212529; /* Đổi màu chữ để tương phản tốt hơn */
 }
 
-.wishlist-icon svg {
-    color: #000;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
+.product-item .item-product-img {
+  width: 100%;
+  height: 220px; /* Chiều cao của ảnh */
+  background-size: contain; /* Đảm bảo toàn bộ ảnh được hiển thị mà không bị cắt */
+  background-repeat: no-repeat; /* Tránh lặp lại ảnh nếu ảnh nhỏ hơn khung */
+  background-position: center;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
 }
 
-.item-product-link {
-    text-decoration: none;
-    color: inherit;
+.product-item .item-product-img:hover {
+  transform: scale(1.05); /* Phóng to ảnh khi hover */
 }
 
-.item-product-img {
-    width: 100%;
-    height: 200px;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    margin-bottom: 16px;
+.product-item .item-product-name {
+  font-size: 20px; /* Tăng kích thước font chữ */
+  font-weight: bold;
+  margin: 15px 0 5px 0; /* Điều chỉnh khoảng cách giữa tên sản phẩm và ảnh */
+  color: #343a40; /* Đổi màu chữ cho phù hợp */
 }
 
-.item-product-name {
-    font-size: 16px;
-    font-weight: 600;
-    color: #000;
-    margin: 8px 0;
+.product-item .item-product-price {
+  font-size: 18px; /* Tăng kích thước font cho giá */
+  color: #6c757d; /* Đổi màu chữ cho giá */
 }
 
-.item-product-price {
-    font-size: 20px;
-    font-weight: bold;
-    color: #000;
-    margin: 8px 0;
+.product-item .buy-now-button {
+  background-color: #007bff; /* Đổi màu nền nút */
+  color: white;
+  padding: 12px 25px; /* Tăng kích thước padding */
+  border: none;
+  border-radius: 50px; /* Bo tròn nút hơn */
+  cursor: pointer;
+  margin-top: 15px; /* Tăng khoảng cách từ giá đến nút */
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.buy-now-button {
-    background-color: black;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 16px;
+.product-item .buy-now-button:hover {
+  background-color: #0056b3; /* Đổi màu nền khi hover */
+  transform: translateY(-3px); /* Nhấc nút lên khi hover */
 }
 
-.buy-now-button:hover {
-    background-color: #333;
+.product-item .wishlist-icon {
+  position: absolute;
+  top: 15px; /* Đẩy icon wishlist xuống một chút */
+  right: 15px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.product-item .wishlist-icon svg {
+  fill: none;
+  stroke: #343a40; /* Đổi màu đường viền cho icon */
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.product-item .wishlist-icon svg.filled {
+  fill: #e63946; /* Đổi màu fill cho icon khi đã thêm vào wishlist */
+  stroke: #e63946; /* Đổi màu đường viền khi đã thêm vào wishlist */
+}
+
+.product-item .wishlist-icon:hover svg {
+  transform: scale(1.2); /* Tăng kích thước icon khi hover */
 }

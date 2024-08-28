@@ -1,21 +1,19 @@
-# from django.shortcuts import render
-from rest_framework import viewsets, filters
-from .models import Api, Category
-from .serializers import ApiSerializer, CategorySerializer
-from rest_framework import status
+from .models import Product, Category, WishlistItem
+from .serializers import ProductSerializer, CategorySerializer, UserSerializer
+from rest_framework import viewsets, filters, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.contrib.auth.models import User
-from .serializers import UserSerializer
-from rest_framework.views import APIView
 
-class APiListView(viewsets.ModelViewSet):
-    queryset = Api.objects.all()
-    serializer_class = ApiSerializer
+
+class ProductListView(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
     filter_backends = [filters.SearchFilter]  # Thêm SearchFilter để hỗ trợ tìm kiếm
     search_fields = ['title', 'brand', 'description']  # Các trường bạn muốn tìm kiếm
 
@@ -53,11 +51,6 @@ class UserListView(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]  # Chỉ cho phép người dùng đã xác thực truy cập
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .serializers import UserSerializer
-from django.contrib.auth.models import User
-
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -71,3 +64,31 @@ class UserProfileView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
+
+class WishlistToggleView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, product_id):
+        product = get_object_or_404(Product, id=product_id)
+        wishlist_item, created = WishlistItem.objects.get_or_create(
+            user=request.user, product=product
+        )
+        if not created:
+            wishlist_item.delete()
+            return Response({'is_in_wishlist': False})
+        return Response({'is_in_wishlist': True})
+
+class WishlistStatusView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, product_id):
+        product = get_object_or_404(Product, id=product_id)
+        in_wishlist = WishlistItem.objects.filter(user=request.user, product=product).exists()
+        return Response({'is_in_wishlist': in_wishlist})
+    
+class WishlistListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return Product.objects.filter(wishlistitem__user=self.request.user)

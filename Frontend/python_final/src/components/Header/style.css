@@ -1,4 +1,4 @@
-.header-top {
+.header {
   align-items: center;
   align-self: stretch;
   background-color: #ffffff;
@@ -16,11 +16,11 @@
   width: 100%;
 }
 
-.logo {
+.header .logo {
   height: 40px;
 }
 
-.search-field {
+.header .search-field {
   display: flex;
   align-items: center;
   background-color: #ebe9e9;
@@ -29,13 +29,13 @@
   width: 372px;
 }
 
-.icon-search {
+.header .icon-search {
   color: #000;
   height: 24px;
   margin-right: 8px;
 }
 
-.search-input {
+.header .search-input {
   border: none;
   background: none;
   outline: none;
@@ -45,7 +45,7 @@
   opacity: 0.5;
 }
 
-.navbar {
+.header .navbar {
   align-items: flex-start;
   display: inline-flex;
   flex: 0 0 auto;
@@ -53,7 +53,7 @@
   position: relative;
 }
 
-.nav-item {
+.header .nav-item {
   font-family: "Inter", sans-serif;
   font-size: 16px;
   color: #000;
@@ -61,12 +61,12 @@
   opacity: 0.3;
 }
 
-.nav-item.active,
-.nav-item:hover {
+.header .nav-item.active,
+.header .nav-item:hover {
   opacity: 1;
 }
 
-.icons {
+.header .icons {
   align-items: center;
   display: inline-flex;
   flex: 0 0 auto;
@@ -75,20 +75,20 @@
   position: relative;
 }
 
-.icon {
+.header .icon {
   color: #000;
   height: 32px;
   width: 32px;
 }
-.profile-dropdown {
+.header .profile-dropdown {
   position: relative;
 }
 
-.profile-dropdown:hover .dropdown-menu {
+.header .profile-dropdown:hover .dropdown-menu {
   display: block;
 }
 
-.dropdown-menu {
+.header .dropdown-menu {
   display: none;
   position: absolute;
   top: 35px;
@@ -100,7 +100,7 @@
   z-index: 1000;
 }
 
-.dropdown-item {
+.header .dropdown-item {
   padding: 10px 20px;
   white-space: nowrap;
   cursor: pointer;
@@ -109,26 +109,26 @@
   text-decoration: none;
 }
 
-.dropdown-item:hover {
+.header .dropdown-item:hover {
   background-color: #f5f5f5;
 }
 
 @media (max-width: 768px) {
-  .header-top {
+  .header {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
   }
 
-  .navbar {
+  .header .navbar {
     gap: 12px;
   }
 
-  .icons {
+  .header .icons {
     gap: 12px;
   }
 
-  .search-field {
+  .header .search-field {
     width: 100%;
   }
 }

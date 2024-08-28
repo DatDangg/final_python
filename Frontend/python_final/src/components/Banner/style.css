@@ -8,7 +8,7 @@
     min-height: 400px; /* Minimum height for the banner */
 }
 
-.banner-content {
+.banner-container .banner-content {
     display: flex;
     flex-wrap: wrap; /* Make the layout wrap on smaller screens */
     max-width: 1200px;
@@ -17,34 +17,34 @@
     justify-content: space-between;
 }
 
-.text-column {
+.banner-container .text-column {
     flex: 1;
     max-width: 50%;
     color: #fff;
     padding: 20px;
 }
 
-.headline {
+.banner-container .headline {
     font-size: 80px;
     margin-bottom: 10px;
 }
 
-.type {
+.banner-container .type {
     font-weight: 400; 
     margin-right: 20px;
 }
 
-.subtype {
+.banner-container .subtype {
     font-weight: bold; 
 }
 
-.description {
+.banner-container .description {
     opacity: 0.5;
     font-size: 18px;
     margin-bottom: 30px;
 }
 
-.shop-button {
+.banner-container .shop-button {
     display: inline-block;
     padding: 15px 30px;
     color: #fff;
@@ -57,11 +57,11 @@
     transition: background-color 0.3s ease;
 }
 
-.shop-button:hover {
+.banner-container .shop-button:hover {
     background-color: #ccc;
 }
 
-.image-column {
+.banner-container .image-column {
     flex: 1;
     max-width: 50%;
     padding-top: 20px;
@@ -71,7 +71,7 @@
     justify-content: center;
 }
 
-.product-image {
+.banner-container .product-image {
     max-width: 70%;
     height: auto;
     object-fit: cover;
@@ -79,34 +79,34 @@
 
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
-    .banner-content {
+    .banner-container .banner-content {
         flex-direction: column;
     }
 
-    .text-column, .image-column {
+    .banner-container .text-column, .banner-container .image-column {
         max-width: 100%;
         text-align: center;
     }
 
-    .headline, .subheadline {
+    .banner-container .headline, .banner-container .subheadline {
         font-size: 32px;
     }
 
-    .description {
+    .banner-container .description {
         font-size: 16px;
     }
 }
 
 @media (max-width: 480px) {
-    .headline {
+    .banner-container .headline {
         font-size: 28px;
     }
 
-    .subheadline {
+    .banner-container .subheadline {
         font-size: 36px;
     }
 
-    .shop-button {
+    .banner-container .shop-button {
         padding: 12px 25px;
     }
     
