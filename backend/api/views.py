@@ -1,5 +1,5 @@
-from .models import Product, Category, WishlistItem
-from .serializers import ProductSerializer, CategorySerializer, UserSerializer
+from .models import Product, Category, WishlistItem, CartItem
+from .serializers import ProductSerializer, CategorySerializer, UserSerializer, CartItemSerializer
 from rest_framework import viewsets, filters, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -92,3 +92,43 @@ class WishlistListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Product.objects.filter(wishlistitem__user=self.request.user)
+    
+class CartItemView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        cart_items = CartItem.objects.filter(user=request.user)
+        serializer = CartItemSerializer(cart_items, many=True)
+        return Response(serializer.data)
+
+    def create(self, request):
+        product_id = request.data.get('product_id')
+        quantity = request.data.get('quantity', 1)
+        product = get_object_or_404(Product, id=product_id)
+
+        cart_item, created = CartItem.objects.get_or_create(
+            user=request.user,
+            product=product,
+            defaults={'quantity': quantity}
+        )
+        if not created:
+            cart_item.quantity += quantity
+            cart_item.save()
+
+        return Response({'message': 'Item added to cart'}, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, pk=None):
+        cart_item = get_object_or_404(CartItem, pk=pk, user=request.user)
+        cart_item.delete()
+        return Response({'message': 'Item removed from cart'}, status=status.HTTP_204_NO_CONTENT)
+
+    def partial_update(self, request, pk=None):
+        cart_item = get_object_or_404(CartItem, pk=pk, user=request.user)
+        quantity = request.data.get('quantity')
+        
+        if quantity is not None:
+            cart_item.quantity = quantity
+            cart_item.save()
+            return Response({'message': 'Quantity updated'}, status=status.HTTP_200_OK)
+        
+        return Response({'error': 'Quantity not provided'}, status=status.HTTP_400_BAD_REQUEST)

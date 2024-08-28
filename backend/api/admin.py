@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Category, WishlistItem
+from .models import Product, Category, WishlistItem, CartItem
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("title", "brand", "images", "description", "cost_price", "listed_price", "SKU", "quantity", "category")
@@ -14,6 +14,11 @@ class WishlistItemAdmin(admin.ModelAdmin):
     list_filter = ('user', 'product')  # Các trường bạn muốn lọc
     search_fields = ('user__username', 'product__title')  # Các trường tìm kiếm
 
+class CartAdmin(admin.ModelAdmin):
+    list_display = ('user', 'product', 'quantity')  # Customize as per your Cart model fields
+    search_fields = ('user__username', 'product__name')  # Enable search by related user and product fields
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(WishlistItem, WishlistItemAdmin)
+admin.site.register(CartItem, CartAdmin)

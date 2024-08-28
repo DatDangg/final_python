@@ -4,11 +4,12 @@ from rest_framework import routers
 from api import views
 from django.conf import settings
 from django.conf.urls.static import static
-from api.views import WishlistToggleView, WishlistStatusView, WishlistListView
+from api.views import WishlistToggleView, WishlistStatusView, WishlistListView, CartItemView
 
 router = routers.DefaultRouter()
 router.register(r'products', views.ProductListView, basename='product')
 router.register(r'categories', views.CategoryListView, basename='category')
+router.register(r'cart', views.CartItemView, basename='cart')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

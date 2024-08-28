@@ -13,6 +13,7 @@ import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
 import UserProfile from './components/UserProfile/UserProfile';
 import WishList from './components/WishList/WishList';
+import Cart from './components/Cart/Cart';
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useContext(AuthContext);
@@ -50,6 +51,7 @@ function App() {
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/profile" element={<UserProfile />} />
                     <Route path="/wishlist" element={<WishList />} />
+                    <Route path="/cart" element={<Cart />} />
                   </Routes>
                 </ProtectedRoute>
               }

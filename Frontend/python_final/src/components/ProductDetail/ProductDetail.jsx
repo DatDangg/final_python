@@ -68,6 +68,28 @@ function ProductDetail() {
       .catch((error) => console.error("Error toggling wishlist:", error));
   };
 
+  const handleAddToCart = () => {
+    if (token) {
+      axios
+        .post(
+          "http://127.0.0.1:8000/api/cart/",
+          { product_id: id, quantity: 1 },
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Product added to cart:", response.data);
+        })
+        .catch((error) => console.error("Error adding to cart:", error));
+    } else {
+      console.error("No token found");
+    }
+  };
+
   if (!product) {
     return <div>Loading...</div>;
   }
@@ -115,7 +137,7 @@ function ProductDetail() {
               >
                 {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               </button>
-              <button className="cart-button">Add to Cart</button>
+              <button className="cart-button" onClick={handleAddToCart}>Add to Cart</button>
             </div>
           </div>
         </div>
