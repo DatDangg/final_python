@@ -45,7 +45,7 @@ class WishlistItemSerializer(serializers.ModelSerializer):
         fields = ['id', 'product', 'added_at']
     
 class CartItemSerializer(serializers.ModelSerializer):
-    product = serializers.StringRelatedField(read_only=True)
+    product = ProductSerializer()
 
     class Meta:
         model = CartItem

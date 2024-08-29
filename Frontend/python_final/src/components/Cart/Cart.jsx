@@ -18,11 +18,9 @@ function Cart() {
           },
         })
         .then((response) => {
-          console.log("Cart Items:", response.data);
           setCartItems(response.data);
         })
         .catch((error) => {
-          console.error("Error fetching cart items:", error);
           setError("Error fetching cart items");
         });
     }
@@ -66,7 +64,6 @@ function Cart() {
         .catch((error) => console.error("Error updating quantity:", error));
     }
   };
-  
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -82,30 +79,64 @@ function Cart() {
   );
 
   return (
-    <div className="cart">
-      <h2>Your Cart</h2>
-      <ul>
-        {cartItems.map((item) => (
-          <li key={item.id} className="cart-item">
-            <Link to={`/products/${item.product.id}`}>
-              <img src={item.product.images} alt={item.product.title} />
-              <span>{item.product.title}</span>
+    <div className="cart-container">
+      <div className="cart-items">
+        <h2>Shopping Cart</h2>
+        <ul>
+      {cartItems.map((item) => (
+        <li key={item.id} className="cart-item">
+          <div className="cart-item-image">
+              <img src={`http://localhost:8000${item.product.images}`} alt={item.product.title} />
+          </div>
+          <div className="cart-item-details">
+            <Link to={`/product/${item.product.id}`}>
+              <h3>{item.product.title}</h3>
+              <p>#{item.product.SKU}</p>
             </Link>
-            <span>{item.product.listed_price} VND</span>
+          </div>
+          <div className="cart-item-quantity">
+            <button onClick={() => handleQuantityChange(item.id, item.quantity - 1)}>-</button>
             <input
               type="number"
               value={item.quantity}
               onChange={(e) => handleQuantityChange(item.id, e.target.value)}
             />
-            <button onClick={() => handleRemoveFromCart(item.id)}>
-              Remove
-            </button>
-          </li>
-        ))}
-      </ul>
-      <div className="cart-summary">
-        <h3>Total: {totalAmount.toFixed(2)} VND</h3>
-        <button className="checkout-button">Proceed to Checkout</button>
+            <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>+</button>
+          </div>
+          <div className="cart-item-price">
+            <span>{item.product.listed_price} VND</span>
+          </div>
+          <div className="cart-item-remove">
+            <button onClick={() => handleRemoveFromCart(item.id)}>X</button>
+          </div>
+        </li>
+      ))}
+    </ul>
+      </div>
+      <div className="order-summary">
+        <h3>Order Summary</h3>
+        <input type="text" placeholder="Discount code / Promo code" />
+        <input type="text" placeholder="Your bonus card number" />
+        <button className="apply-button">Apply</button>
+        <div className="summary-totals">
+          <div className="summary-item">
+            <span>Subtotal</span>
+            <span>{totalAmount.toFixed(2)} VND</span>
+          </div>
+          <div className="summary-item">
+            <span>Estimated Tax</span>
+            <span>50 VND</span>
+          </div>
+          <div className="summary-item">
+            <span>Estimated Shipping & Handling</span>
+            <span>29 VND</span>
+          </div>
+          <div className="summary-item total">
+            <span>Total</span>
+            <span>{(totalAmount + 50 + 29).toFixed(2)} VND</span>
+          </div>
+        </div>
+        <button className="checkout-button">Checkout</button>
       </div>
     </div>
   );
