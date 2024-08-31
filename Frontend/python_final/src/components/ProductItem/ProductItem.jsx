@@ -6,15 +6,15 @@ import axios from "axios";
 function ProductItem({ product, token }) {
   const { title, images, listed_price, id } = product;
   const [isInWishlist, setIsInWishlist] = useState(false);
-  
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get(`http://127.0.0.1:8000/wishlist/${id}/`, {
         headers: {
-          'Authorization': `Token ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
@@ -22,31 +22,32 @@ function ProductItem({ product, token }) {
         setLoading(false); // Set loading to false once the data is fetched
       })
       .catch((error) => {
-        console.error('Error fetching wishlist status:', error);
+        console.error("Error fetching wishlist status:", error);
         setLoading(false);
       });
   }, [id, token]);
 
   const handleWishlistClick = () => {
-    axios.post(
-      `http://127.0.0.1:8000/wishlist/${id}/toggle/`,
-      {},
-      {
-        headers: {
-          'Authorization': `Token ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-    .then((response) => {
-      setIsInWishlist(response.data.is_in_wishlist);
-      if (response.data.is_in_wishlist) {
-        console.log('Sản phẩm đã được thêm vào wishlist.');
-      } else {
-        console.log('Sản phẩm đã được xóa khỏi wishlist.');
-      }
-    })
-    .catch((error) => console.error(error));
+    axios
+      .post(
+        `http://127.0.0.1:8000/wishlist/${id}/toggle/`,
+        {},
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        setIsInWishlist(response.data.is_in_wishlist);
+        if (response.data.is_in_wishlist) {
+          console.log("Sản phẩm đã được thêm vào wishlist.");
+        } else {
+          console.log("Sản phẩm đã được xóa khỏi wishlist.");
+        }
+      })
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -81,7 +82,7 @@ function ProductItem({ product, token }) {
           <span>{`$${listed_price}`}</span>
         </div>
         <Link to={`/product/${id}`} className="buy-now-link">
-          <button className="buy-now-button">Buy Now</button>
+          <button className="buy-now-button">Buy</button>
         </Link>
       </div>
     </div>
