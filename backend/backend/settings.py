@@ -89,10 +89,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'shoppingweb',
+        'USER': 'root',  # Tên người dùng mặc định của MySQL trên XAMPP thường là 'root'
+        'PASSWORD': '',  # Mật khẩu mặc định là trống, nếu bạn chưa thiết lập mật khẩu cho MySQL trên XAMPP
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
+
 
 
 # Password validation

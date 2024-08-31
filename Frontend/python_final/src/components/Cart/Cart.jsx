@@ -114,26 +114,10 @@ function Cart() {
     </ul>
       </div>
       <div className="order-summary">
-        <h3>Order Summary</h3>
-        <input type="text" placeholder="Discount code / Promo code" />
-        <input type="text" placeholder="Your bonus card number" />
-        <button className="apply-button">Apply</button>
         <div className="summary-totals">
-          <div className="summary-item">
-            <span>Subtotal</span>
-            <span>{totalAmount.toFixed(2)} VND</span>
-          </div>
-          <div className="summary-item">
-            <span>Estimated Tax</span>
-            <span>50 VND</span>
-          </div>
-          <div className="summary-item">
-            <span>Estimated Shipping & Handling</span>
-            <span>29 VND</span>
-          </div>
           <div className="summary-item total">
             <span>Total</span>
-            <span>{(totalAmount + 50 + 29).toFixed(2)} VND</span>
+            <span>{(totalAmount).toFixed(2)} VND</span>
           </div>
         </div>
         <button className="checkout-button">Checkout</button>
