@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Category, WishlistItem, CartItem
+from .models import Product, Category, WishlistItem, CartItem, Address
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("title", "brand", "images", "description", "cost_price", "listed_price", "SKU", "quantity", "category")
@@ -18,7 +18,12 @@ class CartAdmin(admin.ModelAdmin):
     list_display = ('user', 'product', 'quantity')  # Customize as per your Cart model fields
     search_fields = ('user__username', 'product__name')  # Enable search by related user and product fields
 
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'specific_address', 'phone_number', 'address_type')
+    search_fields = ('full_name', 'specific_address', 'phone_number')
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(WishlistItem, WishlistItemAdmin)
 admin.site.register(CartItem, CartAdmin)
+admin.site.register(Address, AddressAdmin)

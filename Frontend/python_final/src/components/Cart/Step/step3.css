@@ -1,0 +1,64 @@
+.step3-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.summary-section {
+  flex: 1;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.summary-section h2,
+.payment-section h2 {
+  font-size: 1.5em;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.item-details {
+  margin-left: 10px;
+}
+
+.address-section,
+.price-details {
+  margin-top: 20px;
+}
+
+.payment-section {
+  flex: 1;
+  padding: 20px;
+}
+
+.payment-methods button {
+  margin-right: 10px;
+  padding: 10px 20px;
+}
+
+.payment-methods .active {
+  background-color: #000;
+  color: #fff;
+}
+
+.credit-card-details input {
+  display: block;
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.back-button,
+.pay-button {
+  padding: 10px 20px;
+}

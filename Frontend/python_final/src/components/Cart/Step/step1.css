@@ -1,0 +1,42 @@
+.address-step-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.address-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.address-item {
+  background-color: #f9f9f9;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.add-address-form {
+  margin-top: 20px;
+}
+
+.add-address-form input,
+.add-address-form select {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.step-navigation button {
+  padding: 10px 20px;
+}

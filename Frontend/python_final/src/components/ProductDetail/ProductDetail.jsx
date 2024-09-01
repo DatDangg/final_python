@@ -9,6 +9,7 @@ function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState("");
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [cartItems, setCartItems] = useState([]); // Thêm state để lưu giỏ hàng
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -24,6 +25,22 @@ function ProductDetail() {
       console.error("No token found");
     }
   }, [id, token]);
+
+  useEffect(() => {
+    if (token) {
+      axios
+        .get("http://127.0.0.1:8000/api/cart/", {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          setCartItems(response.data); // Lưu giỏ hàng vào state
+        })
+        .catch((error) => console.error("Error fetching cart items:", error));
+    }
+  }, [token]);
 
   useEffect(() => {
     if (token && product) {
@@ -70,21 +87,30 @@ function ProductDetail() {
 
   const handleAddToCart = () => {
     if (token) {
-      axios
-        .post(
-          "http://127.0.0.1:8000/api/cart/",
-          { product_id: id, quantity: 1 },
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          console.log("Product added to cart:", response.data);
-        })
-        .catch((error) => console.error("Error adding to cart:", error));
+      const currentCartItem = cartItems.find(
+        (item) => item.product.id === product.id
+      );
+
+      if (currentCartItem) {
+        alert("This product is already in your cart.");
+      } else {
+        axios
+          .post(
+            "http://127.0.0.1:8000/api/cart/",
+            { product_id: id, quantity: 1 },
+            {
+              headers: {
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((response) => {
+            setCartItems([...cartItems, response.data]); // Cập nhật giỏ hàng
+            console.log("Product added to cart:", response.data);
+          })
+          .catch((error) => console.error("Error adding to cart:", error));
+      }
     } else {
       console.error("No token found");
     }
@@ -137,7 +163,9 @@ function ProductDetail() {
               >
                 {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               </button>
-              <button className="cart-button" onClick={handleAddToCart}>Add to Cart</button>
+              <button className="cart-button" onClick={handleAddToCart}>
+                Add to Cart
+              </button>
             </div>
           </div>
         </div>

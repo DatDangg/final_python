@@ -1,5 +1,5 @@
-from .models import Product, Category, WishlistItem, CartItem
-from .serializers import ProductSerializer, CategorySerializer, UserSerializer, CartItemSerializer
+from .models import Product, Category, WishlistItem, CartItem, Address, Order
+from .serializers import ProductSerializer, CategorySerializer, UserSerializer, CartItemSerializer, AddressSerializer, OrderSerializer
 from rest_framework import viewsets, filters, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from rest_framework.decorators import action
 
 
 class ProductListView(viewsets.ModelViewSet):
@@ -117,6 +118,19 @@ class CartItemView(viewsets.ViewSet):
 
         return Response({'message': 'Item added to cart'}, status=status.HTTP_201_CREATED)
 
+    @action(detail=False, methods=['delete'], url_path='clear_cart')
+    def clear_cart(self, request):
+        user = request.user
+        try:
+            CartItem.objects.filter(user=user).delete()
+            return Response({"message": "Cart cleared successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to clear cart for user {user.id}: {str(e)}", exc_info=True)
+            return Response({"error": "Failed to clear cart: Server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
     def destroy(self, request, pk=None):
         cart_item = get_object_or_404(CartItem, pk=pk, user=request.user)
         cart_item.delete()
@@ -132,3 +146,24 @@ class CartItemView(viewsets.ViewSet):
             return Response({'message': 'Quantity updated'}, status=status.HTTP_200_OK)
         
         return Response({'error': 'Quantity not provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AddressView(viewsets.ModelViewSet):
+    serializer_class = AddressSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Address.objects.filter(profile__user=self.request.user)
+
+    def perform_create(self, serializer):
+        profile = self.request.user.profile
+        serializer.save(profile=profile)
+
+class OrderView(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        # Gán user từ request.user vào serializer
+        serializer.save(user=self.request.user)
