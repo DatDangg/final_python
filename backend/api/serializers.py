@@ -67,11 +67,18 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'user', 'full_name', 'phone_number', 'address', 'total_price', 'payment_method', 'order_time', 'items', 'status']
-        read_only_fields = ('user',)  # Đảm bảo trường user không phải là trường bắt buộc từ client
+        read_only_fields = ('user',) 
 
     def create(self, validated_data):
         items_data = validated_data.pop('items')
         order = Order.objects.create(**validated_data)
         for item_data in items_data:
-            OrderItem.objects.create(order=order, **item_data)
+            product = Product.objects.get(title=item_data['product'])  # Tìm Product theo title
+            OrderItem.objects.create(
+                order=order,
+                product=product,  # Truyền đối tượng product hoặc product.id
+                quantity=item_data['quantity'],
+                price=item_data['price']
+            )
         return order
+

@@ -53,7 +53,7 @@ const Step3 = () => {
       payment_method: paymentMethod,
       order_time: new Date().toISOString(),
       items: cartItems.map((item) => ({
-        product: item.product.title,
+        product: item.product.id,
         quantity: item.quantity,
         price: item.product.listed_price,
       })),
