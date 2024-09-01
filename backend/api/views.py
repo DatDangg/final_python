@@ -164,6 +164,10 @@ class OrderView(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        # Return only the orders belonging to the authenticated user
+        return Order.objects.filter(user=self.request.user)
+
     def perform_create(self, serializer):
         # Gán user từ request.user vào serializer
         serializer.save(user=self.request.user)

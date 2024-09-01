@@ -66,7 +66,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'user', 'full_name', 'phone_number', 'address', 'total_price', 'payment_method', 'order_time', 'items']
+        fields = ['id', 'user', 'full_name', 'phone_number', 'address', 'total_price', 'payment_method', 'order_time', 'items', 'status']
         read_only_fields = ('user',)  # Đảm bảo trường user không phải là trường bắt buộc từ client
 
     def create(self, validated_data):

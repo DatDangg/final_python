@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function UserProfile() {
   const [userData, setUserData] = useState({
@@ -9,10 +10,12 @@ function UserProfile() {
       date_of_birth: "",
       gender: "",
       phone_number: "",
-    }
+    },
+    orders: []
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -23,48 +26,46 @@ function UserProfile() {
       },
     })
     .then(response => {
-      console.log('Dữ liệu phản hồi API:', response.data);
-      // Cập nhật dữ liệu nếu có profile, nếu không thì giữ nguyên giá trị mặc định
       setUserData(prevState => ({
         ...prevState,
         ...response.data,
         profile: response.data.profile || prevState.profile,
+        orders: response.data.orders || [],
       }));
       setLoading(false);
     })
     .catch(error => {
-      console.error('Lỗi API:', error);
       setError(error);
       setLoading(false);
     });
   }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData(prevState => ({
-      ...prevState,
-      profile: {
-        ...prevState.profile,
-        [name]: value
-      }
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios.put("http://127.0.0.1:8000/auth/profile/", userData, {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios.get("http://127.0.0.1:8000/api/orders/", {
       headers: {
-        Authorization: `Token ${localStorage.getItem("token")}`,
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json',
       },
     })
     .then(response => {
-      alert("Cập nhật hồ sơ thành công!");
+      // Check if the data contains the orders
+      setUserData(prevState => ({
+        ...prevState,
+        orders: response.data || [],
+      }));
+      setLoading(false);
     })
     .catch(error => {
-      console.log(error);
+      console.error('Error fetching orders:', error);
+      setError(error);
+      setLoading(false);
     });
-  };
+  }, []);
   
+
+  const handleOrderClick = (orderId) => {
+    navigate(`/order/${orderId}`);
+  };
 
   if (loading) {
     return <div>Đang tải...</div>;
@@ -77,7 +78,7 @@ function UserProfile() {
   return (
     <div className="user">
       <h2>Hồ sơ</h2>
-      <form onSubmit={handleSubmit}>
+      <form>
         <div>
           <label>Tên đăng nhập:</label>
           <input
@@ -100,7 +101,7 @@ function UserProfile() {
             type="date"
             name="date_of_birth"
             value={userData.profile.date_of_birth || ""}
-            onChange={handleChange}
+            disabled
           />
         </div>
         <div>
@@ -108,7 +109,7 @@ function UserProfile() {
           <select
             name="gender"
             value={userData.profile.gender || ""}
-            onChange={handleChange}
+            disabled
           >
             <option value="">Chọn</option>
             <option value="Male">Nam</option>
@@ -121,11 +122,25 @@ function UserProfile() {
             type="text"
             name="phone_number"
             value={userData.profile.phone_number || ""}
-            onChange={handleChange}
+            disabled
           />
         </div>
-        <button type="submit">Cập nhật hồ sơ</button>
       </form>
+      
+      <h2>Thông tin đơn hàng</h2>
+      <div className="order-list">
+        {userData.orders.length > 0 ? (
+          userData.orders.map(order => (
+            <div key={order.id} className="order-item" onClick={() => handleOrderClick(order.id)}>
+              <p>Mã đơn hàng: {order.id}</p>
+              <p>Tổng tiền: {order.total_price} VND</p>
+              <p>Trạng thái: {order.status}</p>
+            </div>
+          ))
+        ) : (
+          <p>Không có đơn hàng nào.</p>
+        )}
+      </div>
     </div>
   );
 }

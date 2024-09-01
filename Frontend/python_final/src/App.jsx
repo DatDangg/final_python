@@ -17,6 +17,7 @@ import Cart from './components/Cart/Cart';
 import Step1 from './components/Cart/Step/Step1';
 import Step2 from './components/Cart/Step/Step2';
 import Step3 from './components/Cart/Step/Step3';
+import Order from './components/Order/Order';
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useContext(AuthContext);
@@ -58,6 +59,7 @@ function App() {
                     <Route path="/checkout/address" element={<Step1 />} />
                     <Route path="/checkout/shipping" element={<Step2 />} />
                     <Route path="/checkout/payment" element={<Step3 />} />
+                    <Route path="/order/:orderId" element={<Order />} />
                   </Routes>
                 </ProtectedRoute>
               }
