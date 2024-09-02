@@ -101,6 +101,32 @@ function UserProfile() {
   };
   
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserData(prevState => ({
+      ...prevState,
+      profile: {
+        ...prevState.profile,
+        [name]: value
+      }
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios.put("http://127.0.0.1:8000/auth/profile/", userData, {
+      headers: {
+        Authorization: `Token ${localStorage.getItem("token")}`,
+      },
+    })
+    .then(response => {
+      alert("Cập nhật hồ sơ thành công!");
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  };
+  
   if (loading) {
     return <div>Đang tải...</div>;
   }
@@ -112,7 +138,7 @@ function UserProfile() {
   return (
     <div className="user">
       <h2>Hồ sơ</h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div>
           <label>Tên đăng nhập:</label>
           <input
@@ -135,7 +161,7 @@ function UserProfile() {
             type="date"
             name="date_of_birth"
             value={userData.profile.date_of_birth || ""}
-            disabled
+            onChange={handleChange}
           />
         </div>
         <div>
@@ -143,7 +169,7 @@ function UserProfile() {
           <select
             name="gender"
             value={userData.profile.gender || ""}
-            disabled
+            onChange={handleChange}
           >
             <option value="">Chọn</option>
             <option value="Male">Nam</option>
@@ -156,9 +182,10 @@ function UserProfile() {
             type="text"
             name="phone_number"
             value={userData.profile.phone_number || ""}
-            disabled
+            onChange={handleChange}
           />
         </div>
+        <button type="submit">Cập nhật hồ sơ</button>
       </form>
 
       <h2>Thông tin đơn hàng</h2>
