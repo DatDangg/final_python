@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Category, WishlistItem, CartItem, Address, Order, OrderItem
+from .models import Product, Category, WishlistItem, CartItem, Address, Order, OrderItem, Review
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("title", "brand", "images", "description", "cost_price", "listed_price", "SKU", "quantity", "category")

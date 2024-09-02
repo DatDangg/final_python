@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Category, Profile, WishlistItem, CartItem, Address, Order, OrderItem
+from .models import Product, Category, Profile, WishlistItem, CartItem, Address, Order, OrderItem, Review
 from django.contrib.auth.models import User
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -81,4 +81,13 @@ class OrderSerializer(serializers.ModelSerializer):
                 price=item_data['price']
             )
         return order
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id', 'user', 'product', 'rating', 'comment', 'created_at']
+        read_only_fields = ['user', 'created_at']
+
+    def create(self, validated_data):
+        return Review.objects.create(**validated_data)
 

@@ -1,5 +1,5 @@
-from .models import Product, Category, WishlistItem, CartItem, Address, Order
-from .serializers import ProductSerializer, CategorySerializer, UserSerializer, CartItemSerializer, AddressSerializer, OrderSerializer
+from .models import Product, Category, WishlistItem, CartItem, Address, Order, Review
+from .serializers import ProductSerializer, CategorySerializer, UserSerializer, CartItemSerializer, AddressSerializer, OrderSerializer, ReviewSerializer
 from rest_framework import viewsets, filters, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -171,3 +171,18 @@ class OrderView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Gán user từ request.user vào serializer
         serializer.save(user=self.request.user)
+
+class ReviewView(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        product_id = self.request.query_params.get('product_id', None)
+        if product_id is not None:
+            queryset = queryset.filter(product__id=product_id)
+        return queryset

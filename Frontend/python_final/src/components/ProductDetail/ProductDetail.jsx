@@ -9,7 +9,8 @@ function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState("");
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [cartItems, setCartItems] = useState([]); // Thêm state để lưu giỏ hàng
+  const [cartItems, setCartItems] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -21,13 +22,7 @@ function ProductDetail() {
           setSelectedImage(response.data.images);
         })
         .catch((error) => console.error("Error fetching product:", error));
-    } else {
-      console.error("No token found");
-    }
-  }, [id, token]);
 
-  useEffect(() => {
-    if (token) {
       axios
         .get("http://127.0.0.1:8000/api/cart/", {
           headers: {
@@ -36,14 +31,10 @@ function ProductDetail() {
           },
         })
         .then((response) => {
-          setCartItems(response.data); // Lưu giỏ hàng vào state
+          setCartItems(response.data);
         })
         .catch((error) => console.error("Error fetching cart items:", error));
-    }
-  }, [token]);
 
-  useEffect(() => {
-    if (token && product) {
       axios
         .get(`http://127.0.0.1:8000/wishlist/${id}/`, {
           headers: {
@@ -53,14 +44,27 @@ function ProductDetail() {
         })
         .then((response) => {
           setIsInWishlist(response.data.is_in_wishlist);
-          setLoading(false); // Set loading to false once the data is fetched
+          setLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching wishlist status:", error);
           setLoading(false);
         });
+
+      axios
+        .get(`http://127.0.0.1:8000/api/reviews/?product_id=${id}`, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        })
+        .then((response) => {
+          setReviews(response.data);
+        })
+        .catch((error) => console.error("Error fetching reviews:", error));
+    } else {
+      console.error("No token found");
     }
-  }, [id, token, product]);
+  }, [id, token]);
 
   const handleWishlistClick = () => {
     axios
@@ -106,7 +110,7 @@ function ProductDetail() {
             }
           )
           .then((response) => {
-            setCartItems([...cartItems, response.data]); // Cập nhật giỏ hàng
+            setCartItems([...cartItems, response.data]);
             console.log("Product added to cart:", response.data);
           })
           .catch((error) => console.error("Error adding to cart:", error));
@@ -186,6 +190,18 @@ function ProductDetail() {
               <strong>Pixel density:</strong> 460ppi
             </li>
           </ul>
+          <h2>Customer Reviews</h2>
+          {reviews.length > 0 ? (
+            reviews.map((review) => (
+              <div key={review.id}>
+                <strong>{review.user.username}</strong> rated {review.rating} stars
+                <p>{review.comment}</p>
+                <small>{new Date(review.created_at).toLocaleDateString()}</small>
+              </div>
+            ))
+          ) : (
+            <p>No reviews yet.</p>
+          )}
         </div>
       </div>
     </div>
