@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import "./style.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+
 
 function ProductDetail() {
   const { id } = useParams();
@@ -12,6 +17,44 @@ function ProductDetail() {
   const [cartItems, setCartItems] = useState([]);
   const [reviews, setReviews] = useState([]);
   const token = localStorage.getItem("token");
+  //slides
+  const [nav1, setNav1] = useState(null);
+  const [nav2, setNav2] = useState(null);
+  const slider1 = useRef(null);
+  const slider2 = useRef(null);
+
+  useEffect(() => {
+    setNav1(slider1.current);
+    setNav2(slider2.current);
+  }, []);
+
+
+  const settingsMain = {
+    asNavFor: nav2,
+    ref: slider1,
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    arrows: false,
+  };
+
+  const settingsThumbs = {
+    asNavFor: nav1,
+    ref: slider2,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    focusOnSelect: true,
+    centerMode: true,
+    centerPadding: "0px",
+    dots: true,
+    infinite: true,
+    arrows: false,
+    vertical: true,
+  };
 
   useEffect(() => {
     if (token) {
@@ -143,17 +186,52 @@ function ProductDetail() {
             <li>{product.title}</li>
           </ul>
         </nav>
-        <div className="product-detail__top">
-          <div className="product-detail__left">
+        <div className="product-detail__top container">
+          <div className="product-detail__left col-5">
             <div className="product-main-image">
-              <img
-                src={selectedImage}
-                alt={product.title}
-                className="product-image"
-              />
+              {selectedImage > 1 ? (
+                  <>
+                    <Slider {...settingsMain}>
+                      {product.images.map((image, index) => (
+                          <div key={index}>
+                            <img
+                                className="card-img-top card-img"
+                                src={selectedImage}
+                                alt={`Slide ${index + 1}`}
+                            />
+                          </div>
+                      ))}
+                    </Slider>
+                    <Slider {...settingsThumbs}>
+                      {product.images.map((image, index) => (
+                          <div key={index} className="thumbnail">
+                            <img
+                                className="card-img-thumbnail"
+                                src={selectedImage}
+                                alt={`Thumbnail ${index + 1}`}
+                            />
+                          </div>
+                      ))}
+                    </Slider>
+                  </>
+              ) : (
+                  <img
+                      className="product-image"
+                      src={selectedImage}
+                      alt={product.title}
+                  />
+              )}
             </div>
+
+            {/*<div className="product-main-image">*/}
+            {/*  <img*/}
+            {/*    src={selectedImage}*/}
+            {/*    alt={product.title}*/}
+            {/*    className="product-image"*/}
+            {/*  />*/}
+            {/*</div>*/}
           </div>
-          <div className="product-detail__right">
+          <div className="product-detail__right col-7">
             <h1 className="product-title">{product.title}</h1>
             <p className="product-price">
               <span className="current-price">${product.cost_price}</span>

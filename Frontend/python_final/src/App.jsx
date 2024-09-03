@@ -18,6 +18,7 @@ import Step1 from './components/Cart/Step/Step1';
 import Step2 from './components/Cart/Step/Step2';
 import Step3 from './components/Cart/Step/Step3';
 import Order from './components/Order/Order';
+import Footer from "./components/Footer/Footer.jsx";
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useContext(AuthContext);
@@ -61,6 +62,7 @@ function App() {
                     <Route path="/checkout/payment" element={<Step3 />} />
                     <Route path="/order/:orderId" element={<Order />} />
                   </Routes>
+                  <Footer/>
                 </ProtectedRoute>
               }
             />

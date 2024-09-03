@@ -110,13 +110,13 @@ function Cart() {
                 </Link>
               </div>
               <div className="cart-item-quantity">
-                <button
+                <button className="btn btn-outline-dark"
                   onClick={() =>
                     handleQuantityChange(item.id, item.quantity - 1)
                   }
                   disabled={item.quantity <= 1} // Không giảm quá 1
                 >
-                  -
+                  <img src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-remove.svg" alt=""/>
                 </button>
                 <input
                   type="number"
@@ -125,20 +125,22 @@ function Cart() {
                     handleQuantityChange(item.id, e.target.value)
                   }
                 />
-                <button
+                <button className="btn btn-outline-dark"
                   onClick={() =>
                     handleQuantityChange(item.id, item.quantity + 1)
                   }
                   disabled={item.quantity >= item.product.stock} // Không tăng quá tồn kho
                 >
-                  +
+                  <img src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-add.svg" alt=""/>
                 </button>
               </div>
               <div className="cart-item-price">
                 <span>{item.product.listed_price} VND</span>
               </div>
               <div className="cart-item-remove">
-                <button onClick={() => handleRemoveFromCart(item.id)}>X</button>
+                <button onClick={() => handleRemoveFromCart(item.id)}>
+                  X
+                </button>
               </div>
             </li>
           ))}
