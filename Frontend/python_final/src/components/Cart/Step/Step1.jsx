@@ -12,35 +12,11 @@ function Step1() {
     specific_address: "",
     address_type: "HOME",
   });
-  const [hasProfile, setHasProfile] = useState(true); // Thêm state này để kiểm tra profile
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (token) {
-      axios
-        .get("http://127.0.0.1:8000/auth/users/", {
-          headers: {
-            Authorization: `Token ${token}`,
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          const username = localStorage.getItem("username"); // Assuming you store the username
-          const currentUser = response.data.find(user => user.username === username);
-          if (currentUser && currentUser.profile) {
-            // User has a profile
-            setHasProfile(true);
-          } else {
-            // User does not have a profile
-            setHasProfile(false);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching users or profile:", error);
-          setHasProfile(false); // If there's an error, assume the user has no profile
-        });
-      // Lấy danh sách địa chỉ
       axios
         .get("http://127.0.0.1:8000/api/addresses/", {
           headers: {
@@ -56,11 +32,6 @@ function Step1() {
   }, [token]);
 
   const handleAddAddress = () => {
-    if (!hasProfile) {
-      alert("Bạn cần tạo profile trước khi thêm địa chỉ mới.");
-      return;
-    }
-
     axios
       .post("http://127.0.0.1:8000/api/addresses/", newAddress, {
         headers: {

@@ -196,3 +196,4 @@ class ReviewView(viewsets.ModelViewSet):
         if product_id is not None:
             queryset = queryset.filter(product__id=product_id)
         return queryset
+
