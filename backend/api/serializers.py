@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Category, Profile, WishlistItem, CartItem, Address, Order, OrderItem, Review
+from .models import Product, Category, Profile, WishlistItem, CartItem, Address, Order, OrderItem, Review, ProductImage
 from django.contrib.auth.models import User
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -7,11 +7,27 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'name', 'image']
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image', 'is_primary']  # Include is_primary
+
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
+    category = CategorySerializer()  # Nối dữ liệu của category
+    images = ProductImageSerializer(many=True, read_only=True)  # Nối danh sách các hình ảnh
+
     class Meta:
         model = Product
-        fields = ['id', 'title', 'brand', 'images', 'description', 'cost_price', 'listed_price', 'SKU', 'quantity', 'category']
+        fields = [
+            'id', 'title', 'brand', 'description', 
+            'cost_price', 'listed_price', 'SKU', 'quantity', 'category', 
+            'storage_product', 'color', 'data', 'cpu', 'NumberOfCores', 
+            'MainCamera', 'FrontCamera', 'BatteryCapacity', 
+            'screen_size', 'screen_refresh_rate', 'pixel', 'screen_type', 
+            'additional_features', 'images'  # Thêm trường images vào
+        ]
+
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:

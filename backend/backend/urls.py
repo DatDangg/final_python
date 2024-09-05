@@ -4,7 +4,7 @@ from rest_framework import routers
 from api import views
 from django.conf import settings
 from django.conf.urls.static import static
-from api.views import WishlistToggleView, WishlistStatusView, WishlistListView
+from api.views import WishlistToggleView, WishlistStatusView, WishlistListView, upload_product_images
 
 router = routers.DefaultRouter()
 router.register(r'products', views.ProductListView, basename='product')
@@ -15,6 +15,7 @@ router.register(r'orders', views.OrderView, basename='order')
 router.register(r'reviews', views.ReviewView, basename='reviews')
 
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),  # Đường dẫn cho các API viewsets
@@ -22,6 +23,7 @@ urlpatterns = [
     path('wishlist/<int:product_id>/toggle/', WishlistToggleView.as_view(), name='wishlist-toggle'),  # Wishlist toggle URL
     path('wishlist/<int:product_id>/', WishlistStatusView.as_view(), name='wishlist-status'),  # Wishlist status URL
     path('wishlist/', WishlistListView.as_view(), name='wishlist-list'),
+    path('products/<int:product_id>/upload_images/', upload_product_images, name='upload_product_images'),
 ]
 
 # Serve media files during development

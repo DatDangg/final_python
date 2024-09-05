@@ -1,4 +1,4 @@
-from .models import Product, Category, WishlistItem, CartItem, Address, Order, Review
+from .models import Product, Category, WishlistItem, CartItem, Address, Order, Review, ProductImage
 from .serializers import ProductSerializer, CategorySerializer, UserSerializer, CartItemSerializer, AddressSerializer, OrderSerializer, ReviewSerializer
 from rest_framework import viewsets, filters, generics, status
 from rest_framework.response import Response
@@ -17,6 +17,22 @@ class ProductListView(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     filter_backends = [filters.SearchFilter]  # Thêm SearchFilter để hỗ trợ tìm kiếm
     search_fields = ['title', 'brand', 'description']  # Các trường bạn muốn tìm kiếm
+
+@api_view(['POST'])
+def upload_product_images(request, product_id):
+    product = Product.objects.get(id=product_id)
+    images = request.FILES.getlist('images')
+    is_primary = request.data.get('is_primary', False)  # Get primary flag if provided
+
+    for image in images:
+        new_image = ProductImage.objects.create(product=product, image=image, is_primary=is_primary)
+        
+        # Ensure only one primary image
+        if new_image.is_primary:
+            ProductImage.objects.filter(product=product).exclude(id=new_image.id).update(is_primary=False)
+
+    return Response({'message': 'Images uploaded successfully'}, status=status.HTTP_201_CREATED)
+
 
 class CategoryListView(viewsets.ModelViewSet):
     queryset = Category.objects.all()

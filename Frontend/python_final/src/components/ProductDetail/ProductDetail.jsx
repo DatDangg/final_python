@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import "./style.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-
 
 function ProductDetail() {
   const { id } = useParams();
@@ -17,6 +15,7 @@ function ProductDetail() {
   const [cartItems, setCartItems] = useState([]);
   const [reviews, setReviews] = useState([]);
   const token = localStorage.getItem("token");
+
   //slides
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -27,7 +26,6 @@ function ProductDetail() {
     setNav1(slider1.current);
     setNav2(slider2.current);
   }, []);
-
 
   const settingsMain = {
     asNavFor: nav2,
@@ -40,6 +38,7 @@ function ProductDetail() {
     autoplay: true,
     autoplaySpeed: 3000,
     arrows: false,
+    adaptiveHeight: true, // Điều chỉnh chiều cao tự động
   };
 
   const settingsThumbs = {
@@ -54,6 +53,7 @@ function ProductDetail() {
     infinite: true,
     arrows: false,
     vertical: true,
+    adaptiveHeight: true, // Điều chỉnh chiều cao tự động
   };
 
   useEffect(() => {
@@ -61,8 +61,18 @@ function ProductDetail() {
       axios
         .get(`http://127.0.0.1:8000/api/products/${id}/`)
         .then((response) => {
-          setProduct(response.data);
-          setSelectedImage(response.data.images);
+          const fetchedProduct = response.data;
+          setProduct(fetchedProduct);
+
+          // Set the primary image as the default selected image
+          const primaryImage = fetchedProduct.images.find(
+            (img) => img.is_primary
+          );
+          if (primaryImage) {
+            setSelectedImage(primaryImage.image);
+          } else if (fetchedProduct.images.length > 0) {
+            setSelectedImage(fetchedProduct.images[0].image); // Fallback to the first image
+          }
         })
         .catch((error) => console.error("Error fetching product:", error));
 
@@ -163,7 +173,7 @@ function ProductDetail() {
     }
   };
 
-  if (!product) {
+  if (!product || !product.images) {
     return <div>Loading...</div>;
   }
 
@@ -189,47 +199,29 @@ function ProductDetail() {
         <div className="product-detail__top container">
           <div className="product-detail__left col-5">
             <div className="product-main-image">
-              {selectedImage > 1 ? (
-                  <>
-                    <Slider {...settingsMain}>
-                      {product.images.map((image, index) => (
-                          <div key={index}>
-                            <img
-                                className="card-img-top card-img"
-                                src={selectedImage}
-                                alt={`Slide ${index + 1}`}
-                            />
-                          </div>
-                      ))}
-                    </Slider>
-                    <Slider {...settingsThumbs}>
-                      {product.images.map((image, index) => (
-                          <div key={index} className="thumbnail">
-                            <img
-                                className="card-img-thumbnail"
-                                src={selectedImage}
-                                alt={`Thumbnail ${index + 1}`}
-                            />
-                          </div>
-                      ))}
-                    </Slider>
-                  </>
+              {product.images.length > 0 ? (
+                <>
+                  <Slider {...settingsMain}>
+                    {product.images.map((image, index) => (
+                      <div key={index}>
+                        <img
+                          className="card-img-top card-img"
+                          src={image.image}
+                          alt={`Slide ${index + 1}`}
+                          style={{ maxWidth: "100%", height: "auto" }}
+                        />
+                      </div>
+                    ))}
+                  </Slider>
+                </>
               ) : (
-                  <img
-                      className="product-image"
-                      src={selectedImage}
-                      alt={product.title}
-                  />
+                <img
+                  className="product-image"
+                  src={selectedImage}
+                  alt={product.title}
+                />
               )}
             </div>
-
-            {/*<div className="product-main-image">*/}
-            {/*  <img*/}
-            {/*    src={selectedImage}*/}
-            {/*    alt={product.title}*/}
-            {/*    className="product-image"*/}
-            {/*  />*/}
-            {/*</div>*/}
           </div>
           <div className="product-detail__right col-7">
             <h1 className="product-title">{product.title}</h1>
@@ -251,30 +243,50 @@ function ProductDetail() {
             </div>
           </div>
         </div>
+
         <div className="product-detail__bottom">
           <h2>Details</h2>
           <p>{product.description}</p>
           <ul className="product-specs">
             <li>
-              <strong>Screen diagonal:</strong> 6.7"
+              <strong>Storage:</strong> {product.storage_product}
             </li>
             <li>
-              <strong>Resolution:</strong> 2796x1290
+              <strong>CPU:</strong> {product.cpu}
             </li>
             <li>
-              <strong>Refresh rate:</strong> 120Hz
+              <strong>Main Camera:</strong> {product.MainCamera}
             </li>
             <li>
-              <strong>Pixel density:</strong> 460ppi
+              <strong>Front Camera:</strong> {product.FrontCamera}
+            </li>
+            <li>
+              <strong>Battery Capacity:</strong> {product.BatteryCapacity}
+            </li>
+            <li>
+              <strong>Screen Size:</strong> {product.screen_size}
+            </li>
+            <li>
+              <strong>Screen Refresh Rate:</strong>{" "}
+              {product.screen_refresh_rate}
+            </li>
+            <li>
+              <strong>Pixel:</strong> {product.pixel}
+            </li>
+            <li>
+              <strong>Screen Type:</strong> {product.screen_type}
             </li>
           </ul>
           <h2>Customer Reviews</h2>
           {reviews.length > 0 ? (
             reviews.map((review) => (
               <div key={review.id}>
-                <strong>{review.user.username}</strong> rated {review.rating} stars
+                <strong>{review.user.username}</strong> rated {review.rating}{" "}
+                stars
                 <p>{review.comment}</p>
-                <small>{new Date(review.created_at).toLocaleDateString()}</small>
+                <small>
+                  {new Date(review.created_at).toLocaleDateString()}
+                </small>
               </div>
             ))
           ) : (

@@ -12,16 +12,40 @@ class Category(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=255)
     brand = models.CharField(max_length=255)
-    images = models.ImageField(upload_to='products/')
     description = models.TextField()
     cost_price = models.DecimalField(max_digits=10, decimal_places=2)
     listed_price = models.DecimalField(max_digits=10, decimal_places=2)
     SKU = models.CharField(max_length=100, unique=True)
     quantity = models.PositiveIntegerField()
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
-
+    storage_product = models.CharField(max_length=255, blank=True)
+    color = models.CharField(max_length=255, blank=True)
+    data = models.CharField(max_length=255, blank=True)
+    cpu = models.CharField(max_length=255, blank=True)
+    NumberOfCores = models.CharField(max_length=255, blank=True)
+    MainCamera = models.CharField(max_length=255, blank=True)
+    FrontCamera = models.CharField(max_length=255, blank=True)
+    BatteryCapacity = models.CharField(max_length=255, blank=True)
+    screen_size = models.CharField(max_length=255, blank=True)
+    screen_refresh_rate = models.CharField(max_length=255, blank=True)
+    pixel = models.CharField(max_length=255, blank=True)
+    screen_type = models.CharField(max_length=255, blank=True)
+    additional_features = models.TextField(blank=True)  # If there are more extra features
+    
+    def primary_image(self):
+        return self.images.filter(is_primary=True).first()
+    
     def __str__(self):
         return self.title
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='products/')
+    is_primary = models.BooleanField(default=False)  # New field to indicate the primary image
+
+    def __str__(self):
+        return f"Image for {self.product.title}"
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

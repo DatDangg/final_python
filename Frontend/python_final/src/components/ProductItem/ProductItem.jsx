@@ -6,10 +6,11 @@ import axios from "axios";
 function ProductItem({ product, token }) {
   const { title, images, listed_price, id } = product;
   const [isInWishlist, setIsInWishlist] = useState(false);
-
   const [loading, setLoading] = useState(true);
+  const [primaryImage, setPrimaryImage] = useState(null);
 
   useEffect(() => {
+    // Fetch wishlist status
     axios
       .get(`http://127.0.0.1:8000/wishlist/${id}/`, {
         headers: {
@@ -25,7 +26,15 @@ function ProductItem({ product, token }) {
         console.error("Error fetching wishlist status:", error);
         setLoading(false);
       });
-  }, [id, token]);
+
+    // Find primary image
+    const primary = images.find((image) => image.is_primary);
+    if (primary) {
+      setPrimaryImage(primary.image);
+    } else if (images.length > 0) {
+      setPrimaryImage(images[0].image); // Fallback to first image if no primary image
+    }
+  }, [id, token, images]);
 
   const handleWishlistClick = () => {
     axios
@@ -75,7 +84,9 @@ function ProductItem({ product, token }) {
       <div className="item-product-link">
         <div
           className="item-product-img"
-          style={{ backgroundImage: `url(${images})` }}
+          style={{
+            backgroundImage: `url(${primaryImage || "/placeholder.jpg"})`,
+          }} // Use primary image or a placeholder
         ></div>
         <h3 className="item-product-name">{title}</h3>
         <div className="item-product-price">
