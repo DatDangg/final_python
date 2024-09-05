@@ -21,18 +21,12 @@ class ProductListView(viewsets.ModelViewSet):
 @api_view(['POST'])
 def upload_product_images(request, product_id):
     product = Product.objects.get(id=product_id)
-    images = request.FILES.getlist('images')
-    is_primary = request.data.get('is_primary', False)  # Get primary flag if provided
-
+    
+    images = request.FILES.getlist('images')  # Get multiple uploaded images
     for image in images:
-        new_image = ProductImage.objects.create(product=product, image=image, is_primary=is_primary)
-        
-        # Ensure only one primary image
-        if new_image.is_primary:
-            ProductImage.objects.filter(product=product).exclude(id=new_image.id).update(is_primary=False)
-
+        ProductImage.objects.create(product=product, image=image)
+    
     return Response({'message': 'Images uploaded successfully'}, status=status.HTTP_201_CREATED)
-
 
 class CategoryListView(viewsets.ModelViewSet):
     queryset = Category.objects.all()

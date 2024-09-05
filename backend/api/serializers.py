@@ -28,7 +28,6 @@ class ProductSerializer(serializers.ModelSerializer):
         ]
 
 
-
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile

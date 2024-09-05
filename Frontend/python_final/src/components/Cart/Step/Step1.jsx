@@ -18,24 +18,28 @@ function Step1() {
 
   useEffect(() => {
     if (token) {
-      // Kiểm tra xem user có profile chưa
       axios
-        .get("http://127.0.0.1:8000/auth/users/profile/", {
+        .get("http://127.0.0.1:8000/auth/users/", {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
           },
         })
         .then((response) => {
-          if (!response.data) {
+          const username = localStorage.getItem("username"); // Assuming you store the username
+          const currentUser = response.data.find(user => user.username === username);
+          if (currentUser && currentUser.profile) {
+            // User has a profile
+            setHasProfile(true);
+          } else {
+            // User does not have a profile
             setHasProfile(false);
           }
         })
         .catch((error) => {
-          console.error("Error fetching profile:", error);
-          setHasProfile(false); // Nếu lỗi, coi như không có profile
+          console.error("Error fetching users or profile:", error);
+          setHasProfile(false); // If there's an error, assume the user has no profile
         });
-
       // Lấy danh sách địa chỉ
       axios
         .get("http://127.0.0.1:8000/api/addresses/", {
