@@ -20,7 +20,7 @@ function Step1() {
     if (token) {
       // Kiểm tra xem user có profile chưa
       axios
-        .get("http://127.0.0.1:8000/api/profile/", {
+        .get("http://127.0.0.1:8000/auth/users/profile/", {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
