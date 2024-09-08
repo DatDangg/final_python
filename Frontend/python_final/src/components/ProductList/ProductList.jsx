@@ -11,6 +11,7 @@ function ProductList({
 }) {
   const [productList, setProductList] = useState([]);
   const token = localStorage.getItem("token");
+  
   useEffect(() => {
     if (token) {
       fetch("http://localhost:8000/api/products/", {
@@ -24,8 +25,8 @@ function ProductList({
 
           if (Array.isArray(data)) {
             if (selectedCategory) {
-              filteredProducts = data.filter(
-                (product) => product.category.id === selectedCategory.id
+              filteredProducts = filteredProducts.filter(
+                (product) => product.category === selectedCategory.id
               );
             }
 
@@ -41,14 +42,24 @@ function ProductList({
             const endIndex = startIndex + productsPerPage;
             setProductList(filteredProducts.slice(startIndex, endIndex));
           } else {
-            console.error("Expected data to be an array, but got:", typeof data);
+            console.error(
+              "Expected data to be an array, but got:",
+              typeof data
+            );
           }
         })
         .catch((error) => console.error("Error fetching products:", error));
     } else {
       console.error("No token found");
     }
-  }, [selectedCategory, currentPage, productsPerPage, searchQuery, setTotalProducts, token]);
+  }, [
+    selectedCategory,
+    currentPage,
+    productsPerPage,
+    searchQuery,
+    setTotalProducts,
+    token,
+  ]);
 
   return (
     <div className="product-container">

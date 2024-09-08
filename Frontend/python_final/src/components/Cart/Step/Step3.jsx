@@ -37,7 +37,7 @@ const Step3 = () => {
 
   const calculateTotal = () => {
     const subtotal = cartItems.reduce(
-      (total, item) => total + item.product.listed_price * item.quantity,
+      (total, item) => total + item.variant.listed_price * item.quantity,
       0
     );
     const estimatedTax = 50; // Replace with actual tax calculation if needed
@@ -55,7 +55,7 @@ const Step3 = () => {
       items: cartItems.map((item) => ({
         product: item.product.id,
         quantity: item.quantity,
-        price: item.product.listed_price,
+        price: item.variant.listed_price,
       })),
     };
 
@@ -73,10 +73,13 @@ const Step3 = () => {
 
         // Giảm số lượng sản phẩm trong kho
         const updateStockPromises = cartItems.map((item) => {
-          const newStock = item.product.quantity - item.quantity;
+          const newStock = item.variant.quantity - item.quantity;
           return axios.patch(
-            `http://127.0.0.1:8000/api/products/${item.product.id}/`,
-            { quantity: newStock },
+            `http://127.0.0.1:8000/api/products/${item.product.id}/update-variant/`,
+            {
+              variant_id: item.variant.id,
+              quantity: newStock
+            },
             {
               headers: {
                 Authorization: `Token ${token}`,
@@ -85,6 +88,7 @@ const Step3 = () => {
             }
           );
         });
+        
 
         return Promise.all(updateStockPromises);
       })
@@ -121,21 +125,25 @@ const Step3 = () => {
     <div className="step3-container">
       <div className="summary-section">
         <h2>Summary</h2>
-        {cartItems.map((item) => (
+        {cartItems.map((item) => {
+          const primaryImage =
+            item.product.images.find((image) => image.is_primary)?.image ||
+            item.product.images[0]?.image;
+          return(
           <div key={item.id} className="cart-item">
             <img
-              src={`http://localhost:8000${item.product.images}`}
+              src={`http://localhost:8000${primaryImage}`}
               alt={item.product.title}
             />
             <div className="item-details">
               <p>{item.product.title}</p>
               <p>
-                {item.quantity} x {item.product.listed_price} VND
+                {item.quantity} x {item.variant.listed_price} VND
               </p>
             </div>
           </div>
-        ))}
-
+          );
+        })}
         <div className="address-section">
           <h3>Address</h3>
           {selectedAddress ? (
@@ -153,7 +161,7 @@ const Step3 = () => {
             Subtotal:{" "}
             {cartItems.reduce(
               (total, item) =>
-                total + item.product.listed_price * item.quantity,
+                total + item.variant.listed_price * item.quantity,
               0
             )}{" "}
             VND

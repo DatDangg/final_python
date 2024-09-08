@@ -13,30 +13,14 @@ class Product(models.Model):
     title = models.CharField(max_length=255)
     brand = models.CharField(max_length=255)
     description = models.TextField()
-    cost_price = models.DecimalField(max_digits=10, decimal_places=2)
-    listed_price = models.DecimalField(max_digits=10, decimal_places=2)
-    SKU = models.CharField(max_length=100, unique=True)
-    quantity = models.PositiveIntegerField()
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
-    storage_product = models.CharField(max_length=255, blank=True)
-    color = models.CharField(max_length=255, blank=True)
-    data = models.CharField(max_length=255, blank=True)
-    cpu = models.CharField(max_length=255, blank=True)
-    NumberOfCores = models.CharField(max_length=255, blank=True)
-    MainCamera = models.CharField(max_length=255, blank=True)
-    FrontCamera = models.CharField(max_length=255, blank=True)
-    BatteryCapacity = models.CharField(max_length=255, blank=True)
-    screen_size = models.CharField(max_length=255, blank=True)
-    screen_refresh_rate = models.CharField(max_length=255, blank=True)
-    pixel = models.CharField(max_length=255, blank=True)
-    screen_type = models.CharField(max_length=255, blank=True)
-    additional_features = models.TextField(blank=True)  # If there are more extra features
-    
+
     def primary_image(self):
         return self.images.filter(is_primary=True).first()
-    
+
     def __str__(self):
         return self.title
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
@@ -45,6 +29,66 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.product.title}"
+
+class PhoneDetail(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    cpu = models.CharField(max_length=255)
+    main_camera = models.CharField(max_length=255)
+    front_camera = models.CharField(max_length=255)
+    battery_capacity = models.CharField(max_length=255)
+    screen_size = models.CharField(max_length=255)
+    refresh_rate = models.CharField(max_length=255)
+    pixel_density = models.CharField(max_length=255)
+    screen_type = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"Details for {self.product.title}"
+
+
+class ComputerDetail(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    processor = models.CharField(max_length=255)
+    ram = models.CharField(max_length=255)
+    graphics_card = models.CharField(max_length=255)
+    screen_size = models.CharField(max_length=255)
+    battery_life = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"Details for {self.product.title}"
+
+
+class HeadphoneDetail(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    wireless = models.BooleanField(default=False)
+    battery_life = models.CharField(max_length=255)
+    noise_cancellation = models.BooleanField(default=False)
+    driver_size = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"Details for {self.product.title}"
+
+class SmartwatchDetail(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    strap_type = models.CharField(max_length=255)  # Loại dây đeo
+    screen_size = models.CharField(max_length=255)  # Kích thước màn hình
+    battery_capacity = models.CharField(max_length=255)  # Dung lượng pin
+    water_resistance = models.BooleanField(default=False)  # Chống nước
+    heart_rate_monitor = models.BooleanField(default=False)  # Có theo dõi nhịp tim hay không
+
+    def __str__(self):
+        return f"Details for {self.product.title}"
+
+class ProductVariant(models.Model):
+    product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE)
+    color = models.CharField(max_length=100)
+    storage = models.CharField(max_length=100, blank=True, null=True)  # Allow blank and null
+    cost_price = models.DecimalField(max_digits=10, decimal_places=2)
+    listed_price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField()
+    SKU = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return f"{self.product.title} - {self.color} - {self.storage} - {self.SKU}"
 
 
 class Profile(models.Model):
@@ -67,10 +111,12 @@ class WishlistItem(models.Model):
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, null=True, blank=True)  # Add variant here
     quantity = models.PositiveIntegerField(default=1)
 
     class Meta:
-        unique_together = ('user', 'product')
+        unique_together = ('user', 'product', 'variant')  # Modify the unique constraint
+
 
 class Address(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="addresses")

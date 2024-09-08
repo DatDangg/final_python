@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, Link } from "react-router-dom";
 import BreadCrumb from "../BreadCrumb/BreadCrumb";
 import ProductList from "../ProductList/ProductList";
 import "./style.css";
@@ -112,7 +112,16 @@ function CategoryPage() {
 
   return (
     <div className="category-page">
-      <BreadCrumb categoryName={categoryName} />
+      <nav className="breadcrumb">
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              {categoryName}
+            </li>
+          </ul>
+        </nav>
       <div className="content-container flex">
         <div className="main-content">
           <ProductList

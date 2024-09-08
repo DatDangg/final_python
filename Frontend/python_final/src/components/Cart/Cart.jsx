@@ -44,11 +44,12 @@ function Cart() {
   const handleQuantityChange = (itemId, newQuantity) => {
     const quantity = parseInt(newQuantity, 10);
     const item = cartItems.find((item) => item.id === itemId);
-
-    console.log("Stock:", item.product.quantity);
+    console.log(item)
+    console.log("Stock:", item.variant.quantity);
     console.log("Current Quantity:", quantity);
 
-    if (quantity > 0 && quantity <= item.product.quantity) {
+    if (quantity > 0 && quantity <= item.variant.quantity) {
+
       axios
         .patch(
           `http://127.0.0.1:8000/api/cart/${itemId}/`,
@@ -68,7 +69,7 @@ function Cart() {
           );
         })
         .catch((error) => console.error("Error updating quantity:", error));
-    } else if (quantity > item.product.stock) {
+    } else if (quantity > item.variant.quantity) {
       alert("You cannot add more than the available stock.");
     }
   };
@@ -82,7 +83,7 @@ function Cart() {
   }
 
   const totalAmount = cartItems.reduce(
-    (acc, item) => acc + Number(item.product?.listed_price) * item.quantity,
+    (acc, item) => acc + Number(item.variant?.listed_price) * item.quantity,
     0
   );
 
@@ -96,7 +97,6 @@ function Cart() {
         <h2>Shopping Cart</h2>
         <ul>
           {cartItems.map((item) => {
-            // Find the primary image or fallback to the first image
             const primaryImage =
               item.product.images.find((image) => image.is_primary)?.image ||
               item.product.images[0]?.image;
@@ -112,7 +112,7 @@ function Cart() {
                 <div className="cart-item-details">
                   <Link to={`/product/${item.product.id}`}>
                     <h3>{item.product.title}</h3>
-                    <p>#{item.product.SKU}</p>
+                    <p>#{item.variant.SKU}</p>
                   </Link>
                 </div>
                 <div className="cart-item-quantity">
@@ -140,7 +140,7 @@ function Cart() {
                     onClick={() =>
                       handleQuantityChange(item.id, item.quantity + 1)
                     }
-                    disabled={item.quantity >= item.product.stock} // Không tăng quá tồn kho
+                    disabled={item.quantity >= item.variant.quantity} // Không tăng quá tồn kho
                   >
                     <img
                       src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-add.svg"
@@ -149,7 +149,7 @@ function Cart() {
                   </button>
                 </div>
                 <div className="cart-item-price">
-                  <span>{item.product.listed_price} VND</span>
+                  <span>{item.variant.listed_price} VND</span>
                 </div>
                 <div className="cart-item-remove">
                   <button onClick={() => handleRemoveFromCart(item.id)}>

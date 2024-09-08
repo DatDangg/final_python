@@ -1,5 +1,5 @@
-from .models import Product, Category, WishlistItem, CartItem, Address, Order, Review, ProductImage
-from .serializers import ProductSerializer, CategorySerializer, UserSerializer, CartItemSerializer, AddressSerializer, OrderSerializer, ReviewSerializer
+from .models import Product, Category, WishlistItem, CartItem, Address, Order, Review, ProductImage, PhoneDetail, HeadphoneDetail, ComputerDetail, SmartwatchDetail, ProductVariant
+from .serializers import ProductSerializer, CategorySerializer, UserSerializer, CartItemSerializer, AddressSerializer, OrderSerializer, ReviewSerializer, PhoneDetailSerializer, ComputerDetailSerializer, HeadphoneDetailSerializer, SmartwatchDetailSerializer
 from rest_framework import viewsets, filters, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -11,22 +11,60 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework.decorators import action
 
-
 class ProductListView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [filters.SearchFilter]  # Thêm SearchFilter để hỗ trợ tìm kiếm
-    search_fields = ['title', 'brand', 'description']  # Các trường bạn muốn tìm kiếm
+    filter_backends = [filters.SearchFilter]
+    filterset_fields = ['category']  # Cho phép lọc theo category
+    search_fields = ['title', 'brand', 'description']
+
+    @action(detail=True, methods=['patch'], url_path='update-variant')
+    def update_variant(self, request, pk=None):
+        product = self.get_object()
+        variant_id = request.data.get('variant_id')
+        new_quantity = request.data.get('quantity')
+        
+        try:
+            variant = product.variants.get(id=variant_id)
+            variant.quantity = new_quantity
+            variant.save()
+            return Response({'status': 'Variant updated successfully'}, status=status.HTTP_200_OK)
+        except ProductVariant.DoesNotExist:
+            return Response({'error': 'Variant not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        product_data = serializer.data
+        
+        # Thêm chi tiết sản phẩm dựa trên loại sản phẩm
+        if instance.category.name == "Smart Phones":
+            phone_details = PhoneDetail.objects.filter(product=instance).first()
+            if phone_details:
+                product_data['phone_details'] = PhoneDetailSerializer(phone_details).data
+        elif instance.category.name == "Computers":
+            computer_details = ComputerDetail.objects.filter(product=instance).first()
+            if computer_details:
+                product_data['computer_details'] = ComputerDetailSerializer(computer_details).data
+        elif instance.category.name == "Headphones":
+            headphone_details = HeadphoneDetail.objects.filter(product=instance).first()
+            if headphone_details:
+                product_data['headphone_details'] = HeadphoneDetailSerializer(headphone_details).data
+        elif instance.category.name == "Smart Watches":
+            smartwatch_details = SmartwatchDetail.objects.filter(product=instance).first()
+            if smartwatch_details:
+                product_data['smartwatch_details'] = SmartwatchDetailSerializer(smartwatch_details).data
+
+        return Response(product_data)
 
 @api_view(['POST'])
 def upload_product_images(request, product_id):
-    product = Product.objects.get(id=product_id)
-    
-    images = request.FILES.getlist('images')  # Get multiple uploaded images
+    product = get_object_or_404(Product, id=product_id)
+    images = request.FILES.getlist('images')
     for image in images:
         ProductImage.objects.create(product=product, image=image)
-    
     return Response({'message': 'Images uploaded successfully'}, status=status.HTTP_201_CREATED)
+
 
 class CategoryListView(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -114,14 +152,18 @@ class CartItemView(viewsets.ViewSet):
 
     def create(self, request):
         product_id = request.data.get('product_id')
+        variant_id = request.data.get('variant_id')  
         quantity = request.data.get('quantity', 1)
         product = get_object_or_404(Product, id=product_id)
+        variant = get_object_or_404(ProductVariant, id=variant_id)
 
         cart_item, created = CartItem.objects.get_or_create(
             user=request.user,
             product=product,
+            variant=variant, 
             defaults={'quantity': quantity}
         )
+
         if not created:
             cart_item.quantity += quantity
             cart_item.save()

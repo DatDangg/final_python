@@ -14,9 +14,10 @@ function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [selectedVariant, setSelectedVariant] = useState(null); // Thêm trạng thái cho biến thể được chọn
   const token = localStorage.getItem("token");
 
-  //slides
+  // Slides
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
   const slider1 = useRef(null);
@@ -62,12 +63,16 @@ function ProductDetail() {
         .get(`http://127.0.0.1:8000/api/products/${id}/`)
         .then((response) => {
           const fetchedProduct = response.data;
+          console.log("Fetched product:", fetchedProduct);
           setProduct(fetchedProduct);
-
+  
+          // Set biến thể đầu tiên làm mặc định nếu có
+          if (fetchedProduct.variants && fetchedProduct.variants.length > 0) {
+            setSelectedVariant(fetchedProduct.variants[0]);
+          }
+  
           // Set the primary image as the default selected image
-          const primaryImage = fetchedProduct.images.find(
-            (img) => img.is_primary
-          );
+          const primaryImage = fetchedProduct.images.find((img) => img.is_primary);
           if (primaryImage) {
             setSelectedImage(primaryImage.image);
           } else if (fetchedProduct.images.length > 0) {
@@ -75,7 +80,7 @@ function ProductDetail() {
           }
         })
         .catch((error) => console.error("Error fetching product:", error));
-
+  
       axios
         .get("http://127.0.0.1:8000/api/cart/", {
           headers: {
@@ -87,7 +92,7 @@ function ProductDetail() {
           setCartItems(response.data);
         })
         .catch((error) => console.error("Error fetching cart items:", error));
-
+  
       axios
         .get(`http://127.0.0.1:8000/wishlist/${id}/`, {
           headers: {
@@ -103,7 +108,7 @@ function ProductDetail() {
           console.error("Error fetching wishlist status:", error);
           setLoading(false);
         });
-
+  
       axios
         .get(`http://127.0.0.1:8000/api/reviews/?product_id=${id}`, {
           headers: {
@@ -118,6 +123,8 @@ function ProductDetail() {
       console.error("No token found");
     }
   }, [id, token]);
+  
+  
 
   const handleWishlistClick = () => {
     axios
@@ -144,17 +151,22 @@ function ProductDetail() {
 
   const handleAddToCart = () => {
     if (token) {
+      if (!selectedVariant) {
+        alert("Please select a variant before adding to cart.");
+        return;
+      }
+  
       const currentCartItem = cartItems.find(
-        (item) => item.product.id === product.id
+        (item) => item.product.id === product.id && item.variant.id === selectedVariant.id // Check variant in condition
       );
-
+  
       if (currentCartItem) {
-        alert("This product is already in your cart.");
+        alert("This variant is already in your cart.");
       } else {
         axios
           .post(
             "http://127.0.0.1:8000/api/cart/",
-            { product_id: id, quantity: 1 },
+            { product_id: product.id, variant_id: selectedVariant.id, quantity: 1 }, // Keep variant_id in payload
             {
               headers: {
                 Authorization: `Token ${token}`,
@@ -163,7 +175,8 @@ function ProductDetail() {
             }
           )
           .then((response) => {
-            setCartItems([...cartItems, response.data]);
+            setCartItems([...cartItems, response.data]);  // Handle new variant response
+            console.log(selectedVariant.id);
             console.log("Product added to cart:", response.data);
           })
           .catch((error) => console.error("Error adding to cart:", error));
@@ -171,6 +184,12 @@ function ProductDetail() {
     } else {
       console.error("No token found");
     }
+  };
+  
+  // Cập nhật variant khi người dùng thay đổi
+  const handleVariantChange = (variantId) => {
+    const variant = product.variants.find((v) => v.id === parseInt(variantId));
+    setSelectedVariant(variant);
   };
 
   if (!product || !product.images) {
@@ -225,10 +244,30 @@ function ProductDetail() {
           </div>
           <div className="product-detail__right col-7">
             <h1 className="product-title">{product.title}</h1>
-            <p className="product-price">
-              <span className="current-price">${product.cost_price}</span>
-              <span className="original-price">${product.listed_price}</span>
-            </p>
+  
+            {/* Dropdown cho biến thể */}
+            <div className="variant-selector">
+              <label>Choose Variant:</label>
+              <select
+                value={selectedVariant ? selectedVariant.id : ""}
+                onChange={(e) => handleVariantChange(e.target.value)}
+              >
+                {product.variants.map((variant) => (
+                  <option key={variant.id} value={variant.id}>
+                    {variant.color} - {variant.storage}
+                  </option>
+                ))}
+              </select>
+            </div>
+  
+            {/* Hiển thị giá của biến thể được chọn */}
+            {selectedVariant && (
+              <p className="product-price">
+                <span className="current-price">${selectedVariant.cost_price}</span>
+                <span className="original-price">${selectedVariant.listed_price}</span>
+              </p>
+            )}
+  
             <div className="product-actions">
               <button
                 className="wishlist-button"
@@ -243,50 +282,105 @@ function ProductDetail() {
             </div>
           </div>
         </div>
-
+  
         <div className="product-detail__bottom">
           <h2>Details</h2>
           <p>{product.description}</p>
-          <ul className="product-specs">
-            <li>
-              <strong>Storage:</strong> {product.storage_product}
-            </li>
-            <li>
-              <strong>CPU:</strong> {product.cpu}
-            </li>
-            <li>
-              <strong>Main Camera:</strong> {product.MainCamera}
-            </li>
-            <li>
-              <strong>Front Camera:</strong> {product.FrontCamera}
-            </li>
-            <li>
-              <strong>Battery Capacity:</strong> {product.BatteryCapacity}
-            </li>
-            <li>
-              <strong>Screen Size:</strong> {product.screen_size}
-            </li>
-            <li>
-              <strong>Screen Refresh Rate:</strong>{" "}
-              {product.screen_refresh_rate}
-            </li>
-            <li>
-              <strong>Pixel:</strong> {product.pixel}
-            </li>
-            <li>
-              <strong>Screen Type:</strong> {product.screen_type}
-            </li>
-          </ul>
+  
+          {/* Hiển thị chi tiết sản phẩm dựa trên category */}
+          {product.phone_details && (
+            <ul className="product-specs">
+              <li>
+                <strong>CPU:</strong> {product.phone_details.cpu}
+              </li>
+              <li>
+                <strong>Main Camera:</strong> {product.phone_details.main_camera}
+              </li>
+              <li>
+                <strong>Front Camera:</strong> {product.phone_details.front_camera}
+              </li>
+              <li>
+                <strong>Battery Capacity:</strong> {product.phone_details.battery_capacity}
+              </li>
+              <li>
+                <strong>Screen Size:</strong> {product.phone_details.screen_size}
+              </li>
+              <li>
+                <strong>Refresh Rate:</strong> {product.phone_details.refresh_rate}
+              </li>
+              <li>
+                <strong>Pixel Density:</strong> {product.phone_details.pixel_density}
+              </li>
+              <li>
+                <strong>Screen Type:</strong> {product.phone_details.screen_type}
+              </li>
+            </ul>
+          )}
+  
+          {product.computer_details && (
+            <ul className="product-specs">
+              <li>
+                <strong>Processor:</strong> {product.computer_details.processor}
+              </li>
+              <li>
+                <strong>RAM:</strong> {product.computer_details.ram}
+              </li>
+              <li>
+                <strong>Graphics Card:</strong> {product.computer_details.graphics_card}
+              </li>
+              <li>
+                <strong>Screen Size:</strong> {product.computer_details.screen_size}
+              </li>
+              <li>
+                <strong>Battery Life:</strong> {product.computer_details.battery_life}
+              </li>
+            </ul>
+          )}
+  
+          {product.headphone_details && (
+            <ul className="product-specs">
+              <li>
+                <strong>Wireless:</strong> {product.headphone_details.wireless ? "Yes" : "No"}
+              </li>
+              <li>
+                <strong>Battery Life:</strong> {product.headphone_details.battery_life}
+              </li>
+              <li>
+                <strong>Noise Cancellation:</strong> {product.headphone_details.noise_cancellation ? "Yes" : "No"}
+              </li>
+              <li>
+                <strong>Driver Size:</strong> {product.headphone_details.driver_size}
+              </li>
+            </ul>
+          )}
+  
+          {product.smartwatch_details && (
+            <ul className="product-specs">
+              <li>
+                <strong>Strap Type:</strong> {product.smartwatch_details.strap_type}
+              </li>
+              <li>
+                <strong>Screen Size:</strong> {product.smartwatch_details.screen_size}
+              </li>
+              <li>
+                <strong>Battery Capacity:</strong> {product.smartwatch_details.battery_capacity}
+              </li>
+              <li>
+                <strong>Water Resistance:</strong> {product.smartwatch_details.water_resistance ? "Yes" : "No"}
+              </li>
+              <li>
+                <strong>Heart Rate Monitor:</strong> {product.smartwatch_details.heart_rate_monitor ? "Yes" : "No"}
+              </li>
+            </ul>
+          )}
+  
           <h2>Customer Reviews</h2>
           {reviews.length > 0 ? (
             reviews.map((review) => (
               <div key={review.id}>
-                <strong>{review.user.username}</strong> rated {review.rating}{" "}
-                stars
+                <strong>{review.user.username}</strong> rated {review.rating} stars
                 <p>{review.comment}</p>
-                <small>
-                  {new Date(review.created_at).toLocaleDateString()}
-                </small>
+                <small>{new Date(review.created_at).toLocaleDateString()}</small>
               </div>
             ))
           ) : (
@@ -296,6 +390,8 @@ function ProductDetail() {
       </div>
     </div>
   );
+  
+  
 }
 
 export default ProductDetail;

@@ -4,7 +4,7 @@ import "./style.css";
 import axios from "axios";
 
 function ProductItem({ product, token }) {
-  const { title, images, listed_price, id } = product;
+  const { title, images, variants, id } = product;
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(true);
   const [primaryImage, setPrimaryImage] = useState(null);
@@ -89,9 +89,6 @@ function ProductItem({ product, token }) {
           }} // Use primary image or a placeholder
         ></div>
         <h3 className="item-product-name">{title}</h3>
-        <div className="item-product-price">
-          <span>{`$${listed_price}`}</span>
-        </div>
         <Link to={`/product/${id}`} className="buy-now-link">
           <button className="buy-now-button">Buy</button>
         </Link>

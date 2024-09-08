@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Category, Profile, WishlistItem, CartItem, Address, Order, OrderItem, Review, ProductImage
+from .models import Product, Category, Profile, WishlistItem, CartItem, Address, Order, OrderItem, Review, ProductImage, HeadphoneDetail, PhoneDetail, ComputerDetail, ProductVariant, SmartwatchDetail
 from django.contrib.auth.models import User
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -12,21 +12,84 @@ class ProductImageSerializer(serializers.ModelSerializer):
         model = ProductImage
         fields = ['id', 'image', 'is_primary']  # Include is_primary
 
+class PhoneDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhoneDetail
+        fields = '__all__'
+
+class ComputerDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ComputerDetail
+        fields = '__all__'
+
+class HeadphoneDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HeadphoneDetail
+        fields = '__all__'
+
+class ProductVariantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductVariant
+        fields = ['id', 'color', 'storage', 'cost_price', 'listed_price', 'quantity','SKU']
+
+class SmartwatchDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SmartwatchDetail
+        fields = '__all__'
+
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()  # Nối dữ liệu của category
-    images = ProductImageSerializer(many=True, read_only=True)  # Nối danh sách các hình ảnh
+    phone_details = PhoneDetailSerializer(required=False)
+    computer_details = ComputerDetailSerializer(required=False)
+    headphone_details = HeadphoneDetailSerializer(required=False)
+    smartwatch_details = SmartwatchDetailSerializer(required=False)
+    variants = ProductVariantSerializer(many=True, read_only=True)
+    images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
-        fields = [
-            'id', 'title', 'brand', 'description', 
-            'cost_price', 'listed_price', 'SKU', 'quantity', 'category', 
-            'storage_product', 'color', 'data', 'cpu', 'NumberOfCores', 
-            'MainCamera', 'FrontCamera', 'BatteryCapacity', 
-            'screen_size', 'screen_refresh_rate', 'pixel', 'screen_type', 
-            'additional_features', 'images'  # Thêm trường images vào
-        ]
+        fields = '__all__'
 
+    def create(self, validated_data):
+        phone_data = validated_data.pop('phone_details', None)
+        computer_data = validated_data.pop('computer_details', None)
+        headphone_data = validated_data.pop('headphone_details', None)
+        smartwatch_data = validated_data.pop('smartwatch_details', None)
+
+        # Tạo sản phẩm trước
+        product = Product.objects.create(**validated_data)
+
+        # Tạo chi tiết sản phẩm dựa trên category (trước đây là product_type)
+        if product.category.name == "Phone" and phone_data:
+            PhoneDetail.objects.create(product=product, **phone_data)
+        elif product.category.name == "Computer" and computer_data:
+            ComputerDetail.objects.create(product=product, **computer_data)
+        elif product.category.name == "Headphone" and headphone_data:
+            HeadphoneDetail.objects.create(product=product, **headphone_data)
+        elif product.category.name == "Smartwatch" and smartwatch_data:
+            SmartwatchDetail.objects.create(product=product, **smartwatch_data)
+
+        return product
+
+    def update(self, instance, validated_data):
+        phone_data = validated_data.pop('phone_details', None)
+        computer_data = validated_data.pop('computer_details', None)
+        headphone_data = validated_data.pop('headphone_details', None)
+        smartwatch_data = validated_data.pop('smartwatch_details', None)
+
+        # Cập nhật thông tin sản phẩm
+        instance = super().update(instance, validated_data)
+
+        # Cập nhật chi tiết sản phẩm dựa trên category
+        if instance.category.name == "Smart Phones" and phone_data:
+            PhoneDetail.objects.update_or_create(product=instance, defaults=phone_data)
+        elif instance.category.name == "Computers" and computer_data:
+            ComputerDetail.objects.update_or_create(product=instance, defaults=computer_data)
+        elif instance.category.name == "Headphones" and headphone_data:
+            HeadphoneDetail.objects.update_or_create(product=instance, defaults=headphone_data)
+        elif instance.category.name == "Smart Watches" and smartwatch_data:
+            SmartwatchDetail.objects.update_or_create(product=instance, defaults=smartwatch_data)
+
+        return instance
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -61,10 +124,12 @@ class WishlistItemSerializer(serializers.ModelSerializer):
     
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
+    variant = ProductVariantSerializer()  # Add the variant serializer
 
     class Meta:
         model = CartItem
-        fields = ['id', 'product', 'quantity']
+        fields = ['id', 'product', 'variant', 'quantity']  # Include variant in fields
+
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
@@ -87,11 +152,14 @@ class OrderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         items_data = validated_data.pop('items')
         order = Order.objects.create(**validated_data)
+        
+        # Thay thế tìm kiếm product bằng id thay vì title
         for item_data in items_data:
-            product = Product.objects.get(title=item_data['product'])  # Tìm Product theo title
+            product_id = item_data['product'].id
+            product = Product.objects.get(id=product_id)
             OrderItem.objects.create(
                 order=order,
-                product=product,  # Truyền đối tượng product hoặc product.id
+                product=product,
                 quantity=item_data['quantity'],
                 price=item_data['price']
             )
