@@ -79,12 +79,20 @@ function Cart() {
   }
 
   if (cartItems.length === 0) {
-    return <div>Your cart is empty.</div>;
+
+    return <div className="text-center">
+      <img
+          src="/photos/cart_empty.png"
+          alt="cart_empty"
+          className="cart_image align-item-center"
+      />
+      <h3>Giỏ hàng của bạn trống</h3>
+    </div>;
   }
 
   const totalAmount = cartItems.reduce(
-    (acc, item) => acc + Number(item.variant?.listed_price) * item.quantity,
-    0
+      (acc, item) => acc + Number(item.variant?.listed_price) * item.quantity,
+      0
   );
 
   const handleCheckout = () => {
@@ -100,7 +108,6 @@ function Cart() {
             const primaryImage =
               item.product.images.find((image) => image.is_primary)?.image ||
               item.product.images[0]?.image;
-
             return (
               <li key={item.id} className="cart-item">
                 <div className="cart-item-image">

@@ -126,6 +126,12 @@ a {
   cursor: pointer;
 }
 
+.cart_image {
+  width: 300px;
+  height: 300px;
+
+}
+
 @media (max-width: 768px) {
   .cart-container {
     flex-direction: column;

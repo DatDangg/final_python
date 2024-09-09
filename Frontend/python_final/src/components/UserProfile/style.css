@@ -70,3 +70,65 @@
         margin-top: 10px;
     }
 }
+
+
+
+.user1{
+    background-color: #EDEDED;
+    border-radius: 10px;
+    align-items: center;
+}
+
+.box{
+    border-radius: 5px;
+    width: 320px;
+    height: 35px;
+    padding-left: 10px;
+    border-color: #1c1c1e;
+    border-width: 1px;
+    padding-bottom: 4px;
+}
+
+.nav-item {
+    margin-right: 5px;
+}
+
+.nav-item .nav-link {
+    background-color: darkgray;
+    color: white;
+}
+
+.nav-item .nav-link.active {
+    background-color: #333;
+    color: white;
+}
+
+.submit{
+    padding-left: 215px;
+    padding-bottom: 50px;
+}
+
+.text-review{
+    height: 200px;
+    width: 700px;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-top: 5px;
+}
+
+.ml-10{
+    margin-left: 25px;
+}
+
+/* styles.css */
+.table-custom {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table-custom th, .table-custom td {
+    border-bottom: 1px solid #dee2e6;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
