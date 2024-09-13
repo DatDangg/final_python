@@ -1,0 +1,18 @@
+/* src/components/Auth/authpage.css */
+.forgot-password {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .forgot-password input {
+    margin-top: 10px;
+    padding: 8px;
+    width: 80%;
+    max-width: 300px;
+  }
+  
+  .forgot-password button {
+    margin-top: 10px;
+    padding: 8px 16px;
+  }
+  

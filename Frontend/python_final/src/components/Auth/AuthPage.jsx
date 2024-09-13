@@ -1,9 +1,8 @@
-// src/components/Auth/AuthPage.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './authpage.css';
 
-const AuthPage = () => {
+function AuthPage(){
   return (
     <div className="authpage">
       <h2>Welcome to Our App</h2>
@@ -13,6 +12,9 @@ const AuthPage = () => {
       </Link>
       <Link to="/auth/signup">
         <button>Sign Up</button>
+      </Link>
+      <Link to="/auth/forgot-password">
+        <button>Forgot Password</button>
       </Link>
     </div>
   );

@@ -8,17 +8,19 @@ import Categories from "./components/Categories/Categories";
 import CategoryPage from "./components/CategoryPage/CategoryPage";
 import ProductDetail from "./components/ProductDetail/ProductDetail";
 import SearchPage from "./components/SearchPage/SearchPage";
-import AuthPage from './components/Auth/AuthPage'; 
-import Login from './components/Auth/Login';
-import Signup from './components/Auth/Signup';
-import UserProfile from './components/UserProfile/UserProfile';
-import WishList from './components/WishList/WishList';
-import Cart from './components/Cart/Cart';
-import Step1 from './components/Cart/Step/Step1';
-import Step2 from './components/Cart/Step/Step2';
-import Step3 from './components/Cart/Step/Step3';
-import Order from './components/Order/Order';
+import AuthPage from "./components/Auth/AuthPage"; 
+import Login from "./components/Auth/Login";
+import Signup from "./components/Auth/Signup";
+import ForgotPassword from "./components/Auth/ForgotPassword";
+import UserProfile from "./components/UserProfile/UserProfile";
+import WishList from "./components/WishList/WishList";
+import Cart from "./components/Cart/Cart";
+import Step1 from "./components/Cart/Step/Step1";
+import Step2 from "./components/Cart/Step/Step2";
+import Step3 from "./components/Cart/Step/Step3";
+import Order from "./components/Order/Order";
 import Footer from "./components/Footer/Footer.jsx";
+
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useContext(AuthContext);
@@ -35,6 +37,7 @@ function App() {
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/signup" element={<Signup />} />
+            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
             <Route
               path="/*"
               element={

@@ -4,7 +4,7 @@ from rest_framework import routers
 from api import views
 from django.conf import settings
 from django.conf.urls.static import static
-from api.views import WishlistToggleView, WishlistStatusView, WishlistListView, upload_product_images
+from api.views import WishlistToggleView, WishlistStatusView, WishlistListView, upload_product_images, ResetPasswordView
 
 router = routers.DefaultRouter()
 router.register(r'products', views.ProductListView, basename='product')
@@ -24,6 +24,7 @@ urlpatterns = [
     path('wishlist/<int:product_id>/', WishlistStatusView.as_view(), name='wishlist-status'),  # Wishlist status URL
     path('wishlist/', WishlistListView.as_view(), name='wishlist-list'),
     path('products/<int:product_id>/upload_images/', upload_product_images, name='upload_product_images'),
+    path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
 ]
 
 # Serve media files during development

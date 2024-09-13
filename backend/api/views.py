@@ -239,3 +239,15 @@ class ReviewView(viewsets.ModelViewSet):
             queryset = queryset.filter(product__id=product_id)
         return queryset
 
+class ResetPasswordView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        new_password = request.data.get('newPassword')
+
+        try:
+            user = User.objects.get(username=username)
+            user.set_password(new_password)
+            user.save()
+            return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)

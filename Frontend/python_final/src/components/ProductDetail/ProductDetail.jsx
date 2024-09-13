@@ -16,6 +16,7 @@ function ProductDetail() {
   const [reviews, setReviews] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null); // Thêm trạng thái cho biến thể được chọn
   const token = localStorage.getItem("token");
+  const [categoryName, setCategoryName] = useState(location.state?.categoryName || "Category");
 
   // Slides
   const [nav1, setNav1] = useState(null);
@@ -57,6 +58,7 @@ function ProductDetail() {
     adaptiveHeight: true, // Điều chỉnh chiều cao tự động
   };
 
+
   useEffect(() => {
     if (token) {
       axios
@@ -65,7 +67,17 @@ function ProductDetail() {
           const fetchedProduct = response.data;
           console.log("Fetched product:", fetchedProduct);
           setProduct(fetchedProduct);
-  
+          
+          if (!location.state?.categoryName) {
+            fetch(`http://127.0.0.1:8000/api/categories/${fetchedProduct.category}/`)
+              .then((response) => response.json())
+              .then((data) => {
+                setCategoryName(data.name);
+                console.log(data)
+              })
+              .catch((error) => console.error('Error fetching category name:', error));
+          }
+
           // Set biến thể đầu tiên làm mặc định nếu có
           if (fetchedProduct.variants && fetchedProduct.variants.length > 0) {
             setSelectedVariant(fetchedProduct.variants[0]);
@@ -205,12 +217,12 @@ function ProductDetail() {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to={`/category/${product.category.id}`}>
-                {product.category.name}
+              <Link to={`/category/${product.category}`}>
+                {categoryName}
               </Link>
             </li>
             <li>
-              <Link to="#">{product.brand}</Link>
+              {product.brand}
             </li>
             <li>{product.title}</li>
           </ul>
