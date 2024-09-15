@@ -212,201 +212,283 @@ function ProductDetail() {
   }
 
   return (
-    <div className="product-detail">
-      <div className="container">
-        <nav className="breadcrumb">
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to={`/category/${product.category}`}>
-                {categoryName}
-              </Link>
-            </li>
-            <li>
-              {product.brand}
-            </li>
-            <li>{product.title}</li>
-          </ul>
-        </nav>
-        <div className="product-detail__top container">
-          <div className="product-detail__left col-5">
-            <div className="product-main-image">
-              {product.images.length > 0 ? (
-                <>
-                  <Slider {...settingsMain}>
-                    {product.images.map((image, index) => (
-                      <div key={index}>
-                        <img
-                          className="card-img-top card-img"
-                          src={image.image}
-                          alt={`Slide ${index + 1}`}
-                          style={{ maxWidth: "100%", height: "auto" }}
-                        />
-                      </div>
+      <div className="product-detail">
+        <div className="container">
+          <nav className="breadcrumb">
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to={`/category/${product.category}`}>
+                  {categoryName}
+                </Link>
+              </li>
+              <li>
+                {product.brand}
+              </li>
+              <li>{product.title}</li>
+            </ul>
+          </nav>
+          {/*left*/}
+          <div className="row">
+            <div className="product-detail__top">
+              <div className="product-detail__left col-md-6">
+                <div className="product-main-image">
+                  {product.images.length > 0 ? (
+                      <>
+                        <Slider {...settingsMain}>
+                          {product.images.map((image, index) => (
+                              <div key={index}>
+                                <img
+                                    className="card-img-top card-img"
+                                    src={image.image}
+                                    alt={`Slide ${index + 1}`}
+                                    style={{maxWidth: "100%", height: "auto"}}
+                                />
+                              </div>
+                          ))}
+                        </Slider>
+                      </>
+                  ) : (
+                      <img
+                          className="product-image"
+                          src={selectedImage}
+                          alt={product.title}
+                      />
+                  )}
+                </div>
+              </div>
+              {/*right*/}
+              <div className="product-detail__right col-md-6 pt-3">
+                <h1 className="product-title fw-bold">{product.title}</h1>
+                <span className="brand p-0">Brand: {product.brand}</span>
+                {/* Hiển thị giá của biến thể được chọn */}
+                {selectedVariant && (
+                    <p className="product-price pt-3">
+                      <span className="current-price fw-bold">${selectedVariant.cost_price}</span>
+                      <span className="original-price">${selectedVariant.listed_price}</span>
+                    </p>
+                )}
+
+                {/* Dropdown cho biến thể */}
+                <div className="variant-selector">
+                  <label>Choose Variant: </label>
+                  <select className="btn btn-outline-light text-black"
+                          value={selectedVariant ? selectedVariant.id : ""}
+                          onChange={(e) => handleVariantChange(e.target.value)}
+                  >
+                    {product.variants.map((variant) => (
+                        <option key={variant.id} value={variant.id}>
+                          {variant.color} - {variant.storage}
+                        </option>
                     ))}
-                  </Slider>
-                </>
-              ) : (
-                <img
-                  className="product-image"
-                  src={selectedImage}
-                  alt={product.title}
-                />
-              )}
+                  </select>
+
+                </div>
+                {selectedVariant && (
+                    <p className="product-storage">
+                      <label>Storage: </label>
+                      <span className="ml-5">{selectedVariant.storage}</span>
+                    </p>
+                )}
+
+                {/*description*/}
+                <div className="product-description">
+                  <p className="fw-100">{product.description}</p>
+                </div>
+
+                <div className="product-actions pt-3">
+                  <button
+                      className="wishlist-button"
+                      onClick={handleWishlistClick}
+                      disabled={loading}
+                  >
+                    {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                  </button>
+                  <button className="cart-button" onClick={handleAddToCart}>
+                    Add to Cart
+                  </button>
+                </div>
+
+                <div className="info pt-4">
+                  <div className="container justify-content-between">
+                    <div className="row">
+                      <div className="col-md-4 d-flex">
+                        <div className="col-4">
+                          <img src="/photos/Delivery.png" alt=""/>
+                        </div>
+                        <div className="col-8">
+                          <span className="ml-5">Free Delivery</span>
+                          <p className="ml-5 fw-bold">1-2 day</p>
+                        </div>
+                      </div>
+                      <div className="col-md-4 d-flex">
+                        <div className="col-4">
+                          <img src="/photos/Stock.png" alt=""/>
+                        </div>
+                        <div className="col-8">
+                          <span className="ml-5">In Stock</span>
+                          <p className="ml-5 fw-bold">Today</p>
+                        </div>
+
+                      </div>
+                      <div className="col-md-4 d-flex">
+                        <div className="col-4">
+                          <img src="/photos/Guaranteed.png" alt=""/>
+                        </div>
+                        <div className="col-8">
+                          <span className="ml-5">Guaranteed</span>
+                          <p className="ml-5 fw-bold">1 year</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="product-detail__right col-7">
-            <h1 className="product-title">{product.title}</h1>
-  
-            {/* Dropdown cho biến thể */}
-            <div className="variant-selector">
-              <label>Choose Variant:</label>
-              <select
-                value={selectedVariant ? selectedVariant.id : ""}
-                onChange={(e) => handleVariantChange(e.target.value)}
-              >
-                {product.variants.map((variant) => (
-                  <option key={variant.id} value={variant.id}>
-                    {variant.color} - {variant.storage}
-                  </option>
-                ))}
-              </select>
+
+          {/*product-bottom-detail*/}
+          <div className="container">
+            <div className="row d-flex pt-5">
+              <div className="col product-detail__bottom">
+                <h2 className="fw-bold">Details</h2>
+                <p className="pt-3">{product.description}</p>
+
+                {/* Hiển thị chi tiết sản phẩm dựa trên category */}
+                {product.phone_details && (
+                    <ul className="product-specs">
+                      <li>
+                        <strong>CPU:</strong> {product.phone_details.cpu}
+                      </li>
+                      <li>
+                        <strong>Main Camera:</strong> {product.phone_details.main_camera}
+                      </li>
+                      <li>
+                        <strong>Front Camera:</strong> {product.phone_details.front_camera}
+                      </li>
+                      <li>
+                        <strong>Battery Capacity:</strong> {product.phone_details.battery_capacity}
+                      </li>
+                      <li>
+                        <strong>Screen Size:</strong> {product.phone_details.screen_size}
+                      </li>
+                      <li>
+                        <strong>Refresh Rate:</strong> {product.phone_details.refresh_rate}
+                      </li>
+                      <li>
+                        <strong>Pixel Density:</strong> {product.phone_details.pixel_density}
+                      </li>
+                      <li>
+                        <strong>Screen Type:</strong> {product.phone_details.screen_type}
+                      </li>
+                    </ul>
+                )}
+
+                {product.computer_details && (
+                    <ul className="product-specs">
+                      <li>
+                        <strong>Processor:</strong> {product.computer_details.processor}
+                      </li>
+                      <li>
+                        <strong>RAM:</strong> {product.computer_details.ram}
+                      </li>
+                      <li>
+                        <strong>Graphics Card:</strong> {product.computer_details.graphics_card}
+                      </li>
+                      <li>
+                        <strong>Screen Size:</strong> {product.computer_details.screen_size}
+                      </li>
+                      <li>
+                        <strong>Battery Life:</strong> {product.computer_details.battery_life}
+                      </li>
+                    </ul>
+                )}
+
+                {product.headphone_details && (
+                    <ul className="product-specs">
+                      <li>
+                        <strong>Wireless:</strong> {product.headphone_details.wireless ? "Yes" : "No"}
+                      </li>
+                      <li>
+                        <strong>Battery Life:</strong> {product.headphone_details.battery_life}
+                      </li>
+                      <li>
+                        <strong>Noise
+                          Cancellation:</strong> {product.headphone_details.noise_cancellation ? "Yes" : "No"}
+                      </li>
+                      <li>
+                        <strong>Driver Size:</strong> {product.headphone_details.driver_size}
+                      </li>
+                    </ul>
+                )}
+
+                {product.smartwatch_details && (
+                    <ul className="product-specs">
+                      <li>
+                        <strong>Strap Type:</strong> {product.smartwatch_details.strap_type}
+                      </li>
+                      <li>
+                        <strong>Screen Size:</strong> {product.smartwatch_details.screen_size}
+                      </li>
+                      <li>
+                        <strong>Battery Capacity:</strong> {product.smartwatch_details.battery_capacity}
+                      </li>
+                      <li>
+                        <strong>Water Resistance:</strong> {product.smartwatch_details.water_resistance ? "Yes" : "No"}
+                      </li>
+                      <li>
+                        <strong>Heart Rate
+                          Monitor:</strong> {product.smartwatch_details.heart_rate_monitor ? "Yes" : "No"}
+                      </li>
+                    </ul>
+                )}
+              </div>
+
             </div>
-  
-            {/* Hiển thị giá của biến thể được chọn */}
-            {selectedVariant && (
-              <p className="product-price">
-                <span className="current-price">${selectedVariant.cost_price}</span>
-                <span className="original-price">${selectedVariant.listed_price}</span>
-              </p>
-            )}
-  
-            <div className="product-actions">
-              <button
-                className="wishlist-button"
-                onClick={handleWishlistClick}
-                disabled={loading}
-              >
-                {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
-              </button>
-              <button className="cart-button" onClick={handleAddToCart}>
-                Add to Cart
-              </button>
-            </div>
+
           </div>
         </div>
-  
-        <div className="product-detail__bottom">
-          <h2>Details</h2>
-          <p>{product.description}</p>
-  
-          {/* Hiển thị chi tiết sản phẩm dựa trên category */}
-          {product.phone_details && (
-            <ul className="product-specs">
-              <li>
-                <strong>CPU:</strong> {product.phone_details.cpu}
-              </li>
-              <li>
-                <strong>Main Camera:</strong> {product.phone_details.main_camera}
-              </li>
-              <li>
-                <strong>Front Camera:</strong> {product.phone_details.front_camera}
-              </li>
-              <li>
-                <strong>Battery Capacity:</strong> {product.phone_details.battery_capacity}
-              </li>
-              <li>
-                <strong>Screen Size:</strong> {product.phone_details.screen_size}
-              </li>
-              <li>
-                <strong>Refresh Rate:</strong> {product.phone_details.refresh_rate}
-              </li>
-              <li>
-                <strong>Pixel Density:</strong> {product.phone_details.pixel_density}
-              </li>
-              <li>
-                <strong>Screen Type:</strong> {product.phone_details.screen_type}
-              </li>
-            </ul>
-          )}
-  
-          {product.computer_details && (
-            <ul className="product-specs">
-              <li>
-                <strong>Processor:</strong> {product.computer_details.processor}
-              </li>
-              <li>
-                <strong>RAM:</strong> {product.computer_details.ram}
-              </li>
-              <li>
-                <strong>Graphics Card:</strong> {product.computer_details.graphics_card}
-              </li>
-              <li>
-                <strong>Screen Size:</strong> {product.computer_details.screen_size}
-              </li>
-              <li>
-                <strong>Battery Life:</strong> {product.computer_details.battery_life}
-              </li>
-            </ul>
-          )}
-  
-          {product.headphone_details && (
-            <ul className="product-specs">
-              <li>
-                <strong>Wireless:</strong> {product.headphone_details.wireless ? "Yes" : "No"}
-              </li>
-              <li>
-                <strong>Battery Life:</strong> {product.headphone_details.battery_life}
-              </li>
-              <li>
-                <strong>Noise Cancellation:</strong> {product.headphone_details.noise_cancellation ? "Yes" : "No"}
-              </li>
-              <li>
-                <strong>Driver Size:</strong> {product.headphone_details.driver_size}
-              </li>
-            </ul>
-          )}
-  
-          {product.smartwatch_details && (
-            <ul className="product-specs">
-              <li>
-                <strong>Strap Type:</strong> {product.smartwatch_details.strap_type}
-              </li>
-              <li>
-                <strong>Screen Size:</strong> {product.smartwatch_details.screen_size}
-              </li>
-              <li>
-                <strong>Battery Capacity:</strong> {product.smartwatch_details.battery_capacity}
-              </li>
-              <li>
-                <strong>Water Resistance:</strong> {product.smartwatch_details.water_resistance ? "Yes" : "No"}
-              </li>
-              <li>
-                <strong>Heart Rate Monitor:</strong> {product.smartwatch_details.heart_rate_monitor ? "Yes" : "No"}
-              </li>
-            </ul>
-          )}
-  
-          <h2>Customer Reviews</h2>
-          {reviews.length > 0 ? (
-            reviews.map((review) => (
-              <div key={review.id}>
-                <strong>{review.user.username}</strong> rated {review.rating} stars
-                <p>{review.comment}</p>
-                <small>{new Date(review.created_at).toLocaleDateString()}</small>
+
+        {/*rating*/}
+        <div className="container pt-5">
+          <div className="row">
+            <div className="col">
+              <div className="product-detail__bottom">
+                <h2 className="fw-bold">Customer Reviews</h2>
+                {reviews.length > 0 ? (
+                    reviews.map((review) => (
+                        <div key={review.id} className="border-bottom pt-3">
+                          <p>Mã đơn hàng: {review.id}</p>
+                          <strong>{review.user.username}</strong>
+                          <div>
+                            {[...Array(review.rating)].map((_, i) => (
+                                <img
+                                    key={i}
+                                    src="https://salt.tikicdn.com/ts/upload/e3/f0/86/efd76e1d41c00ad8ebb7287c66b559fd.png"
+                                    alt={`${review.rating} stars`}
+                                    style={{ width: '20px', height: '20px', marginRight: '5px' }}
+                                />
+                            ))}
+                            rated {review.rating} stars
+                          </div>
+                          <p className="pt-3">{review.comment}</p>
+                          <small>{new Date(review.created_at).toLocaleDateString()}</small>
+                        </div>
+                    ))
+                ) : (
+                    <p>No reviews yet.</p>
+                )}
+
               </div>
-            ))
-          ) : (
-            <p>No reviews yet.</p>
-          )}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
   );
-  
-  
+
+
 }
 
 export default ProductDetail;

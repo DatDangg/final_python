@@ -1,6 +1,29 @@
+.f-prata{
+  font-family: "Prata", serif;
+}
+.f-inter{
+  font-family: "Inter", serif;
+}
+.ml-5{
+  margin-left: 5px;
+}
+
+.ml-10{
+  margin-left: 10px;
+}
+
 .product-detail {
   padding: 20px;
+  font-family: "Inter", sans-serif;
 }
+
+/*.product-detail__top{*/
+/*  background-color: white;*/
+/*  !*height: 770px;*!*/
+/*  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+/*  border-radius: 10px;*/
+
+/*}*/
 
 .product-detail .product-detail__top {
   display: flex;
@@ -53,26 +76,29 @@
 }
 
 .product-detail .product-title {
-  font-size: 24px;
+  font-size: 40px;
   margin-bottom: 10px;
-  font-weight: 600;
-  line-height: 1.2;
+  font-weight: 400;
+}
+.fs40{
+  font-size: 40px;
 }
 
 .product-detail .product-price {
-  font-size: 20px;
+
   margin-bottom: 20px;
 }
 
 .product-detail .product-price .current-price {
-  color: #e60023;
-  font-weight: bold;
+  font-size: 40px;
+  color: red;
 }
 
 .product-detail .product-price .original-price {
   color: #888;
   text-decoration: line-through;
   margin-left: 10px;
+  font-size: 24px
 }
 
 .product-detail .product-actions {
@@ -93,6 +119,8 @@
 .product-detail .wishlist-button {
   background-color: #f0f0f0;
   color: #333;
+  width: 40%;
+  height: 50px;
 }
 
 .product-detail .wishlist-button:hover {
@@ -100,15 +128,41 @@
 }
 
 .product-detail .cart-button {
-  background-color: #e60023;
+  background-color: black;
   color: #fff;
+  width: 40%;
 }
 
 .product-detail .cart-button:hover {
-  background-color: #cc0020;
+  background-color: darkred;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.variant-selector label{
+  font-size: 20px;
+}
+
+.variant-selector select{
+  margin-left: 5px;
+  border-color: black;
+
+}
+
+.product-storage{
+  font-size: 20px
+}
+
+.brand{
+  font-size:16px;
+}
+
+.product-detail__bottom{
+  background-color: white;
+  /*height: 770px;*/
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 50px;
+}
 @media (min-width: 768px) {
   .product-detail .product-detail__top {
     flex-direction: row;
