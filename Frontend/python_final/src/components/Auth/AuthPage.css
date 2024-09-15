@@ -25,6 +25,57 @@
   background-color: #0056b3;
 }
 
+.section{
+  height: 740px;
+}
+
+.login-section {
+  background-color: #f9f9ff;
+  padding: 20px;
+
+}
+
+.login-box {
+  max-width: 500px;
+  width: 100%;
+  height: 700px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding-top: 250px;
+
+}
+.bt button {
+  background-color: black;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  width: 100px;
+}
+
+.image-section {
+  background-color: black;
+  height: 100%;
+  display: block;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-section p{
+  font-size: 50px;
+}
+.image-section img{
+  height: 250px;
+}
+.f-inter{
+  font-family: "Inter", sans-serif;
+}
+
+.f-prata{
+  font-family: "Prata", serif;
+  font-weight: bold;
+}
+
+
 @media (max-width: 768px) {
   .authpage .container {
     width: 100%;

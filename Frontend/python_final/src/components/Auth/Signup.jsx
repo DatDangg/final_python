@@ -1,7 +1,7 @@
 // src/components/Auth/Signup.jsx
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import './signup.css';
 
@@ -72,50 +72,73 @@ function Signup() {
   };
 
   return (
-    <div className="signup">
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            setPasswordError(validatePassword(e.target.value));
-          }}
-        />
-        {passwordError && <p className="error">{passwordError}</p>}
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => {
-            setConfirmPassword(e.target.value);
-            if (password !== e.target.value) {
-              setConfirmPasswordError('Passwords do not match.');
-            } else {
-              setConfirmPasswordError('');
-            }
-          }}
-        />
-        {confirmPasswordError && <p className="error">{confirmPasswordError}</p>}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <button type="submit">Sign Up</button>
-        {error && <p className="error">{error}</p>}
-      </form>
-    </div>
-  );
+      <div className="container-fluid">
+        <div className="row d-flex section">
+          <div className="col-md-7 login-section d-flex align-items-center justify-content-center">
+            <div className="login-box mx-auto text-center">
+              <h3 className="sign f-prata">Sign Up</h3>
+              <div className="signup f-inter">
+                <form onSubmit={handleSubmit}>
+                  <input
+                      type="text"
+                      placeholder="Username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                  />
+                  <input
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setPasswordError(validatePassword(e.target.value));
+                      }}
+                  />
+                  {passwordError && <p className="error">{passwordError}</p>}
+                  <input
+                      type="password"
+                      placeholder="Confirm Password"
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        if (password !== e.target.value) {
+                          setConfirmPasswordError('Passwords do not match.');
+                        } else {
+                          setConfirmPasswordError('');
+                        }
+                      }}
+                  />
+                  {confirmPasswordError && <p className="error">{confirmPasswordError}</p>}
+                  <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <button type="submit">Sign Up</button>
+                  <Link className="f-inter back text-end text-decoration-underline" to="/auth">
+                    Back
+                  </Link>
+                  {error && <p className="error">{error}</p>}
+                </form>
+              </div>
+
+            </div>
+
+          </div>
+          <div className="col-md-5 d-flex image-section justify-content-center align-items-center ">
+            <div className="text-center">
+              <p className="text-white text-uppercase f-prata">Welcome</p>
+              <p className="text-white text-uppercase f-prata p-0">to our website !</p>
+              <img className="text-center" src="/photos/giohang.png" alt=""/>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+  )
+      ;
 };
 
 export default Signup;
