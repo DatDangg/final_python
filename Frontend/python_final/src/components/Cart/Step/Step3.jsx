@@ -8,8 +8,11 @@ const Step3 = () => {
   const [paymentMethod, setPaymentMethod] = useState("qrCode");
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [shippingCost, setShippingCost] = useState(0);
+  const [qrCodeVisible, setQrCodeVisible] = useState(false);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  
+  const [transactionSuccess, setTransactionSuccess] = useState(false); // for payment verification
 
   useEffect(() => {
     // Fetch the cart items from the API
@@ -58,7 +61,7 @@ const Step3 = () => {
         price: item.variant.listed_price,
       })),
     };
-
+    
     console.log("Order Data:", orderData); // Debug log
 
     axios
@@ -120,6 +123,23 @@ const Step3 = () => {
         }
       });
   };
+
+  const handleCheckTransaction = () => {
+    const totalAmount = calculateTotal(); // Tính tổng tiền
+    axios
+      .get(`/check-transaction?total_amount=${totalAmount}`)
+      .then((response) => {
+        if (response.status === 200) {
+          alert("Transaction successful!");
+          setTransactionSuccess(true);
+          handleConfirmOrder(); // Gọi hàm để hoàn tất đặt hàng
+        }
+      })
+      .catch((error) => {
+        alert("Transaction not found or error occurred.");
+      });
+  };
+  
 
   return (
     <div className="step3-container">
@@ -189,25 +209,41 @@ const Step3 = () => {
           </button>
         </div>
 
-        {paymentMethod === "qrCode" && (
+        {paymentMethod === "qrCode" && !qrCodeVisible && (
+          <div className="qr-code-prompt">
+            <button onClick={() => setQrCodeVisible(true)}>
+              Confirm and Show QR Code
+            </button>
+          </div>
+        )}
+
+        {qrCodeVisible && (
           <div className="qr-code-details">
             <p>Scan the QR code to complete your payment.</p>
-            {/* Replace with actual QR code image */}
-            <img src="/path/to/qr-code.png" alt="QR Code" />
+            <img
+              src={`https://qr.sepay.vn/img?acc=4220112003&bank=MBBANK&amount=${calculateTotal()}`}
+              alt="QR Code"
+            />
+            <button onClick={handleCheckTransaction}>Check Transaction</button>
           </div>
         )}
 
         {paymentMethod === "cashOnDelivery" && (
           <div className="cash-on-delivery-details">
             <p>You will pay in cash upon receiving the order.</p>
+            <button className="pay-button" onClick={handleConfirmOrder}>
+              Confirm Order
+            </button>
           </div>
         )}
 
         <div className="actions">
           <button onClick={() => navigate("/checkout/shipping")}>Back</button>
-          <button className="pay-button" onClick={handleConfirmOrder}>
-            Confirm Order
-          </button>
+          {transactionSuccess ? (
+            <button className="pay-button" onClick={handleConfirmOrder}>
+              Confirm Order
+            </button>
+          ) : null}
         </div>
       </div>
     </div>

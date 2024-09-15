@@ -25,6 +25,7 @@ urlpatterns = [
     path('wishlist/', WishlistListView.as_view(), name='wishlist-list'),
     path('products/<int:product_id>/upload_images/', upload_product_images, name='upload_product_images'),
     path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
+    path('check-transaction/', views.check_transaction, name='check_transaction'),
 ]
 
 # Serve media files during development

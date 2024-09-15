@@ -251,3 +251,58 @@ class ResetPasswordView(APIView):
             return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+import requests
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from datetime import datetime, timedelta
+
+@api_view(['GET'])
+def check_transaction(request):
+    url = "https://my.sepay.vn/userapi/transactions/list"
+    headers = {
+        "Authorization": "Bearer DV639G7MCQYBSDKIUVOXPWKL7XRNF21YPD5YYOF6LVQUCFOOEZRIAHAXAAGTZXCI"
+    }
+
+    # Lấy tổng tiền từ yêu cầu React
+    total_amount = request.GET.get('total_amount')
+    
+    # Lấy thời gian hiện tại và trừ đi 2 phút
+    current_time = datetime.now()
+    two_minutes_ago = current_time - timedelta(minutes=2)
+
+    try:
+        # Gửi yêu cầu GET đến SePay API để lấy danh sách giao dịch
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            transactions = response.json().get("transactions", [])
+
+            # Kiểm tra giao dịch có trùng số tiền và trong khoảng thời gian 2 phút
+            matching_transaction = None
+            for transaction in transactions:
+                transaction_time = datetime.strptime(transaction["transaction_date"], '%Y-%m-%d %H:%M:%S')
+                if float(transaction["amount_in"]) == float(total_amount) and two_minutes_ago <= transaction_time <= current_time:
+                    matching_transaction = transaction
+                    break
+
+            if matching_transaction:
+                return JsonResponse({
+                    "message": "Thanh toán thành công!",
+                    "transaction": matching_transaction
+                }, status=200)
+            else:
+                return JsonResponse({
+                    "message": "Không tìm thấy giao dịch khớp với số tiền và thời gian."
+                }, status=404)
+        else:
+            return JsonResponse({
+                "message": "Lỗi khi gọi API SePay.",
+                "error": response.text
+            }, status=response.status_code)
+
+    except requests.RequestException as e:
+        return JsonResponse({
+            "message": "Lỗi khi kết nối với API SePay.",
+            "error": str(e)
+        }, status=500)

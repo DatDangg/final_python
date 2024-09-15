@@ -65,7 +65,6 @@ function ProductDetail() {
         .get(`http://127.0.0.1:8000/api/products/${id}/`)
         .then((response) => {
           const fetchedProduct = response.data;
-          console.log("Fetched product:", fetchedProduct);
           setProduct(fetchedProduct);
           
           if (!location.state?.categoryName) {
@@ -73,7 +72,6 @@ function ProductDetail() {
               .then((response) => response.json())
               .then((data) => {
                 setCategoryName(data.name);
-                console.log(data)
               })
               .catch((error) => console.error('Error fetching category name:', error));
           }
@@ -167,6 +165,12 @@ function ProductDetail() {
         alert("Please select a variant before adding to cart.");
         return;
       }
+      console.log(selectedVariant.id)
+      // Kiểm tra số lượng sản phẩm trong kho
+      if (selectedVariant.quantity <= 0) {
+        alert("Sản phẩm đã hết hàng.");
+        return;
+      }
   
       const currentCartItem = cartItems.find(
         (item) => item.product.id === product.id && item.variant.id === selectedVariant.id // Check variant in condition
@@ -188,7 +192,6 @@ function ProductDetail() {
           )
           .then((response) => {
             setCartItems([...cartItems, response.data]);  // Handle new variant response
-            console.log(selectedVariant.id);
             console.log("Product added to cart:", response.data);
           })
           .catch((error) => console.error("Error adding to cart:", error));
