@@ -377,7 +377,7 @@ function ProductDetail() {
                       </div>
                   )}
                   {/*headphone*/}
-                  {product.headphone_details && (
+                  {product.computer_details && (
                       <div className="container p-0 justify-content-between mb-4">
                         <div className="row ">
                           <div className="col-sm-4 d-flex border-bottom">
@@ -386,7 +386,7 @@ function ProductDetail() {
                             </div>
                             <div className="col-8 pt-2">
                               <span className="ml-5">Screen Size</span>
-                              <p className="ml-5 fw-bold">{product.headphone_details.wireless ? "Yes" : "No"}</p>
+                              <p className="ml-5 fw-bold">{product.computer_details.screen_size}</p>
                             </div>
                           </div>
                           <div className="col-sm-4 d-flex border-bottom">
@@ -394,14 +394,8 @@ function ProductDetail() {
                               <img className="icon-value" src="/photos/cpu.png" alt=""/>
                             </div>
                             <div className="col-8 pt-2">
-                              <span className="ml-5">CPU</span>
-                              <p className="ml-5 fw-bold">{product.headphone_details.noise_cancellation ? "Yes" : "No"}</p>
-                            </div>
-
-                          </div>
-                          <div className="col-sm-4 d-flex border-bottom ">
-                            <div className="col-4 align-items-center pt-3 ml-2">
-                              <img className="icon-value" src="/photos/refresh.png" alt=""/>
+                              <span className="ml-5">RAM</span>
+                              <p className="ml-5 fw-bold">{product.computer_details.ram}</p>
                             </div>
 
                           </div>
@@ -409,20 +403,13 @@ function ProductDetail() {
                             <div className="col-4 align-items-center pt-3 ml-2">
                               <img className="icon-value" src="/photos/main-camera.png" alt=""/>
                             </div>
-
-                          </div>
-                          <div className="col-sm-4 d-flex border-bottom">
-                            <div className="col-4 align-items-center pt-3 ml-2">
-                              <img className="icon-value" src="/photos/front-camera.png" alt=""/>
+                            <div className="col-8 pt-2">
+                              <span className="ml-5">Battery Life</span>
+                              <p className="ml-5 fw-bold">{product.computer_details.battery_life}</p>
                             </div>
-
                           </div>
-                          <div className="col-sm-4 d-flex border-bottom ">
-                            <div className="col-4 align-items-center pt-3 ml-2">
-                              <img className="icon-value" src="/photos/battery.png" alt=""/>
-                            </div>
 
-                          </div>
+
                         </div>
                       </div>
 
@@ -633,9 +620,7 @@ function ProductDetail() {
                     reviews.map((review) => (
                         <div key={review.id} className="border-bottom pt-3">
                           <p className="fw-bold text-primary">Mã đơn hàng: {review.id}</p>
-                            {users.map((user) => (
-                                <strong>{ user.id} </strong>
-                            ))}
+
                           <div>
                             {[...Array(review.rating)].map((_, i) => (
                                 <img
