@@ -25,37 +25,38 @@ function ProductDetail() {
   const slider2 = useRef(null);
 
   useEffect(() => {
+    // Set liên kết giữa các slider
     setNav1(slider1.current);
     setNav2(slider2.current);
   }, []);
 
+  // Thiết lập cho slider chính (ảnh lớn)
   const settingsMain = {
-    asNavFor: nav2,
-    ref: slider1,
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    arrows: false,
-    adaptiveHeight: true, // Điều chỉnh chiều cao tự động
+    asNavFor: nav2,           // Liên kết với slider thumbnail
+    dots: false,              // Không hiển thị chấm chỉ thị
+    infinite: true,           // Vòng lặp vô tận
+    speed: 500,               // Tốc độ chuyển slide
+    slidesToShow: 1,          // Hiển thị 1 slide tại một thời điểm
+    slidesToScroll: 1,        // Cuộn 1 slide mỗi lần
+    autoplay: true,           // Tự động chuyển slide
+    autoplaySpeed: 3000,      // Thời gian giữa các slide
+    arrows: false,            // Không hiển thị mũi tên điều hướng
+    adaptiveHeight: true,     // Tự động điều chỉnh chiều cao theo nội dung
   };
 
+  // Thiết lập cho slider ảnh thu nhỏ
   const settingsThumbs = {
-    asNavFor: nav1,
-    ref: slider2,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    focusOnSelect: true,
-    centerMode: true,
-    centerPadding: "0px",
-    dots: true,
-    infinite: true,
-    arrows: false,
-    vertical: true,
-    adaptiveHeight: true, // Điều chỉnh chiều cao tự động
+    asNavFor: nav1,           // Liên kết với slider chính
+    slidesToShow: 4,          // Hiển thị 4 ảnh thu nhỏ
+    slidesToScroll: 1,        // Cuộn 1 ảnh mỗi lần
+    focusOnSelect: true,      // Chọn ảnh thu nhỏ để chuyển ảnh chính
+    centerMode: true,         // Canh giữa các ảnh thu nhỏ
+    centerPadding: "0px",     // Không có padding
+    dots: true,               // Hiển thị các chấm chỉ thị cho ảnh thu nhỏ
+    infinite: true,           // Vòng lặp vô tận
+    arrows: false,            // Không hiển thị mũi tên điều hướng
+    vertical: false,          // Đặt chiều ngang cho ảnh thu nhỏ
+    adaptiveHeight: true,     // Tự động điều chỉnh chiều cao
   };
 
 
@@ -234,17 +235,29 @@ function ProductDetail() {
           <div className="row">
             <div className="product-detail__top">
               <div className="product-detail__left col-md-6">
-                <div className="product-main-image">
+                <div className="product-main-image justify-content-center align-items-center">
                   {product.images.length > 0 ? (
                       <>
-                        <Slider {...settingsMain}>
+                        <Slider className="main-slider" {...settingsMain} ref={(slider) => setNav1(slider)}>
                           {product.images.map((image, index) => (
                               <div key={index}>
                                 <img
                                     className="card-img-top card-img"
                                     src={image.image}
                                     alt={`Slide ${index + 1}`}
-                                    style={{maxWidth: "100%", height: "auto"}}
+                                    style={{ maxWidth: "100%", height: "auto" }}
+                                />
+                              </div>
+                          ))}
+                        </Slider>
+                        {/* Slider ảnh thu nhỏ */}
+                        <Slider {...settingsThumbs} ref={slider2} className="thumbnail-slider">
+                          {product.images.map((image, index) => (
+                              <div key={index}>
+                                <img
+                                    className="thumbnail-img"
+                                    src={image.image}
+                                    alt={`Thumbnail ${index + 1}`}
                                 />
                               </div>
                           ))}
@@ -261,18 +274,18 @@ function ProductDetail() {
               </div>
               {/*right*/}
               <div className="product-detail__right col-md-6 pt-3">
-                <h1 className="product-title fw-bold">{product.title}</h1>
-                <span className="brand p-0">Brand: {product.brand}</span>
+                <a className="title fw-bold">{product.title}</a>
+                <p className="brand p-0 mb-1">Brand: {product.brand}</p>
                 {/* Hiển thị giá của biến thể được chọn */}
                 {selectedVariant && (
-                    <p className="product-price pt-3">
+                    <p className="product-price pt-1">
                       <span className="current-price fw-bold">${selectedVariant.cost_price}</span>
                       <span className="original-price">${selectedVariant.listed_price}</span>
                     </p>
                 )}
 
                 {/* Dropdown cho biến thể */}
-                <div className="variant-selector">
+                <div className="variant-selector mb-4">
                   <label>Choose Variant: </label>
                   <select className="btn btn-outline-light text-black"
                           value={selectedVariant ? selectedVariant.id : ""}
@@ -286,12 +299,12 @@ function ProductDetail() {
                   </select>
 
                 </div>
-                {selectedVariant && (
-                    <p className="product-storage">
-                      <label>Storage: </label>
-                      <span className="ml-5">{selectedVariant.storage}</span>
-                    </p>
-                )}
+                {/*{selectedVariant && (*/}
+                {/*    <p className="product-storage">*/}
+                {/*      <label>Storage: </label>*/}
+                {/*      <span className="ml-5">{selectedVariant.storage}</span>*/}
+                {/*    </p>*/}
+                {/*)}*/}
 
                 {/*description*/}
                 <div className="product-description">
