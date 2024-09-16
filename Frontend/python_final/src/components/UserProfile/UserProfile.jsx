@@ -73,6 +73,7 @@ function UserProfile() {
   };
 
   const handleReviewSubmit = (productId) => {
+
     const token = localStorage.getItem("token");
     const payload = {
       product: productId,  // Ensure this is just the ID
@@ -285,7 +286,7 @@ function UserProfile() {
                           </div>
                           <button
                               className="btn btn-outline-dark mt-3 mb-5"
-                              onClick={() => handleReviewSubmit(selectedOrder.productId)} // Thay thế productId bằng giá trị thực tế
+                              onClick={() => handleReviewSubmit(selectedOrder.id)} // Thay thế productId bằng giá trị thực tế
                           >
                             Gửi đánh giá
                           </button>

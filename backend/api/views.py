@@ -6,10 +6,13 @@ from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from rest_framework.decorators import action
+from django.http import JsonResponse
+import requests
+from datetime import datetime, timedelta
 
 class ProductListView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -252,12 +255,6 @@ class ResetPasswordView(APIView):
         except User.DoesNotExist:
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-
-import requests
-from django.http import JsonResponse
-from rest_framework.decorators import api_view
-from datetime import datetime, timedelta
-
 @api_view(['GET'])
 def check_transaction(request):
     url = "https://my.sepay.vn/userapi/transactions/list"
@@ -306,3 +303,179 @@ def check_transaction(request):
             "message": "Lỗi khi kết nối với API SePay.",
             "error": str(e)
         }, status=500)
+
+# myapp/views.py
+from django.shortcuts import render
+from django.db.models import Sum
+from .models import Order, Product, Category
+from django.contrib.auth.models import User
+from decimal import Decimal
+from django.db.models.functions import TruncMonth
+
+def dashboard_view(request):
+    # Đếm số lượng đơn hàng có trạng thái 'delivered'
+    total_orders = Order.objects.filter(status='delivered').count()
+    
+    # Tính tổng doanh thu từ các đơn hàng có trạng thái 'delivered'
+    total_sales = Order.objects.filter(status='delivered').aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
+    
+    # Tính lợi nhuận dựa trên tổng doanh thu
+    total_profit = total_sales * Decimal('0.1') if total_sales else 0
+
+    # Tính tổng doanh thu theo tháng
+    sales_data = (Order.objects.filter(status='delivered')
+                  .annotate(month=TruncMonth('order_time'))
+                  .values('month')
+                  .annotate(sales=Sum('total_price'))
+                  .order_by('month'))
+
+    # Lấy danh sách các đơn hàng
+    orders = Order.objects.all()
+
+    # Nếu request là POST (người dùng thay đổi trạng thái đơn hàng)
+    if request.method == 'POST' and 'order_id' in request.POST:
+        order_id = request.POST.get('order_id')
+        order = get_object_or_404(Order, id=order_id)
+        form = OrderStatusForm(request.POST, instance=order)
+
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')  # Sau khi cập nhật, điều hướng về dashboard
+
+    # Khởi tạo form để cập nhật trạng thái đơn hàng
+    form = OrderStatusForm()
+
+    # Lấy tất cả sản phẩm và danh mục
+    products = Product.objects.all()  # Lấy danh sách sản phẩm
+    categories = Category.objects.all()  # Lấy danh sách danh mục
+    users = User.objects.all()  # Lấy danh sách người dùng
+    
+    context = {
+        'total_orders': total_orders,
+        'total_sales': total_sales,
+        'total_profit': total_profit,
+        'sales_data': list(sales_data),  # Chuyển queryset thành danh sách để sử dụng trong template
+        'products': products,
+        'categories': categories,
+        'users': users,
+        'orders': orders,  # Đưa danh sách đơn hàng vào context
+        'form': form,  # Đưa form để cập nhật trạng thái vào context
+    }
+
+    return render(request, 'dashboard.html', context)
+from django.http import JsonResponse
+from .models import Product
+
+def product_list_view(request):
+    products = Product.objects.all()
+    
+    product_data = []
+    
+    for product in products:
+        product_details = {
+            'id': product.id,
+            'title': product.title,
+            'brand': product.brand,
+            'category': product.category.name,
+            'variants': list(product.variants.values('color', 'storage', 'listed_price', 'quantity'))  # Serializing the variants
+        }
+        
+        # Add product details if available
+        if hasattr(product, 'phonedetail'):
+            product_details['details'] = {
+                'cpu': product.phonedetail.cpu,
+                'main_camera': product.phonedetail.main_camera,
+                # Add other phone details as necessary
+            }
+        elif hasattr(product, 'computerdetail'):
+            product_details['details'] = {
+                'processor': product.computerdetail.processor,
+                'ram': product.computerdetail.ram,
+                # Add other computer details as necessary
+            }
+        elif hasattr(product, 'headphonedetail'):
+            product_details['details'] = {
+                'wireless': product.headphonedetail.wireless,
+                'battery_life': product.headphonedetail.battery_life,
+                # Add other headphone details as necessary
+            }
+        elif hasattr(product, 'smartwatchdetail'):
+            product_details['details'] = {
+                'strap_type': product.smartwatchdetail.strap_type,
+                'screen_size': product.smartwatchdetail.screen_size,
+                # Add other smartwatch details as necessary
+            }
+        
+        product_data.append(product_details)
+
+    # Return the product data as JSON
+    return JsonResponse({'products': product_data})
+
+
+
+from django.shortcuts import get_object_or_404, redirect
+from .models import Product, ProductVariant
+from .forms import ProductForm, ProductVariantForm
+from django.core.exceptions import ValidationError
+
+def edit_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.method == 'POST':
+        product_form = ProductForm(request.POST, instance=product)
+        variant_form = ProductVariantForm(request.POST, instance=product.variants.first())
+
+        if product_form.is_valid() and variant_form.is_valid():
+            product = product_form.save()
+
+            # Save the variant form
+            variant = variant_form.save(commit=False)
+            variant.product = product
+            variant.save()
+
+            # Redirect to the dashboard after saving
+            return redirect('dashboard')  # Đảm bảo 'dashboard' là URL pattern trong urls.py
+    
+    else:
+        product_form = ProductForm(instance=product)
+        variant_form = ProductVariantForm(instance=product.variants.first())
+
+    return render(request, 'edit_product.html', {
+        'product_form': product_form,
+        'variant_form': variant_form,
+    })
+
+
+from .forms import CategoryForm
+def edit_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, request.FILES, instance=category)  # Sử dụng request.FILES nếu bạn muốn sửa hình ảnh
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')  # Điều hướng về dashboard sau khi lưu
+    else:
+        form = CategoryForm(instance=category)
+
+    return render(request, 'edit_category.html', {'form': form})
+
+from .forms import OrderStatusForm
+
+def order_management_view(request):
+    # Lấy danh sách tất cả các đơn hàng
+    orders = Order.objects.all()
+
+    # Kiểm tra xem có POST request không
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        order = get_object_or_404(Order, id=order_id)
+        form = OrderStatusForm(request.POST, instance=order)
+
+        if form.is_valid():
+            form.save()
+            return redirect('order_management')  # Điều hướng về trang quản lý đơn hàng sau khi cập nhật thành công
+    else:
+        form = OrderStatusForm()
+
+    return render(request, 'order_management.html', {'orders': orders, 'form': form})

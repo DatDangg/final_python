@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh sửa sản phẩm</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Chỉnh sửa thông tin sản phẩm</h1>
+    </header>
+
+    <main>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <!-- Hiển thị form sửa sản phẩm -->
+            <div>
+                <h2>Thông tin sản phẩm</h2>
+                {{ product_form.as_p }}
+            </div>
+
+            <!-- Hiển thị form sửa biến thể -->
+            <div>
+                <h2>Thông tin biến thể</h2>
+                {{ variant_form.as_p }}
+            </div>
+
+            <button type="submit">Lưu thay đổi</button>
+        </form>
+
+        <a href="{% url 'dashboard' %}">Hủy</a>  <!-- Nút để quay lại danh sách sản phẩm -->
+    </main>
+
+    <footer>
+        <p>Footer của trang</p>
+    </footer>
+</body>
+</html>
