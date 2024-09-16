@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick-theme.css";
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [users, setUsers] = useState([]);
   const [selectedImage, setSelectedImage] = useState("");
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,6 @@ function ProductDetail() {
   const [selectedVariant, setSelectedVariant] = useState(null); // Thêm trạng thái cho biến thể được chọn
   const token = localStorage.getItem("token");
   const [categoryName, setCategoryName] = useState(location.state?.categoryName || "Category");
-
   // Slides
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -103,7 +103,20 @@ function ProductDetail() {
           setCartItems(response.data);
         })
         .catch((error) => console.error("Error fetching cart items:", error));
-  
+
+      axios
+          .get("http://localhost:8000/auth/users/", {
+            headers: {
+              Authorization: `Token ${token}`,
+              "Content-Type": "application/json",
+            },
+          })
+          .then((response) => {
+            setUsers(response.data);
+            console.log(response.data)
+          })
+          .catch((error) => console.error("Error fetching cart items:", error));
+
       axios
         .get(`http://127.0.0.1:8000/wishlist/${id}/`, {
           headers: {
@@ -128,6 +141,7 @@ function ProductDetail() {
         })
         .then((response) => {
           setReviews(response.data);
+          console.log(response.data)
         })
         .catch((error) => console.error("Error fetching reviews:", error));
     } else {
@@ -211,7 +225,6 @@ function ProductDetail() {
   if (!product || !product.images) {
     return <div>Loading...</div>;
   }
-
   return (
       <div className="product-detail">
         <div className="container">
@@ -232,8 +245,8 @@ function ProductDetail() {
             </ul>
           </nav>
           {/*left*/}
-          <div className="row">
-            <div className="product-detail__top">
+          <div className="row w-100">
+            <div className="product-detail__top p-0 m-0">
               <div className="product-detail__left col-md-6">
                 <div className="product-main-image justify-content-center align-items-center">
                   {product.images.length > 0 ? (
@@ -297,7 +310,123 @@ function ProductDetail() {
                         </option>
                     ))}
                   </select>
+                </div>
 
+                {/*product-value*/}
+                <div className="product-value">
+                  {/*smartphone*/}
+                  {product.phone_details && (
+                      <div className="container p-0 justify-content-between mb-4">
+                        <div className="row ">
+                          <div className="col-sm-4 d-flex border-bottom">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/Screensize.png" alt=""/>
+                            </div>
+                            <div className="col-8 pt-2">
+                              <span className="ml-5">Screen Size</span>
+                              <p className="ml-5 fw-bold">{product.phone_details.screen_size}</p>
+                            </div>
+                          </div>
+                          <div className="col-sm-4 d-flex border-bottom">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/cpu.png" alt=""/>
+                            </div>
+                            <div className="col-8 pt-2">
+                              <span className="ml-5">CPU</span>
+                              <p className="ml-5 fw-bold">{product.phone_details.cpu}</p>
+                            </div>
+
+                          </div>
+                          <div className="col-sm-4 d-flex border-bottom ">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/refresh.png" alt=""/>
+                            </div>
+                            <div className="col-8 pt-2">
+                              <span className="ml-5">Refresh Rate</span>
+                              <p className="ml-5 fw-bold">{product.phone_details.refresh_rate}</p>
+                            </div>
+                          </div>
+                          <div className="col-sm-4 d-flex border-bottom ">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/main-camera.png" alt=""/>
+                            </div>
+                            <div className="col-8 pt-2">
+                              <span className="ml-5">Main Camera</span>
+                              <p className="ml-5 fw-bold">{product.phone_details.main_camera}</p>
+                            </div>
+                          </div>
+                          <div className="col-sm-4 d-flex border-bottom">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/front-camera.png" alt=""/>
+                            </div>
+                            <div className="col-8 pt-2">
+                              <span className="ml-5">Front Camera</span>
+                              <p className="ml-5 fw-bold">{product.phone_details.front_camera}</p>
+                            </div>
+                          </div>
+                          <div className="col-sm-4 d-flex border-bottom ">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/battery.png" alt=""/>
+                            </div>
+                            <div className="col-8 pt-2">
+                              <span className="ml-5">Battery</span>
+                              <p className="ml-5 fw-bold">{product.phone_details.battery_capacity}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  )}
+                  {/*headphone*/}
+                  {product.headphone_details && (
+                      <div className="container p-0 justify-content-between mb-4">
+                        <div className="row ">
+                          <div className="col-sm-4 d-flex border-bottom">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/Screensize.png" alt=""/>
+                            </div>
+                            <div className="col-8 pt-2">
+                              <span className="ml-5">Screen Size</span>
+                              <p className="ml-5 fw-bold">{product.headphone_details.wireless ? "Yes" : "No"}</p>
+                            </div>
+                          </div>
+                          <div className="col-sm-4 d-flex border-bottom">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/cpu.png" alt=""/>
+                            </div>
+                            <div className="col-8 pt-2">
+                              <span className="ml-5">CPU</span>
+                              <p className="ml-5 fw-bold">{product.headphone_details.noise_cancellation ? "Yes" : "No"}</p>
+                            </div>
+
+                          </div>
+                          <div className="col-sm-4 d-flex border-bottom ">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/refresh.png" alt=""/>
+                            </div>
+
+                          </div>
+                          <div className="col-sm-4 d-flex border-bottom ">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/main-camera.png" alt=""/>
+                            </div>
+
+                          </div>
+                          <div className="col-sm-4 d-flex border-bottom">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/front-camera.png" alt=""/>
+                            </div>
+
+                          </div>
+                          <div className="col-sm-4 d-flex border-bottom ">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/battery.png" alt=""/>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                  )}
                 </div>
                 {/*{selectedVariant && (*/}
                 {/*    <p className="product-storage">*/}
@@ -371,91 +500,121 @@ function ProductDetail() {
 
                 {/* Hiển thị chi tiết sản phẩm dựa trên category */}
                 {product.phone_details && (
-                    <ul className="product-specs">
-                      <li>
-                        <strong>CPU:</strong> {product.phone_details.cpu}
-                      </li>
-                      <li>
-                        <strong>Main Camera:</strong> {product.phone_details.main_camera}
-                      </li>
-                      <li>
-                        <strong>Front Camera:</strong> {product.phone_details.front_camera}
-                      </li>
-                      <li>
-                        <strong>Battery Capacity:</strong> {product.phone_details.battery_capacity}
-                      </li>
-                      <li>
-                        <strong>Screen Size:</strong> {product.phone_details.screen_size}
-                      </li>
-                      <li>
-                        <strong>Refresh Rate:</strong> {product.phone_details.refresh_rate}
-                      </li>
-                      <li>
-                        <strong>Pixel Density:</strong> {product.phone_details.pixel_density}
-                      </li>
-                      <li>
-                        <strong>Screen Type:</strong> {product.phone_details.screen_type}
-                      </li>
-                    </ul>
+                    <table className="table">
+                      <tbody>
+                      <tr>
+                        <td><strong>CPU:</strong></td>
+                        <td className="align-bottom">{product.phone_details.cpu}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Main Camera:</strong></td>
+                        <td className="align-bottom">{product.phone_details.main_camera}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Front Camera:</strong></td>
+                        <td className="align-bottom">{product.phone_details.front_camera}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Battery Capacity:</strong></td>
+                        <td className="align-bottom">{product.phone_details.battery_capacity}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Screen Size:</strong></td>
+                        <td className="align-bottom">{product.phone_details.screen_size}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Refresh Rate:</strong></td>
+                        <td className="align-bottom">{product.phone_details.refresh_rate}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Pixel Density:</strong></td>
+                        <td className="align-bottom">{product.phone_details.pixel_density}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Screen Type:</strong></td>
+                        <td className="align-bottom">{product.phone_details.screen_type}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+
+
                 )}
 
                 {product.computer_details && (
-                    <ul className="product-specs">
-                      <li>
-                        <strong>Processor:</strong> {product.computer_details.processor}
-                      </li>
-                      <li>
-                        <strong>RAM:</strong> {product.computer_details.ram}
-                      </li>
-                      <li>
-                        <strong>Graphics Card:</strong> {product.computer_details.graphics_card}
-                      </li>
-                      <li>
-                        <strong>Screen Size:</strong> {product.computer_details.screen_size}
-                      </li>
-                      <li>
-                        <strong>Battery Life:</strong> {product.computer_details.battery_life}
-                      </li>
-                    </ul>
+                    <table className="table">
+                      <tbody>
+                      <tr>
+                        <td><strong>Processor:</strong></td>
+                        <td>{product.computer_details.processor}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>RAM:</strong></td>
+                        <td>{product.computer_details.ram}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Graphics Card:</strong></td>
+                        <td>{product.computer_details.graphics_card}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Screen Size:</strong></td>
+                        <td>{product.computer_details.screen_size}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Battery Life:</strong></td>
+                        <td>{product.computer_details.battery_life}</td>
+                      </tr>
+                      </tbody>
+                    </table>
                 )}
 
                 {product.headphone_details && (
-                    <ul className="product-specs">
-                      <li>
-                        <strong>Wireless:</strong> {product.headphone_details.wireless ? "Yes" : "No"}
-                      </li>
-                      <li>
-                        <strong>Battery Life:</strong> {product.headphone_details.battery_life}
-                      </li>
-                      <li>
-                        <strong>Noise
-                          Cancellation:</strong> {product.headphone_details.noise_cancellation ? "Yes" : "No"}
-                      </li>
-                      <li>
-                        <strong>Driver Size:</strong> {product.headphone_details.driver_size}
-                      </li>
-                    </ul>
+                    <table className="table">
+                      <tbody>
+                      <tr>
+                        <td><strong>Wireless:</strong></td>
+                        <td>{product.headphone_details.wireless ? "Yes" : "No"}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Battery Life:</strong></td>
+                        <td>{product.headphone_details.battery_life}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Noise Cancellation:</strong></td>
+                        <td>{product.headphone_details.noise_cancellation ? "Yes" : "No"}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Driver Size:</strong></td>
+                        <td>{product.headphone_details.driver_size}</td>
+                      </tr>
+                      </tbody>
+                    </table>
                 )}
 
                 {product.smartwatch_details && (
-                    <ul className="product-specs">
-                      <li>
-                        <strong>Strap Type:</strong> {product.smartwatch_details.strap_type}
-                      </li>
-                      <li>
-                        <strong>Screen Size:</strong> {product.smartwatch_details.screen_size}
-                      </li>
-                      <li>
-                        <strong>Battery Capacity:</strong> {product.smartwatch_details.battery_capacity}
-                      </li>
-                      <li>
-                        <strong>Water Resistance:</strong> {product.smartwatch_details.water_resistance ? "Yes" : "No"}
-                      </li>
-                      <li>
-                        <strong>Heart Rate
-                          Monitor:</strong> {product.smartwatch_details.heart_rate_monitor ? "Yes" : "No"}
-                      </li>
-                    </ul>
+                    <table className="table">
+                      <tbody>
+                      <tr>
+                        <td><strong>Strap Type:</strong></td>
+                        <td>{product.smartwatch_details.strap_type}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Screen Size:</strong></td>
+                        <td>{product.smartwatch_details.screen_size}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Battery Capacity:</strong></td>
+                        <td>{product.smartwatch_details.battery_capacity}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Water Resistance:</strong></td>
+                        <td>{product.smartwatch_details.water_resistance ? "Yes" : "No"}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Heart Rate Monitor:</strong></td>
+                        <td>{product.smartwatch_details.heart_rate_monitor ? "Yes" : "No"}</td>
+                      </tr>
+                      </tbody>
+                    </table>
                 )}
               </div>
 
@@ -473,8 +632,10 @@ function ProductDetail() {
                 {reviews.length > 0 ? (
                     reviews.map((review) => (
                         <div key={review.id} className="border-bottom pt-3">
-                          <p>Mã đơn hàng: {review.id}</p>
-                          <strong>{review.user.username}</strong>
+                          <p className="fw-bold text-primary">Mã đơn hàng: {review.id}</p>
+                            {users.map((user) => (
+                                <strong>{ user.id} </strong>
+                            ))}
                           <div>
                             {[...Array(review.rating)].map((_, i) => (
                                 <img
@@ -486,8 +647,8 @@ function ProductDetail() {
                             ))}
                             rated {review.rating} stars
                           </div>
-                          <p className="pt-3">{review.comment}</p>
-                          <small>{new Date(review.created_at).toLocaleDateString()}</small>
+                          <p className="pt-3">Comments: {review.comment}</p>
+                          <small>Ngày đánh giá: {new Date(review.created_at).toLocaleDateString()}</small>
                         </div>
                     ))
                 ) : (

@@ -12,9 +12,18 @@
   margin-left: 10px;
 }
 
+.mr-2{
+  margin-right: 1px;
+}
+
 .product-detail {
   padding: 20px;
   font-family: "Inter", sans-serif;
+}
+
+.icon-value{
+  width: 30px;
+  height: 30px;
 }
 
 /*.product-detail__top{*/
@@ -152,7 +161,9 @@
   font-size: 50px;
 }
 
-
+.custom-gap {
+  gap: 2px;
+}
 
 .card-img-top {
   border-radius: 10px;
@@ -192,6 +203,8 @@
   height: 430px;
   max-width: 430px;
 }
+
+
 
 @media (min-width: 768px) {
   .product-detail .product-detail__top {

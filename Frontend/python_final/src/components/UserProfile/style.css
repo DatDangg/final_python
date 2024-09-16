@@ -132,3 +132,12 @@
     padding-top: 15px;
     padding-bottom: 15px;
 }
+
+.table-custom tbody tr {
+    cursor: pointer; /* Thay đổi kiểu con trỏ khi hover lên hàng */
+    transition: background-color 0.3s ease; /* Thêm hiệu ứng chuyển màu nền */
+}
+
+.table-custom tbody tr:hover {
+    background-color: gray; /* Màu nền khi hover lên hàng */
+}
