@@ -1,0 +1,48 @@
+.banner-container2 {
+    width: 100%;
+    min-height: 400px; /* Chiều cao tùy chọn cho banner */
+    overflow: hidden; /* Để ẩn phần nào của hình ảnh nếu cần */
+    background-color: white;
+    margin-top: 50px;;
+}
+.banner-container img {
+    width: 100%;
+    padding: 0;
+}
+
+.text-overlay {
+    padding: 20px; /* Thêm khoảng cách xung quanh văn bản */
+}
+
+.Textline{
+    font-size: 80px;
+    margin-bottom: 10px;
+}
+
+.type2{
+    font-weight: lighter;
+    margin-right: 20px;
+}
+
+.description{
+    opacity: 0.5;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.Shop{
+    display: inline-block;
+    padding: 15px 30px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #fff;
+    border-width: 1px;
+    transition: background-color 0.3s ease;
+}
+
+.Shop:hover{
+    background-color: #ccc;
+}
