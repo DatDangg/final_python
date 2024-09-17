@@ -188,17 +188,17 @@ const Step3 = () => {
             <div className="price-details">
               <h3 className="fw-bold mb-2">Summary</h3>
               <p>
-                Subtotal:{" "}
+                Subtotal:{" $"}
                 {cartItems.reduce(
                     (total, item) =>
                         total + item.variant.listed_price * item.quantity,
                     0
                 )}{" "}
-                VND
+
               </p>
-              <p>Estimated Tax: 50 VND</p>
-              <p>Estimated Shipping & Handling: {shippingCost} VND</p>
-              <h3 className="fw-bold pt-3">Total: {calculateTotal()} VND</h3>
+              <p>Estimated Tax: $1 </p>
+              <p>Estimated Shipping & Handling: ${Number(shippingCost).toFixed(2)} </p>
+              <h3 className="fw-bold pt-3">Total: ${Number(calculateTotal())} </h3>
             </div>
           </div>
 
