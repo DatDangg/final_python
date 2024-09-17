@@ -67,16 +67,13 @@ function Cart() {
                     </div>
                     <div className="cart-item-quantity">
                       <button
-                          className="checkout-button btn btn-outline-dark"
+                          className="checkout-button btn btn-outline-dark fw-bold"
                           onClick={() =>
                               handleQuantityChange(item.id, item.quantity - 1)
                           }
                           disabled={item.quantity <= 1} // Không giảm quá 1
                       >
-                        <img
-                            src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-remove.svg"
-                            alt=""
-                        />
+                        -
                       </button>
                       <input
                           className="text-button"
@@ -87,16 +84,13 @@ function Cart() {
                           }
                       />
                       <button
-                          className="checkout-button btn btn-outline-dark"
+                          className="checkout-button btn btn-outline-dark fw-bold"
                           onClick={() =>
                               handleQuantityChange(item.id, item.quantity + 1)
                           }
                           disabled={item.quantity >= item.variant.quantity} // Không tăng quá tồn kho
                       >
-                        <img
-                            src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-add.svg"
-                            alt=""
-                        />
+                        +
                       </button>
                     </div>
                     <div className="cart-item-price m-3">
