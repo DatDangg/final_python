@@ -15,10 +15,10 @@ function Step2() {
 
   return (
     <div className="shipping-step-container">
-      <h2>Shipment Method</h2>
+      <h2 className="mb-4 fw-bold">Shipment Method</h2>
       <ul className="shipping-options">
         <li>
-          <input
+          <input className="node "
             type="radio"
             id="free"
             name="shipping"
@@ -28,14 +28,14 @@ function Step2() {
           />
           <label htmlFor="free">
             <div className="shipping-option">
-              <span className="shipping-title">Free</span>
-              <span className="shipping-description">Regular shipment</span>
+              <span className="shipping-title">Free  </span>
+              <span className="shipping-description">-- Regular shipment -- </span>
               <span className="shipping-date">17 Oct, 2023</span>
             </div>
           </label>
         </li>
         <li>
-          <input
+          <input className="node"
             type="radio"
             id="express"
             name="shipping"
@@ -47,14 +47,14 @@ function Step2() {
             <div className="shipping-option">
               <span className="shipping-title">$8.50</span>
               <span className="shipping-description">
-                Get your delivery as soon as possible
+                -- Get your delivery as soon as possible --
               </span>
               <span className="shipping-date">1 Oct, 2023</span>
             </div>
           </label>
         </li>
         <li>
-          <input
+          <input className="node"
             type="radio"
             id="schedule"
             name="shipping"
@@ -66,7 +66,7 @@ function Step2() {
             <div className="shipping-option">
               <span className="shipping-title">$5.00</span>
               <span className="shipping-description">
-                Schedule delivery at your convenience
+               -- Schedule delivery at your convenience --
               </span>
               <span className="shipping-date">5 Oct, 2023</span>
             </div>
