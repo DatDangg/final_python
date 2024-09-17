@@ -1,41 +1,26 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chỉnh sửa sản phẩm</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <header>
-        <h1>Chỉnh sửa thông tin sản phẩm</h1>
-    </header>
+{% extends 'base.html' %}
 
-    <main>
-        <form method="POST">
-            {% csrf_token %}
-            
-            <!-- Hiển thị form sửa sản phẩm -->
-            <div>
-                <h2>Thông tin sản phẩm</h2>
-                {{ product_form.as_p }}
-            </div>
+{% block title %}Edit Product{% endblock %}
 
-            <!-- Hiển thị form sửa biến thể -->
-            <div>
-                <h2>Thông tin biến thể</h2>
-                {{ variant_form.as_p }}
-            </div>
+{% block content %}
+<h1>Edit Product</h1>
 
-            <button type="submit">Lưu thay đổi</button>
-        </form>
+<!-- Form chỉnh sửa sản phẩm -->
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        <h2>Product Information</h2>
+        {{ product_form.as_p }}  <!-- Hiển thị form chỉnh sửa sản phẩm -->
+    </div>
 
-        <a href="{% url 'dashboard' %}">Hủy</a>  <!-- Nút để quay lại danh sách sản phẩm -->
-    </main>
+    <!-- Form chỉnh sửa biến thể -->
+    <div>
+        <h2>Variant Information</h2>
+        {{ variant_form.as_p }}  <!-- Hiển thị form chỉnh sửa biến thể cụ thể -->
+    </div>
 
-    <footer>
-        <p>Footer của trang</p>
-    </footer>
-</body>
-</html>
+    <button type="submit">Save Changes</button>
+</form>
+
+<a href="{% url 'product_list' %}">Cancel</a>  <!-- Nút hủy bỏ quay lại danh sách sản phẩm -->
+{% endblock %}

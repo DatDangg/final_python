@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<h1>Dashboard Overview</h1>
+<div class="dashboard-stats">
+    <div class="stat-box">
+        <h3>Total Orders</h3>
+        <p>{{ total_orders }}</p>
+    </div>
+    <div class="stat-box">
+        <h3>Total Sales</h3>
+        <p>${{ total_sales }}</p>
+    </div>
+    <div class="stat-box">
+        <h3>Total Profit</h3>
+        <p>${{ total_profit }}</p>
+    </div>
+</div>
+
+<!-- Biểu đồ doanh thu theo tháng -->
+<div class="chart-container">
+    <canvas id="salesChart"></canvas>
+</div>
+
+<script>
+    var salesData = JSON.parse(document.getElementById('sales-data').textContent);
+
+    var ctx = document.getElementById('salesChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: salesData.map(data => new Date(data.month).toLocaleString('en-US', { month: 'long', year: 'numeric' })),
+            datasets: [{
+                label: 'Monthly Sales',
+                data: salesData.map(data => data.sales),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

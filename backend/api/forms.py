@@ -34,7 +34,7 @@ class ProductVariantForm(forms.ModelForm):
 class OrderStatusForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['status']  # Chỉ cần thay đổi trạng thái đơn hàng
+        fields = ['status']  # Chỉ cần cập nhật trường trạng thái
         widgets = {
-            'status': forms.Select(choices=Order.STATUS_CHOICES)
+            'status': forms.Select(choices=Order.STATUS_CHOICES)  # Dropdown cho các trạng thái
         }

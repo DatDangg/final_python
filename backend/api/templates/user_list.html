@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}User List{% endblock %}
+
+{% block content %}
+<h1>User List</h1>
+<table>
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên người dùng</th>
+            <th>Email</th>
+            <th>Ngày tham gia</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.date_joined }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
