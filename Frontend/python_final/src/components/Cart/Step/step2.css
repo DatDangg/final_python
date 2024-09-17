@@ -1,3 +1,6 @@
+.mr-5{
+  margin-right: 5px;
+}
 .shipping-step-container {
   width: 100%;
   max-width: 600px;
@@ -8,6 +11,11 @@
 .shipping-options {
   list-style: none;
   padding: 0;
+}
+
+.node {
+  transform: scale(1.5);
+  margin-right: 10px;
 }
 
 .shipping-option {
@@ -21,15 +29,18 @@
 }
 
 .shipping-title {
+  font-size: 20px;
   font-weight: bold;
 }
 
 .shipping-description {
-  font-size: 0.9em;
+  margin-left: 5px;
+  font-size: 16px;
   color: #666;
 }
 
 .shipping-date {
+  margin-left: 5px;
   font-size: 0.9em;
   color: #333;
 }

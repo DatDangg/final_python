@@ -72,8 +72,8 @@ function UserProfile() {
     document.getElementById('pills-contact-tab').click(); // Chuyển sang tab review
   };
 
-  const handleReviewSubmit = (productId) => {
-
+  const handleReviewSubmit = () => {
+    const productId = selectedOrder.items[0]?.product;
     const token = localStorage.getItem("token");
     const payload = {
       product: productId,  // Ensure this is just the ID
@@ -286,7 +286,7 @@ function UserProfile() {
                           </div>
                           <button
                               className="btn btn-outline-dark mt-3 mb-5"
-                              onClick={() => handleReviewSubmit(selectedOrder.id)} // Thay thế productId bằng giá trị thực tế
+                              onClick={() => handleReviewSubmit()} // Thay thế productId bằng giá trị thực tế
                           >
                             Gửi đánh giá
                           </button>
