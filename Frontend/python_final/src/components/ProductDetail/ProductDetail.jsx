@@ -188,8 +188,6 @@ function ProductDetail() {
     }
   
     const availableQuantity = selectedVariant.quantity;
-  
-    // Kiểm tra sản phẩm hiện tại trong giỏ hàng của biến thể đã chọn
     const currentCartItem = cartItems.find(
       (item) => item.product.id === product.id && item.variant.id === selectedVariant.id
     );
@@ -202,38 +200,11 @@ function ProductDetail() {
       return;
     }
   
-    axios
-      .post(
-        "http://127.0.0.1:8000/api/cart/",
-        { product_id: product.id, variant_id: selectedVariant.id, quantity: 1 },
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((response) => {
-        // Nếu currentCartItem không tồn tại, thêm sản phẩm mới vào giỏ hàng
-        if (!currentCartItem) {
-          setCartItems([...cartItems, response.data]);
-        } else {
-          // Nếu biến thể đã có trong giỏ hàng, chỉ cập nhật số lượng
-          const updatedCart = cartItems.map((item) =>
-            item.product.id === product.id && item.variant.id === selectedVariant.id
-              ? { ...item, quantity: item.quantity + 1 } // Cập nhật số lượng
-              : item
-          );
-          setCartItems(updatedCart);
-        }
-  
-        console.log("Product added to cart:", response.data);
-      })
-      .catch((error) => console.error("Error adding to cart:", error));
+    // Cập nhật giỏ hàng trên giao diện trước khi gọi API
+    addToCart(product.id, selectedVariant.id, 1);
   };
   
-  
-  
+
   
   // Cập nhật variant khi người dùng thay đổi
   const handleVariantChange = (variantId) => {

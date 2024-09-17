@@ -1,11 +1,10 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CartContext } from "../../context/CartContext"; // Đường dẫn tới CartContext
+import { CartContext } from "../../context/CartContext"; // Import CartContext
 import "./style.css";
 
 function Cart() {
-  const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext); // Sử dụng removeFromCart và updateQuantity từ CartContext
-  const [error, setError] = useState(null);
+  const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext); // Sử dụng cartItems, removeFromCart và updateQuantity từ context
   const navigate = useNavigate();
 
   const handleQuantityChange = (itemId, newQuantity) => {
@@ -13,15 +12,11 @@ function Cart() {
     const item = cartItems.find((item) => item.id === itemId);
 
     if (quantity > 0 && quantity <= item.variant.quantity) {
-      updateQuantity(itemId, quantity); // Cập nhật số lượng thông qua context
+      updateQuantity(itemId, quantity); // Sử dụng hàm updateQuantity từ context để cập nhật số lượng
     } else if (quantity > item.variant.quantity) {
       alert("You cannot add more than the available stock.");
     }
   };
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   if (cartItems.length === 0) {
     return (
@@ -53,64 +48,68 @@ function Cart() {
           <ul>
             {cartItems.map((item) => {
               const primaryImage =
-                  item.product.images.find((image) => image.is_primary)?.image ||
-                  item.product.images[0]?.image;
+                item.product.images.find((image) => image.is_primary)?.image ||
+                item.product.images[0]?.image;
               return (
-                  <li key={item.id} className="cart-item">
-                    <div className="cart-item-image">
+                <li key={item.id} className="cart-item">
+                  <div className="cart-item-image">
+                    <img
+                      src={`http://localhost:8000${primaryImage}`}
+                      alt={item.product.title}
+                    />
+                  </div>
+                  <div className="cart-item-details">
+                    <Link to={`/product/${item.product.id}`}>
+                      <h3>{item.product.title}</h3>
+                      <p>#{item.variant.SKU}</p>
+                    </Link>
+                  </div>
+                  <div className="cart-item-quantity">
+                    <button
+                      className="checkout-button btn btn-outline-dark"
+                      onClick={() =>
+                        handleQuantityChange(item.id, item.quantity - 1)
+                      }
+                      disabled={item.quantity <= 1} // Không giảm quá 1
+                    >
                       <img
-                          src={`http://localhost:8000${primaryImage}`}
-                          alt={item.product.title}
+                        src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-remove.svg"
+                        alt=""
                       />
-                    </div>
-                    <div className="cart-item-details">
-                      <Link to={`/product/${item.product.id}`}>
-                        <h3>{item.product.title}</h3>
-                        <p>#{item.variant.SKU}</p>
-                      </Link>
-                    </div>
-                    <div className="cart-item-quantity">
-                      <button
-                          className="checkout-button btn btn-outline-dark"
-                          onClick={() =>
-                              handleQuantityChange(item.id, item.quantity - 1)
-                          }
-                          disabled={item.quantity <= 1} // Không giảm quá 1
-                      >
-                        <img
-                            src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-remove.svg"
-                            alt=""
-                        />
-                      </button>
-                      <input className="text-button"
-                             type="number"
-                             value={item.quantity}
-                             onChange={(e) =>
-                                 handleQuantityChange(item.id, e.target.value)
-                             }
+                    </button>
+                    <input
+                      className="text-button"
+                      type="number"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        handleQuantityChange(item.id, e.target.value)
+                      }
+                    />
+                    <button
+                      className="checkout-button btn btn-outline-dark"
+                      onClick={() =>
+                        handleQuantityChange(item.id, item.quantity + 1)
+                      }
+                      disabled={item.quantity >= item.variant.quantity} // Không tăng quá tồn kho
+                    >
+                      <img
+                        src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-add.svg"
+                        alt=""
                       />
-                      <button
-                          className="checkout-button btn btn-outline-dark"
-                          onClick={() =>
-                              handleQuantityChange(item.id, item.quantity + 1)
-                          }
-                          disabled={item.quantity >= item.variant.quantity} // Không tăng quá tồn kho
-                      >
-                        <img
-                            src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-add.svg"
-                            alt=""
-                        />
-                      </button>
-                    </div>
-                    <div className="cart-item-price m-3">
-                      <span>{item.variant.listed_price}đ</span>
-                    </div>
-                    <div className="cart-item-remove m-3">
-                      <button className="checkout-button" onClick={() => handleRemoveFromCart(item.id)}>
-                        x
-                      </button>
-                    </div>
-                  </li>
+                    </button>
+                  </div>
+                  <div className="cart-item-price m-3">
+                    <span>{item.variant.listed_price}đ</span>
+                  </div>
+                  <div className="cart-item-remove m-3">
+                    <button
+                      className="checkout-button"
+                      onClick={() => removeFromCart(item.id)} // Sử dụng removeFromCart từ context để xóa sản phẩm
+                    >
+                      x
+                    </button>
+                  </div>
+                </li>
               );
             })}
           </ul>
@@ -126,9 +125,7 @@ function Cart() {
             </button>
           </div>
         </div>
-
       </div>
-
     </div>
   );
 }
