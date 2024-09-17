@@ -57,7 +57,7 @@ body {
 }
 #moving-image {
     position: fixed; /* Đảm bảo ảnh cố định trên trang */
-    width: 100px; /* Kích thước của ảnh */
+    width: 500px; /* Kích thước của ảnh */
     height: auto;
     top: 0;
     left: 0;

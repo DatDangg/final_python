@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Thêm Category{% endblock %}
+
+{% block content %}
+<h1>Thêm Category Mới</h1>
+
+<form method="POST" enctype="multipart/form-data">  <!-- Sử dụng enctype để cho phép upload file (ảnh) -->
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- Hiển thị các trường form -->
+    
+    <button type="submit">Thêm Category</button>
+</form>
+
+<a href="{% url 'category_list' %}">Quay lại danh sách Category</a>  <!-- Link trở lại danh sách Category -->
+{% endblock %}

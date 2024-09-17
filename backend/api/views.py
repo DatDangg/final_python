@@ -511,3 +511,18 @@ def add_product_view(request):
         'smartwatch_detail_form': SmartwatchDetailForm(),
         'headphone_detail_form': HeadphoneDetailForm(),
     })
+
+from django.shortcuts import render, redirect
+from .models import Category
+from .forms import CategoryForm
+
+def add_category_view(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, request.FILES)  # Sử dụng request.FILES để xử lý ảnh
+        if form.is_valid():
+            form.save()
+            return redirect('category_list')  # Điều hướng về trang danh sách Category sau khi lưu thành công
+    else:
+        form = CategoryForm()
+
+    return render(request, 'add_category.html', {'form': form})
