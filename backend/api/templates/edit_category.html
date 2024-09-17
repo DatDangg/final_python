@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sửa danh mục</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Chỉnh sửa danh mục</h1>
+    </header>
+
+    <main>
+        <form method="POST" enctype="multipart/form-data">  <!-- Thêm enctype để tải ảnh -->
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Lưu thay đổi</button>
+        </form>
+
+        <a href="{% url 'dashboard' %}">Hủy</a>  <!-- Điều hướng về dashboard nếu người dùng muốn hủy -->
+    </main>
+
+    <footer>
+        <p>Footer của trang</p>
+    </footer>
+</body>
+</html>

@@ -26,6 +26,11 @@ urlpatterns = [
     path('products/<int:product_id>/upload_images/', upload_product_images, name='upload_product_images'),
     path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
     path('check-transaction/', views.check_transaction, name='check_transaction'),
+    path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('products/', views.product_list_view, name='product_list'),
+    path('products/edit/<int:product_id>/', views.edit_product, name='edit_product'),
+    path('categories/edit/<int:category_id>/', views.edit_category, name='edit_category'), 
+    path('orders/manage/', views.order_management_view, name='order_management'),  
 ]
 
 # Serve media files during development

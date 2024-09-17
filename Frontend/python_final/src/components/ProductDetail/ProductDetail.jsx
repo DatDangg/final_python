@@ -9,7 +9,7 @@ import "slick-carousel/slick/slick-theme.css";
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [users, setUsers] = useState([]);
+  const [userDetails, setUserDetails] = useState({});
   const [selectedImage, setSelectedImage] = useState("");
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -105,19 +105,6 @@ function ProductDetail() {
         .catch((error) => console.error("Error fetching cart items:", error));
 
       axios
-          .get("http://localhost:8000/auth/users/", {
-            headers: {
-              Authorization: `Token ${token}`,
-              "Content-Type": "application/json",
-            },
-          })
-          .then((response) => {
-            setUsers(response.data);
-            console.log(response.data)
-          })
-          .catch((error) => console.error("Error fetching cart items:", error));
-
-      axios
         .get(`http://127.0.0.1:8000/wishlist/${id}/`, {
           headers: {
             Authorization: `Token ${token}`,
@@ -133,20 +120,38 @@ function ProductDetail() {
           setLoading(false);
         });
   
-      axios
+        axios
         .get(`http://127.0.0.1:8000/api/reviews/?product_id=${id}`, {
           headers: {
             Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
           },
         })
         .then((response) => {
           setReviews(response.data);
-          console.log(response.data)
+
+          const userIds = response.data.map((review) => review.user);
+
+          userIds.forEach((userId) => {
+            axios
+              .get(`http://127.0.0.1:8000/auth/users/${userId}/`, {
+                headers: {
+                  Authorization: `Token ${token}`,
+                },
+              })
+              .then((userResponse) => {
+                setUserDetails((prevDetails) => ({
+                  ...prevDetails,
+                  [userId]: userResponse.data.username, 
+                }));
+              })
+              .catch((error) =>
+                console.error(`Error fetching user with ID ${userId}:`, error)
+              );
+          });
         })
         .catch((error) => console.error("Error fetching reviews:", error));
-    } else {
-      console.error("No token found");
-    }
+      }
   }, [id, token]);
   
   
@@ -180,41 +185,63 @@ function ProductDetail() {
         alert("Please select a variant before adding to cart.");
         return;
       }
-      console.log(selectedVariant.id)
+  
       // Kiểm tra số lượng sản phẩm trong kho
-      if (selectedVariant.quantity <= 0) {
-        alert("Sản phẩm đã hết hàng.");
+      const availableQuantity = selectedVariant.quantity;
+  
+      // Lấy sản phẩm hiện tại trong giỏ hàng của biến thể đang chọn (nếu có)
+      const currentCartItem = cartItems.find(
+        (item) => item.product.id === product.id && item.variant.id === selectedVariant.id
+      );
+  
+      // Nếu biến thể đã có trong giỏ hàng, lấy số lượng hiện tại
+      const currentCartQuantity = currentCartItem ? currentCartItem.quantity : 0;
+  
+      // Tổng số lượng sau khi thêm sản phẩm
+      const newQuantity = currentCartQuantity + 1;
+  
+      // Kiểm tra nếu tổng số lượng sau khi thêm lớn hơn số lượng tồn kho
+      if (newQuantity > availableQuantity) {
+        alert(`Số lượng sản phẩm trong giỏ hàng đã đạt tối đa`);
         return;
       }
   
-      const currentCartItem = cartItems.find(
-        (item) => item.product.id === product.id && item.variant.id === selectedVariant.id // Check variant in condition
-      );
+      // Nếu không vượt quá, tiến hành thêm sản phẩm vào giỏ hàng
+      axios
+        .post(
+          "http://127.0.0.1:8000/api/cart/",
+          { product_id: product.id, variant_id: selectedVariant.id, quantity: 1 },
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          // Cập nhật giỏ hàng với sản phẩm mới thêm
+          const updatedCart = cartItems.map((item) =>
+            item.product.id === product.id && item.variant.id === selectedVariant.id
+              ? { ...item, quantity: item.quantity + 1 }  // Cập nhật số lượng
+              : item
+          );
+          if (!currentCartItem) {
+            // Nếu biến thể này chưa có trong giỏ hàng thì thêm nó vào
+            setCartItems([...cartItems, response.data]);
+          } else {
+            // Nếu biến thể đã có trong giỏ hàng, chỉ cập nhật số lượng
+            setCartItems(updatedCart);
+          }
   
-      if (currentCartItem) {
-        alert("This variant is already in your cart.");
-      } else {
-        axios
-          .post(
-            "http://127.0.0.1:8000/api/cart/",
-            { product_id: product.id, variant_id: selectedVariant.id, quantity: 1 }, // Keep variant_id in payload
-            {
-              headers: {
-                Authorization: `Token ${token}`,
-                "Content-Type": "application/json",
-              },
-            }
-          )
-          .then((response) => {
-            setCartItems([...cartItems, response.data]);  // Handle new variant response
-            console.log("Product added to cart:", response.data);
-          })
-          .catch((error) => console.error("Error adding to cart:", error));
-      }
+          console.log("Product added to cart:", response.data);
+        })
+        .catch((error) => console.error("Error adding to cart:", error));
     } else {
       console.error("No token found");
     }
   };
+  
+  
   
   // Cập nhật variant khi người dùng thay đổi
   const handleVariantChange = (variantId) => {
@@ -415,12 +442,6 @@ function ProductDetail() {
 
                   )}
                 </div>
-                {/*{selectedVariant && (*/}
-                {/*    <p className="product-storage">*/}
-                {/*      <label>Storage: </label>*/}
-                {/*      <span className="ml-5">{selectedVariant.storage}</span>*/}
-                {/*    </p>*/}
-                {/*)}*/}
 
                 {/*description*/}
                 <div className="product-description">
@@ -620,7 +641,7 @@ function ProductDetail() {
                     reviews.map((review) => (
                         <div key={review.id} className="border-bottom pt-3">
                           <p className="fw-bold text-primary">Mã đơn hàng: {review.id}</p>
-
+                          <p>Người đánh giá: {userDetails[review.user]}</p>
                           <div>
                             {[...Array(review.rating)].map((_, i) => (
                                 <img
