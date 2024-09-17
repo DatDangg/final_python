@@ -4,9 +4,10 @@
 
 {% block content %}
 <h1>Dashboard Overview</h1>
+
 <div class="dashboard-stats">
     <div class="stat-box">
-        <h3>Total Orders</h3>
+        <h3>Total Delivered Orders</h3>
         <p>{{ total_orders }}</p>
     </div>
     <div class="stat-box">
@@ -24,26 +25,33 @@
     <canvas id="salesChart"></canvas>
 </div>
 
+<!-- Nhúng dữ liệu sales_data vào một thẻ script ẩn -->
+{{ sales_data|json_script:"sales-data" }}
+
+<!-- Script để render biểu đồ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  <!-- Thư viện Chart.js -->
 <script>
+    // Lấy dữ liệu từ thẻ script ẩn với ID 'sales-data'
     var salesData = JSON.parse(document.getElementById('sales-data').textContent);
 
+    // Khởi tạo biểu đồ
     var ctx = document.getElementById('salesChart').getContext('2d');
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: salesData.map(data => new Date(data.month).toLocaleString('en-US', { month: 'long', year: 'numeric' })),
+            labels: salesData.map(data => new Date(data.month).toLocaleString('en-US', { month: 'long', year: 'numeric' })),  // Các tháng
             datasets: [{
                 label: 'Monthly Sales',
-                data: salesData.map(data => data.sales),
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
+                data: salesData.map(data => data.sales),  // Doanh thu theo từng tháng
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',  // Màu nền của cột
+                borderColor: 'rgba(75, 192, 192, 1)',  // Màu viền của cột
                 borderWidth: 1
             }]
         },
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true  // Bắt đầu trục Y từ 0
                 }
             }
         }

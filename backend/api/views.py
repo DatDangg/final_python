@@ -321,22 +321,29 @@ from .forms import ProductForm, ProductVariantForm  # Form cho sản phẩm và 
 
 # View cho trang dashboard
 def dashboard_view(request):
-    total_orders = Order.objects.count()
-    total_sales = Order.objects.aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
-    total_profit = total_sales * Decimal('0.1')
+    # Chỉ đếm các đơn hàng có trạng thái 'delivered'
+    total_orders = Order.objects.filter(status='delivered').count()
 
-    # Lấy dữ liệu doanh thu theo tháng
-    sales_data = (Order.objects.annotate(month=TruncMonth('order_time'))
-                  .values('month')
-                  .annotate(sales=Sum('total_price'))
-                  .order_by('month'))
+    # Chỉ tính tổng doanh thu từ các đơn hàng có trạng thái 'delivered'
+    total_sales = Order.objects.filter(status='delivered').aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
+    
+    # Tính lợi nhuận dựa trên tổng doanh thu (giả sử lợi nhuận là 10%)
+    total_profit = total_sales * Decimal('0.1')  # Lợi nhuận giả định 10% tổng doanh thu
+
+    # Lấy dữ liệu doanh thu theo tháng (chỉ đơn hàng 'delivered')
+    sales_data = (Order.objects.filter(status='delivered')
+                  .annotate(month=TruncMonth('order_time'))  # Lấy tháng từ ngày đặt hàng
+                  .values('month')  # Nhóm theo tháng
+                  .annotate(sales=Sum('total_price'))  # Tính tổng doanh thu cho từng tháng
+                  .order_by('month'))  # Sắp xếp theo tháng
 
     context = {
         'total_orders': total_orders,
         'total_sales': total_sales,
         'total_profit': total_profit,
-        'sales_data': sales_data,
+        'sales_data': list(sales_data),  # Chuyển sales_data thành danh sách để dùng trong template
     }
+
     return render(request, 'dashboard_overview.html', context)
 
 # View cho danh sách sản phẩm
