@@ -44,6 +44,7 @@ urlpatterns = [
 
     # Đường dẫn cho danh sách người dùng
     path('users/', views.user_list_view, name='user_list'),
+    path('add-product/', views.add_product_view, name='add_product'),
 ]
 
 # Serve media files during development

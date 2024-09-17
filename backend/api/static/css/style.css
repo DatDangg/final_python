@@ -55,3 +55,12 @@ body {
 .chart-container {
     margin-top: 30px;
 }
+#moving-image {
+    position: fixed; /* Đảm bảo ảnh cố định trên trang */
+    width: 100px; /* Kích thước của ảnh */
+    height: auto;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Đảm bảo ảnh nằm trên tất cả các phần khác */
+    transition: transform 0s; /* Không có animation cho transform */
+}

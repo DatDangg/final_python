@@ -3,6 +3,7 @@
 {% block title %}Dashboard Overview{% endblock %}
 
 {% block content %}
+{% load static %}
 <h1>Dashboard Overview</h1>
 
 <div class="dashboard-stats">
@@ -19,17 +20,50 @@
         <p>${{ total_profit }}</p>
     </div>
 </div>
+<img id="moving-image" src="{% static 'images/lantern.png' %}" alt="Lantern">
+<script>
+    // Chạy animation di chuyển hình ảnh quanh trang
+    let img = document.getElementById("moving-image");
+    let posX = 0;
+    let posY = 0;
+    let directionX = 1;
+    let directionY = 1;
 
+    function moveImage() {
+        let containerWidth = window.innerWidth;
+        let containerHeight = window.innerHeight;
+
+        posX += directionX * 2; // Tốc độ di chuyển ngang
+        posY += directionY * 2; // Tốc độ di chuyển dọc
+
+        // Đổi hướng nếu chạm vào mép trình duyệt
+        if (posX + img.offsetWidth > containerWidth || posX < 0) {
+            directionX = -directionX;
+        }
+
+        if (posY + img.offsetHeight > containerHeight || posY < 0) {
+            directionY = -directionY;
+        }
+
+        // Cập nhật vị trí của hình ảnh
+        img.style.transform = `translate(${posX}px, ${posY}px)`;
+
+        // Lặp lại animation
+        requestAnimationFrame(moveImage);
+    }
+
+    moveImage(); // Bắt đầu animation
+</script>
 <!-- Biểu đồ doanh thu theo tháng -->
-<div class="chart-container">
+<!-- <div class="chart-container">
     <canvas id="salesChart"></canvas>
-</div>
+</div> -->
 
 <!-- Nhúng dữ liệu sales_data vào một thẻ script ẩn -->
-{{ sales_data|json_script:"sales-data" }}
+<!-- {{ sales_data|json_script:"sales-data" }} -->
 
 <!-- Script để render biểu đồ -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  <!-- Thư viện Chart.js -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
 <script>
     // Lấy dữ liệu từ thẻ script ẩn với ID 'sales-data'
     var salesData = JSON.parse(document.getElementById('sales-data').textContent);
@@ -56,6 +90,7 @@
             }
         }
     });
-</script>
+</script>  -->
+
 
 {% endblock %}

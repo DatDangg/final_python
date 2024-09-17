@@ -1,5 +1,6 @@
 from django import forms
 from .models import Product, ProductVariant, Category, Order
+from .models import Product, PhoneDetail, SmartwatchDetail, ComputerDetail, HeadphoneDetail, ProductVariant
 from django.core.exceptions import ValidationError
 
 class CategoryForm(forms.ModelForm):
@@ -38,3 +39,23 @@ class OrderStatusForm(forms.ModelForm):
         widgets = {
             'status': forms.Select(choices=Order.STATUS_CHOICES)  # Dropdown cho các trạng thái
         }
+
+class PhoneDetailForm(forms.ModelForm):
+    class Meta:
+        model = PhoneDetail
+        fields = ['cpu', 'main_camera', 'front_camera', 'battery_capacity', 'screen_size', 'refresh_rate', 'pixel_density', 'screen_type']
+
+class ComputerDetailForm(forms.ModelForm):
+    class Meta:
+        model = ComputerDetail
+        fields = ['processor', 'ram', 'graphics_card', 'screen_size', 'battery_life']
+
+class SmartwatchDetailForm(forms.ModelForm):
+    class Meta:
+        model = SmartwatchDetail
+        fields = ['strap_type', 'screen_size', 'battery_capacity', 'water_resistance', 'heart_rate_monitor']
+
+class HeadphoneDetailForm(forms.ModelForm):
+    class Meta:
+        model = HeadphoneDetail
+        fields = ['wireless', 'battery_life', 'noise_cancellation', 'driver_size']
