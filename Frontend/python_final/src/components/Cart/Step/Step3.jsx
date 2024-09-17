@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { CartContext } from "../../../context/CartContext";
 import axios from "axios";
 import "./step3.css";
 
 const Step3 = () => {
   const [cartItems, setCartItems] = useState([]);
+  const { clearCart } = useContext(CartContext); 
   const [paymentMethod, setPaymentMethod] = useState("qrCode");
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [shippingCost, setShippingCost] = useState(0);
@@ -108,6 +110,7 @@ const Step3 = () => {
       })
       .then(() => {
         console.log("Cart cleared successfully.");
+        clearCart(); 
         navigate("/order-confirmation");
       })
       .catch((error) => {
