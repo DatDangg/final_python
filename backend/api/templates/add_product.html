@@ -3,71 +3,82 @@
 {% block title %}Add Product{% endblock %}
 
 {% block content %}
-<h1>Add Product</h1>
+<h1 class="mb-4">Add Product</h1>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ product_form.as_p }}
-    {{ variant_formset.management_form }}  
-    
-    <div id="variant-formset">
-        {% for form in variant_formset %}
-            <h1>Variant {{ forloop.counter }}</h1>
-            <div class="variant-form">
-                {{ form.as_p }}
+    <div class="container">
+        <form class="row d-flex" method="POST" enctype="multipart/form-data">
+            <div class="col-md-5">
+                {% csrf_token %}
+
+                {{ product_form.as_p }}
+                {{ variant_formset.management_form }}
+
+                <div id="variant-formset">
+                    {% for form in variant_formset %}
+                        <h1>Variant {{ forloop.counter }}</h1>
+                        <div class="variant-form">
+                            {{ form.as_p }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <button class="btn btn-outline-dark mb-4" type="button" id="add-variant">Add Another Variant</button>
+
+                <div id="empty-form-template" style="display: none;">
+                    <h1>Variant __prefix__</h1>
+                    <div class="variant-form">
+                        {{ variant_formset.empty_form.as_p }}
+                    </div>
+                </div>
+
+                {{ image_formset.management_form }}
+
+                <div id="image-formset">
+                    {% for form in image_formset %}
+                        <div class="image-form">
+                            {{ form.as_p }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div id="empty-image-form-template" style="display: none;">
+                    <div class="image-form">
+                        {{ image_formset.empty_form.as_p }}
+                    </div>
+                </div>
+
+                <button class="btn btn-outline-dark mb-4" type="button" id="add-image">Add Another Image</button>
             </div>
-        {% endfor %}
-    </div>
-    
-    <button type="button" id="add-variant">Add Another Variant</button>
-    
-    <div id="empty-form-template" style="display: none;">
-        <h1>Variant __prefix__</h1>
-        <div class="variant-form">
-            {{ variant_formset.empty_form.as_p }}
-        </div>
-    </div>
+            <div class="col-md-3">
+                <div class="info">
+                    <div class="" id="phone-details" style="display: none;">
+                        <h4 class="mb-3 fw-lighter text-primary text-decoration-underline ">Phone Details</h4>
+                        {{ phone_detail_form.as_p }}
+                    </div>
 
-    {{ image_formset.management_form }}
+                    <div class="pt-3" id="computer-details" style="display: none;">
+                        <h4 class="mb-3 fw-lighter text-primary text-decoration-underline">Computer Details</h4>
+                        {{ computer_detail_form.as_p }}
+                    </div>
 
-    <div id="image-formset">
-        {% for form in image_formset %}
-            <div class="image-form">
-                {{ form.as_p }}
+                    <div class="pt-3" id="smartwatch-details" style="display: none;">
+                        <h4 class="mb-3 fw-lighter text-primary text-decoration-underline">Smartwatch Details</h4>
+                        {{ smartwatch_detail_form.as_p }}
+                    </div>
+
+                    <div class="pt-3" id="headphone-details" style="display: none;">
+                        <h4 class="mb-3 fw-lighter text-primary text-decoration-underline">Headphone Details</h4>
+                        {{ headphone_detail_form.as_p }}
+                    </div>
+                </div>
             </div>
-        {% endfor %}
+
+
+            <button class="btn btn-outline-dark" type="submit" style="margin-left: 10px;">Save Product</button>
+        </form>
     </div>
 
-    <div id="empty-image-form-template" style="display: none;">
-        <div class="image-form">
-            {{ image_formset.empty_form.as_p }}
-        </div>
-    </div>
 
-    <button type="button" id="add-image">Add Another Image</button>
-
-    <div id="phone-details" style="display: none;">
-        <h2>Phone Details</h2>
-        {{ phone_detail_form.as_p }}
-    </div>
-
-    <div id="computer-details" style="display: none;">
-        <h2>Computer Details</h2>
-        {{ computer_detail_form.as_p }}
-    </div>
-
-    <div id="smartwatch-details" style="display: none;">
-        <h2>Smartwatch Details</h2>
-        {{ smartwatch_detail_form.as_p }}
-    </div>
-
-    <div id="headphone-details" style="display: none;">
-        <h2>Headphone Details</h2>
-        {{ headphone_detail_form.as_p }}
-    </div>
-
-    <button type="submit">Save Product</button>
-</form>
 
 <script>
     document.getElementById('id_category').addEventListener('change', function () {
@@ -82,7 +93,7 @@
                     input.disabled = false;
                 });
             } else {
-                form.style.display = 'none'; 
+                form.style.display = 'none';
                 inputs.forEach(function(input) {
                     input.disabled = true;
                 });
@@ -111,7 +122,7 @@
     document.addEventListener('DOMContentLoaded', function () {
     let variantFormsetDiv = document.getElementById('variant-formset');
     let addVariantBtn = document.getElementById('add-variant');
-    let totalVariantForms = document.getElementById('id_form-TOTAL_FORMS'); 
+    let totalVariantForms = document.getElementById('id_form-TOTAL_FORMS');
     let variantFormIndex = totalVariantForms ? parseInt(totalVariantForms.value) : 0;
 
     addVariantBtn.addEventListener('click', function () {
@@ -123,14 +134,14 @@
         variantFormIndex++;
 
         if (totalVariantForms) {
-            totalVariantForms.value = variantFormIndex; 
+            totalVariantForms.value = variantFormIndex;
         }
     });
 
     let imageFormsetDiv = document.getElementById('image-formset');
     let addImageBtn = document.getElementById('add-image');
-    let totalImageForms = document.getElementById('id_image-TOTAL_FORMS');  
-    let imageFormIndex = totalImageForms ? parseInt(totalImageForms.value) : 0;  
+    let totalImageForms = document.getElementById('id_image-TOTAL_FORMS');
+    let imageFormIndex = totalImageForms ? parseInt(totalImageForms.value) : 0;
 
     addImageBtn.addEventListener('click', function () {
         let newImageFormHtml = document.getElementById('empty-image-form-template').innerHTML;
@@ -141,7 +152,7 @@
 
         imageFormIndex++;
         if (totalImageForms) {
-            totalImageForms.value = imageFormIndex;  
+            totalImageForms.value = imageFormIndex;
         }
     });
 });

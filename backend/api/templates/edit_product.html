@@ -3,22 +3,28 @@
 {% block title %}Edit Product{% endblock %}
 
 {% block content %}
-<h1>Edit Product</h1>
+    <h1 class="mb-2 pt-4">Edit Product</h1>
 
 <form method="POST">
     {% csrf_token %}
-    <div>
-        <h2>Product Information</h2>
-        {{ product_form.as_p }}  
-    </div>
+    <div class="container">
+        <div class="row d-flex gap-3">
+            <div class="col-md-6">
+                <h4 class="fw-lighter text-primary text-decoration-underline mb-3">Product Information</h4>
+                {{ product_form.as_p }}
+            </div>
+            <div class="col-md-4 ">
+                <h4 class="fw-lighter text-primary text-decoration-underline">Variant Information</h4>
+                {{ variant_form.as_p }}
+            </div>
+        </div>
 
-    <div>
-        <h2>Variant Information</h2>
-        {{ variant_form.as_p }}  
     </div>
+    <button class=" btn btn-outline-dark" style="margin-left: 10px;" type="submit">Save Changes</button>
 
-    <button type="submit">Save Changes</button>
+
+
+
 </form>
 
-<a href="{% url 'product_list' %}">Cancel</a> 
 {% endblock %}

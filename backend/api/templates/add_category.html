@@ -3,14 +3,16 @@
 {% block title %}Thêm Category{% endblock %}
 
 {% block content %}
-<h1>Thêm Category Mới</h1>
 
-<form method="POST" enctype="multipart/form-data">
+    <a style="font-size:18px;" href="{% url 'category_list' %}">Back</a>
+
+<h1 class="pt-3">Thêm Category Mới</h1>
+
+<form class="pt-3 mb-4" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }} 
     
-    <button type="submit">Thêm Category</button>
+    <button class="btn btn-outline-dark" type="submit">Thêm Category</button>
 </form>
 
-<a href="{% url 'category_list' %}">Quay lại danh sách Category</a>  
 {% endblock %}
