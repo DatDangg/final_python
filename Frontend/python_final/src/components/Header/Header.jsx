@@ -87,10 +87,10 @@ function Header() {
           Home
         </Link>
         <Link
-          to="/about"
+          to="/product/:id"
           className={`nav-item ${currentPath === '/about' ? 'active' : ''}`}
         >
-          About
+          Product
         </Link>
         <Link
           to="/contact"
@@ -98,12 +98,7 @@ function Header() {
         >
           Contact Us
         </Link>
-        <Link
-          to="/blog"
-          className={`nav-item ${currentPath === '/blog' ? 'active' : ''}`}
-        >
-          Blog
-        </Link>
+
       </div>
       <div className="icons">
         <Link to="/wishlist">
