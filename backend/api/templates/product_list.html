@@ -4,6 +4,7 @@
 
 {% block content %}
 <h1>Product List</h1>
+<a href="{% url 'add_product' %}" class="btn btn-primary">Thêm sản phẩm</a> <!-- Nút để chuyển tới trang Thêm sản phẩm -->
 <table>
     <thead>
         <tr>
@@ -29,7 +30,7 @@
             </td>
             <td>
                 {% if item.detail %}
-                CPU: {{ item.detail.cpu }}{% if item.detail.main_camera %}, Camera chính: {{ item.detail.main_camera }}{% endif %}
+                {% if item.detail.cpu %}CPU: {{ item.detail.cpu }} {% endif %}{% if item.detail.main_camera %}, Camera chính: {{ item.detail.main_camera }}{% endif %}
                 {% else %}
                 No details available
                 {% endif %}

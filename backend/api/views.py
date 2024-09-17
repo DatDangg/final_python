@@ -454,3 +454,60 @@ def order_list_view(request):
             return redirect('order_list')  # Sau khi lưu, điều hướng lại danh sách đơn hàng
 
     return render(request, 'order_list.html', {'orders': orders})
+
+from django.shortcuts import render, redirect
+from .models import Product, PhoneDetail, ComputerDetail, SmartwatchDetail, HeadphoneDetail, Category
+from .forms import ProductForm, PhoneDetailForm, ComputerDetailForm, SmartwatchDetailForm, HeadphoneDetailForm, ProductVariantForm
+
+def add_product_view(request):
+    if request.method == 'POST':
+        product_form = ProductForm(request.POST)
+        variant_form = ProductVariantForm(request.POST)
+
+        if product_form.is_valid() and variant_form.is_valid():
+            product = product_form.save()
+            variant = variant_form.save(commit=False)
+            variant.product = product
+            variant.save()
+
+            # Dựa vào category, ta sẽ hiển thị form chi tiết tương ứng
+            category_name = product.category.name
+
+            if category_name == "Smart Phones":
+                phone_detail_form = PhoneDetailForm(request.POST)
+                if phone_detail_form.is_valid():
+                    phone_detail = phone_detail_form.save(commit=False)
+                    phone_detail.product = product
+                    phone_detail.save()
+            elif category_name == "Computers":
+                computer_detail_form = ComputerDetailForm(request.POST)
+                if computer_detail_form.is_valid():
+                    computer_detail = computer_detail_form.save(commit=False)
+                    computer_detail.product = product
+                    computer_detail.save()
+            elif category_name == "Smart Watches":
+                smartwatch_detail_form = SmartwatchDetailForm(request.POST)
+                if smartwatch_detail_form.is_valid():
+                    smartwatch_detail = smartwatch_detail_form.save(commit=False)
+                    smartwatch_detail.product = product
+                    smartwatch_detail.save()
+            elif category_name == "Headphones":
+                headphone_detail_form = HeadphoneDetailForm(request.POST)
+                if headphone_detail_form.is_valid():
+                    headphone_detail = headphone_detail_form.save(commit=False)
+                    headphone_detail.product = product
+                    headphone_detail.save()
+
+            return redirect('product_list')
+    else:
+        product_form = ProductForm()
+        variant_form = ProductVariantForm()
+
+    return render(request, 'add_product.html', {
+        'product_form': product_form,
+        'variant_form': variant_form,
+        'phone_detail_form': PhoneDetailForm(),
+        'computer_detail_form': ComputerDetailForm(),
+        'smartwatch_detail_form': SmartwatchDetailForm(),
+        'headphone_detail_form': HeadphoneDetailForm(),
+    })

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+<h1>Add Product</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ product_form.as_p }}
+    {{ variant_form.as_p }}
+
+    <!-- Form chi tiết cho Smart Phones -->
+    <div id="phone-details" style="display: none;">
+        <h2>Phone Details</h2>
+        {{ phone_detail_form.as_p }}
+    </div>
+
+    <!-- Form chi tiết cho Computers -->
+    <div id="computer-details" style="display: none;">
+        <h2>Computer Details</h2>
+        {{ computer_detail_form.as_p }}
+    </div>
+
+    <!-- Form chi tiết cho Smart Watches -->
+    <div id="smartwatch-details" style="display: none;">
+        <h2>Smartwatch Details</h2>
+        {{ smartwatch_detail_form.as_p }}
+    </div>
+
+    <!-- Form chi tiết cho Headphones -->
+    <div id="headphone-details" style="display: none;">
+        <h2>Headphone Details</h2>
+        {{ headphone_detail_form.as_p }}
+    </div>
+
+    <button type="submit">Save Product</button>
+</form>
+
+<script>
+    document.getElementById('id_category').addEventListener('change', function () {
+        var category = this.options[this.selectedIndex].text;
+
+        // Tạo hàm để bật hoặc tắt các form dựa trên category đã chọn
+        function toggleFormDetails(formId, enabled) {
+            var form = document.getElementById(formId);
+            var inputs = form.querySelectorAll('input, select, textarea');
+            if (enabled) {
+                form.style.display = 'block'; // Hiển thị form
+                inputs.forEach(function(input) {
+                    input.disabled = false; // Kích hoạt lại input
+                });
+            } else {
+                form.style.display = 'none'; // Ẩn form
+                inputs.forEach(function(input) {
+                    input.disabled = true; // Vô hiệu hóa input để nó không được kiểm tra
+                });
+            }
+        }
+
+        // Ẩn tất cả các form chi tiết trước
+        toggleFormDetails('phone-details', false);
+        toggleFormDetails('computer-details', false);
+        toggleFormDetails('smartwatch-details', false);
+        toggleFormDetails('headphone-details', false);
+
+        // Hiển thị form tương ứng với Category đã chọn và kích hoạt các input
+        if (category == 'Smart Phones') {
+            toggleFormDetails('phone-details', true);
+        } else if (category == 'Computers') {
+            toggleFormDetails('computer-details', true);
+        } else if (category == 'Smart Watches') {
+            toggleFormDetails('smartwatch-details', true);
+        } else if (category == 'Headphones') {
+            toggleFormDetails('headphone-details', true);
+        }
+    });
+
+    // Gọi hàm khi trang load để đảm bảo form tương ứng được hiển thị đúng
+    document.getElementById('id_category').dispatchEvent(new Event('change'));
+</script>
+
+{% endblock %}
