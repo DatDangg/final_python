@@ -1,74 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { CartContext } from "../../context/CartContext"; // Đường dẫn tới CartContext
 import "./style.css";
 
 function Cart() {
-  const [cartItems, setCartItems] = useState([]);
+  const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext); // Sử dụng removeFromCart và updateQuantity từ CartContext
   const [error, setError] = useState(null);
-  const token = localStorage.getItem("token");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (token) {
-      axios
-        .get("http://127.0.0.1:8000/api/cart/", {
-          headers: {
-            Authorization: `Token ${token}`,
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          setCartItems(response.data);
-        })
-        .catch((error) => {
-          setError("Error fetching cart items");
-        });
-    }
-  }, [token]);
-
-  const handleRemoveFromCart = (itemId) => {
-    axios
-      .delete(`http://127.0.0.1:8000/api/cart/${itemId}/`, {
-        headers: {
-          Authorization: `Token ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-      .then(() => {
-        setCartItems(cartItems.filter((item) => item.id !== itemId));
-      })
-      .catch((error) => console.error("Error removing item from cart:", error));
-  };
 
   const handleQuantityChange = (itemId, newQuantity) => {
     const quantity = parseInt(newQuantity, 10);
     const item = cartItems.find((item) => item.id === itemId);
-    console.log(item)
-    console.log("Stock:", item.variant.quantity);
-    console.log("Current Quantity:", quantity);
 
     if (quantity > 0 && quantity <= item.variant.quantity) {
-
-      axios
-        .patch(
-          `http://127.0.0.1:8000/api/cart/${itemId}/`,
-          { quantity: quantity },
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then(() => {
-          setCartItems(
-            cartItems.map((item) =>
-              item.id === itemId ? { ...item, quantity: quantity } : item
-            )
-          );
-        })
-        .catch((error) => console.error("Error updating quantity:", error));
+      updateQuantity(itemId, quantity); // Cập nhật số lượng thông qua context
     } else if (quantity > item.variant.quantity) {
       alert("You cannot add more than the available stock.");
     }
@@ -79,20 +24,21 @@ function Cart() {
   }
 
   if (cartItems.length === 0) {
-
-    return <div className="text-center">
-      <img
+    return (
+      <div className="text-center">
+        <img
           src="/photos/cart_empty.png"
           alt="cart_empty"
           className="cart_image align-item-center"
-      />
-      <h3>Giỏ hàng của bạn trống</h3>
-    </div>;
+        />
+        <h3>Giỏ hàng của bạn trống</h3>
+      </div>
+    );
   }
 
   const totalAmount = cartItems.reduce(
-      (acc, item) => acc + Number(item.variant?.listed_price) * item.quantity,
-      0
+    (acc, item) => acc + Number(item.variant?.listed_price) * item.quantity,
+    0
   );
 
   const handleCheckout = () => {
@@ -159,7 +105,7 @@ function Cart() {
                   <span>{item.variant.listed_price} VND</span>
                 </div>
                 <div className="cart-item-remove">
-                  <button onClick={() => handleRemoveFromCart(item.id)}>
+                  <button onClick={() => removeFromCart(item.id)}> {/* Sử dụng hàm removeFromCart */}
                     X
                   </button>
                 </div>

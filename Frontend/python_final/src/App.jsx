@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import "./index.css";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthContext, AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import Header from "./components/Header/Header";
 import Banner from "./components/Banner/Banner";
 import Categories from "./components/Categories/Categories";
@@ -31,46 +32,48 @@ function ProtectedRoute({ children }) {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <div className="app">
-          <Routes>
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/auth/login" element={<Login />} />
-            <Route path="/auth/signup" element={<Signup />} />
-            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-            <Route
-              path="/*"
-              element={
-                <ProtectedRoute>
-                  <Header />
-                  <Routes>
-                    <Route
-                      path="/"
-                      element={
-                        <>
-                          <Banner />
-                          <Categories />
-                        </>
-                      }
-                    />
-                    <Route path="/category/:id" element={<CategoryPage />} />
-                    <Route path="/product/:id" element={<ProductDetail />} />
-                    <Route path="/search" element={<SearchPage />} />
-                    <Route path="/profile" element={<UserProfile />} />
-                    <Route path="/wishlist" element={<WishList />} />
-                    <Route path="/cart" element={<Cart />} />
-                    <Route path="/checkout/address" element={<Step1 />} />
-                    <Route path="/checkout/shipping" element={<Step2 />} />
-                    <Route path="/checkout/payment" element={<Step3 />} />
-                    <Route path="/order/:orderId" element={<Order />} />
-                  </Routes>
-                  <Footer/>
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </div>
-      </BrowserRouter>
+      <CartProvider>
+        <BrowserRouter>
+          <div className="app">
+            <Routes>
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/auth/login" element={<Login />} />
+              <Route path="/auth/signup" element={<Signup />} />
+              <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+              <Route
+                path="/*"
+                element={
+                  <ProtectedRoute>
+                    <Header />
+                    <Routes>
+                      <Route
+                        path="/"
+                        element={
+                          <>
+                            <Banner />
+                            <Categories />
+                          </>
+                        }
+                      />
+                      <Route path="/category/:id" element={<CategoryPage />} />
+                      <Route path="/product/:id" element={<ProductDetail />} />
+                      <Route path="/search" element={<SearchPage />} />
+                      <Route path="/profile" element={<UserProfile />} />
+                      <Route path="/wishlist" element={<WishList />} />
+                      <Route path="/cart" element={<Cart />} />
+                      <Route path="/checkout/address" element={<Step1 />} />
+                      <Route path="/checkout/shipping" element={<Step2 />} />
+                      <Route path="/checkout/payment" element={<Step3 />} />
+                      <Route path="/order/:orderId" element={<Order />} />
+                    </Routes>
+                    <Footer/>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </CartProvider>
     </AuthProvider>
   );
 }

@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext  } from "react";
 import { useParams, Link } from "react-router-dom";
+import { CartContext } from "../../context/CartContext";
 import axios from "axios";
 import "./style.css";
 import Slider from "react-slick";
@@ -13,11 +14,12 @@ function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState("");
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [cartItems, setCartItems] = useState([]);
+  // const [cartItems, setCartItems] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null); // Thêm trạng thái cho biến thể được chọn
   const token = localStorage.getItem("token");
   const [categoryName, setCategoryName] = useState(location.state?.categoryName || "Category");
+  const { cartItems, setCartItems, addToCart } = useContext(CartContext);
   // Slides
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -180,66 +182,56 @@ function ProductDetail() {
   };
 
   const handleAddToCart = () => {
-    if (token) {
-      if (!selectedVariant) {
-        alert("Please select a variant before adding to cart.");
-        return;
-      }
+    if (!selectedVariant) {
+      alert("Please select a variant before adding to cart.");
+      return;
+    }
   
-      // Kiểm tra số lượng sản phẩm trong kho
-      const availableQuantity = selectedVariant.quantity;
+    const availableQuantity = selectedVariant.quantity;
   
-      // Lấy sản phẩm hiện tại trong giỏ hàng của biến thể đang chọn (nếu có)
-      const currentCartItem = cartItems.find(
-        (item) => item.product.id === product.id && item.variant.id === selectedVariant.id
-      );
+    // Kiểm tra sản phẩm hiện tại trong giỏ hàng của biến thể đã chọn
+    const currentCartItem = cartItems.find(
+      (item) => item.product.id === product.id && item.variant.id === selectedVariant.id
+    );
   
-      // Nếu biến thể đã có trong giỏ hàng, lấy số lượng hiện tại
-      const currentCartQuantity = currentCartItem ? currentCartItem.quantity : 0;
+    const currentCartQuantity = currentCartItem ? currentCartItem.quantity : 0;
+    const newQuantity = currentCartQuantity + 1;
   
-      // Tổng số lượng sau khi thêm sản phẩm
-      const newQuantity = currentCartQuantity + 1;
+    if (newQuantity > availableQuantity) {
+      alert("Số lượng sản phẩm trong giỏ hàng đã đạt tối đa");
+      return;
+    }
   
-      // Kiểm tra nếu tổng số lượng sau khi thêm lớn hơn số lượng tồn kho
-      if (newQuantity > availableQuantity) {
-        alert(`Số lượng sản phẩm trong giỏ hàng đã đạt tối đa`);
-        return;
-      }
-  
-      // Nếu không vượt quá, tiến hành thêm sản phẩm vào giỏ hàng
-      axios
-        .post(
-          "http://127.0.0.1:8000/api/cart/",
-          { product_id: product.id, variant_id: selectedVariant.id, quantity: 1 },
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          // Cập nhật giỏ hàng với sản phẩm mới thêm
+    axios
+      .post(
+        "http://127.0.0.1:8000/api/cart/",
+        { product_id: product.id, variant_id: selectedVariant.id, quantity: 1 },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        // Nếu currentCartItem không tồn tại, thêm sản phẩm mới vào giỏ hàng
+        if (!currentCartItem) {
+          setCartItems([...cartItems, response.data]);
+        } else {
+          // Nếu biến thể đã có trong giỏ hàng, chỉ cập nhật số lượng
           const updatedCart = cartItems.map((item) =>
             item.product.id === product.id && item.variant.id === selectedVariant.id
-              ? { ...item, quantity: item.quantity + 1 }  // Cập nhật số lượng
+              ? { ...item, quantity: item.quantity + 1 } // Cập nhật số lượng
               : item
           );
-          if (!currentCartItem) {
-            // Nếu biến thể này chưa có trong giỏ hàng thì thêm nó vào
-            setCartItems([...cartItems, response.data]);
-          } else {
-            // Nếu biến thể đã có trong giỏ hàng, chỉ cập nhật số lượng
-            setCartItems(updatedCart);
-          }
+          setCartItems(updatedCart);
+        }
   
-          console.log("Product added to cart:", response.data);
-        })
-        .catch((error) => console.error("Error adding to cart:", error));
-    } else {
-      console.error("No token found");
-    }
+        console.log("Product added to cart:", response.data);
+      })
+      .catch((error) => console.error("Error adding to cart:", error));
   };
+  
   
   
   
