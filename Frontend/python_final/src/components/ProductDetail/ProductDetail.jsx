@@ -228,9 +228,6 @@ function ProductDetail() {
                   {categoryName}
                 </Link>
               </li>
-              <li>
-                {product.brand}
-              </li>
               <li>{product.title}</li>
             </ul>
           </nav>
@@ -245,7 +242,7 @@ function ProductDetail() {
                           {product.images.map((image, index) => (
                               <div key={index}>
                                 <img
-                                    className="card-img-top card-img"
+                                    className="card-img-top card-img max-height"
                                     src={image.image}
                                     alt={`Slide ${index + 1}`}
                                     style={{ maxWidth: "100%", height: "auto" }}
@@ -454,7 +451,7 @@ function ProductDetail() {
           {/*product-bottom-detail*/}
           <div className="container">
             <div className="row d-flex pt-5">
-              <div className="col product-detail__bottom">
+              <div className="col product-detail__bottom1">
                 <h2 className="fw-bold">Details</h2>
                 <p className="pt-3">{product.description}</p>
 

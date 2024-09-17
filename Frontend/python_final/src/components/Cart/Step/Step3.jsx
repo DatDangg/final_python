@@ -142,111 +142,127 @@ const Step3 = () => {
   
 
   return (
-    <div className="step3-container container">
-      <div className="summary-section">
-        <h2>Summary</h2>
-        {cartItems.map((item) => {
-          const primaryImage =
-            item.product.images.find((image) => image.is_primary)?.image ||
-            item.product.images[0]?.image;
-          return(
-          <div key={item.id} className="cart-item">
-            <img
-              src={`http://localhost:8000${primaryImage}`}
-              alt={item.product.title}
-            />
-            <div className="item-details">
-              <p>{item.product.title}</p>
+      <div className="step3-container container gap-4">
+        {/*section-left*/}
+        <div className="summary-section col-md-6">
+          {/*summary*/}
+          <h2 className="fw-bold">Order Details</h2>
+          {cartItems.map((item) => {
+            const primaryImage =
+                item.product.images.find((image) => image.is_primary)?.image ||
+                item.product.images[0]?.image;
+            return (
+                <div key={item.id} className="cart-item">
+                  <img
+                      src={`http://localhost:8000${primaryImage}`}
+                      alt={item.product.title}
+                  />
+                  <div className="item-details">
+                    <p>{item.product.title}</p>
+                    <p>
+                      {item.quantity} x {item.variant.listed_price} VND
+                    </p>
+                  </div>
+                </div>
+            );
+          })}
+        </div>
+
+        {/*section-right*/}
+        <div className="payment-section col-md-6">
+          {/*address*/}
+          <div className="right-top">
+            <div className="address-section">
+              <h3 className="fw-bold">Address</h3>
+              <div className="text-address">
+                {selectedAddress ? (
+                    <p>
+                      {selectedAddress.full_name}, {selectedAddress.specific_address},{" "}
+                      {selectedAddress.phone_number}
+                    </p>
+                ) : (
+                    <p>No address selected</p>
+                )}
+              </div>
+            </div>
+            <div className="price-details">
+              <h3 className="fw-bold mb-2">Summary</h3>
               <p>
-                {item.quantity} x {item.variant.listed_price} VND
+                Subtotal:{" "}
+                {cartItems.reduce(
+                    (total, item) =>
+                        total + item.variant.listed_price * item.quantity,
+                    0
+                )}{" "}
+                VND
               </p>
+              <p>Estimated Tax: 50 VND</p>
+              <p>Estimated Shipping & Handling: {shippingCost} VND</p>
+              <h3 className="fw-bold pt-3">Total: {calculateTotal()} VND</h3>
             </div>
           </div>
-          );
-        })}
-        <div className="address-section">
-          <h3>Address</h3>
-          {selectedAddress ? (
-            <p>
-              {selectedAddress.full_name}, {selectedAddress.specific_address},{" "}
-              {selectedAddress.phone_number}
-            </p>
-          ) : (
-            <p>No address selected</p>
-          )}
+
+          {/*payment*/}
+          <div className="right-bottom mb-4">
+            <h2 className="mb-4 fw-bold">Payment</h2>
+            <div className="payment-methods">
+              <button
+                  className={paymentMethod === "qrCode" ? "active" : ""}
+                  onClick={() => setPaymentMethod("qrCode")}
+              >
+                QR Code
+              </button>
+              <button
+                  className={paymentMethod === "cashOnDelivery" ? "active" : ""}
+                  onClick={() => setPaymentMethod("cashOnDelivery")}
+              >
+                Cash on Delivery
+              </button>
+            </div>
+
+            {paymentMethod === "qrCode" && !qrCodeVisible && (
+                <div className="qr-code-prompt pt-3">
+                  <button onClick={() => setQrCodeVisible(true)}>
+                    Confirm and Show QR Code
+                  </button>
+                </div>
+            )}
+
+            {qrCodeVisible && (
+                <div className="qr-code-details pt-3">
+                  <p>Scan the QR code to complete your payment.</p>
+                  <img
+                      src={`https://qr.sepay.vn/img?acc=4220112003&bank=MBBANK&amount=${calculateTotal()}`}
+                      alt="QR Code"
+                  />
+                  <button className="btn btn-outline-primary" onClick={handleCheckTransaction}>Check Transaction</button>
+                </div>
+            )}
+
+            {paymentMethod === "cashOnDelivery" && (
+                <div className="cash-on-delivery-details">
+                  <p className="pt-4">You will pay in cash upon receiving the order.</p>
+                  <button className="pay-button" onClick={handleConfirmOrder}>
+                    Confirm Order
+                  </button>
+                </div>
+
+            )}
+            <div className="actions">
+              {transactionSuccess ? (
+                  <button className="pay-button" onClick={handleConfirmOrder}>
+                    Confirm Order
+                  </button>
+              ) : null}
+            </div>
+
+
+          </div>
+          <button className="back btn btn-outline-dark"  onClick={() => navigate("/checkout/shipping")}>Back</button>
+
         </div>
 
-        <div className="price-details">
-          <p>
-            Subtotal:{" "}
-            {cartItems.reduce(
-              (total, item) =>
-                total + item.variant.listed_price * item.quantity,
-              0
-            )}{" "}
-            VND
-          </p>
-          <p>Estimated Tax: 50 VND</p>
-          <p>Estimated Shipping & Handling: {shippingCost} VND</p>
-          <h3>Total: {calculateTotal()} VND</h3>
-        </div>
       </div>
-
-      <div className="payment-section">
-        <h2>Payment</h2>
-        <div className="payment-methods">
-          <button
-            className={paymentMethod === "qrCode" ? "active" : ""}
-            onClick={() => setPaymentMethod("qrCode")}
-          >
-            QR Code
-          </button>
-          <button
-            className={paymentMethod === "cashOnDelivery" ? "active" : ""}
-            onClick={() => setPaymentMethod("cashOnDelivery")}
-          >
-            Cash on Delivery
-          </button>
-        </div>
-
-        {paymentMethod === "qrCode" && !qrCodeVisible && (
-          <div className="qr-code-prompt">
-            <button onClick={() => setQrCodeVisible(true)}>
-              Confirm and Show QR Code
-            </button>
-          </div>
-        )}
-
-        {qrCodeVisible && (
-          <div className="qr-code-details">
-            <p>Scan the QR code to complete your payment.</p>
-            <img
-              src={`https://qr.sepay.vn/img?acc=4220112003&bank=MBBANK&amount=${calculateTotal()}`}
-              alt="QR Code"
-            />
-            <button onClick={handleCheckTransaction}>Check Transaction</button>
-          </div>
-        )}
-
-        {paymentMethod === "cashOnDelivery" && (
-          <div className="cash-on-delivery-details">
-            <p>You will pay in cash upon receiving the order.</p>
-            <button className="pay-button" onClick={handleConfirmOrder}>
-              Confirm Order
-            </button>
-          </div>
-        )}
-
-        <div className="actions">
-          <button onClick={() => navigate("/checkout/shipping")}>Back</button>
-          {transactionSuccess ? (
-            <button className="pay-button" onClick={handleConfirmOrder}>
-              Confirm Order
-            </button>
-          ) : null}
-        </div>
-      </div>
-    </div>
   );
 };
 
