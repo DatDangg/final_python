@@ -1,5 +1,7 @@
+import requests
 from .models import Product, Category, WishlistItem, CartItem, Address, Order, Review, ProductImage, PhoneDetail, HeadphoneDetail, ComputerDetail, SmartwatchDetail, ProductVariant
 from .serializers import ProductSerializer, CategorySerializer, UserSerializer, CartItemSerializer, AddressSerializer, OrderSerializer, ReviewSerializer, PhoneDetailSerializer, ComputerDetailSerializer, HeadphoneDetailSerializer, SmartwatchDetailSerializer
+from .forms import  ProductForm, CategoryForm, OrderStatusForm, PhoneDetailForm, ComputerDetailForm, SmartwatchDetailForm, HeadphoneDetailForm, ProductVariantForm, ProductImageFormSet, ProductVariantFormSet
 from rest_framework import viewsets, filters, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -7,18 +9,20 @@ from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
-import requests
+from django.db.models import Sum
+from django.db.models.functions import TruncMonth
 from datetime import datetime, timedelta
+from decimal import Decimal
 
 class ProductListView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [filters.SearchFilter]
-    filterset_fields = ['category']  # Cho phép lọc theo category
+    filterset_fields = ['category']  
     search_fields = ['title', 'brand', 'description']
 
     @action(detail=True, methods=['patch'], url_path='update-variant')
@@ -40,7 +44,6 @@ class ProductListView(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         product_data = serializer.data
         
-        # Thêm chi tiết sản phẩm dựa trên loại sản phẩm
         if instance.category.name == "Smart Phones":
             phone_details = PhoneDetail.objects.filter(product=instance).first()
             if phone_details:
@@ -101,7 +104,7 @@ def login(request):
 class UserListView(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]  # Chỉ cho phép người dùng đã xác thực truy cập
+    permission_classes = [IsAuthenticated]
 
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
@@ -202,7 +205,6 @@ class CartItemView(viewsets.ViewSet):
         
         return Response({'error': 'Quantity not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-
 class AddressView(viewsets.ModelViewSet):
     serializer_class = AddressSerializer
     permission_classes = [IsAuthenticated]
@@ -220,11 +222,9 @@ class OrderView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # Return only the orders belonging to the authenticated user
         return Order.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        # Gán user từ request.user vào serializer
         serializer.save(user=self.request.user)
 
 class ReviewView(viewsets.ModelViewSet):
@@ -262,7 +262,6 @@ def check_transaction(request):
         "Authorization": "Bearer DV639G7MCQYBSDKIUVOXPWKL7XRNF21YPD5YYOF6LVQUCFOOEZRIAHAXAAGTZXCI"
     }
 
-    # Lấy tổng tiền từ yêu cầu React
     total_amount = request.GET.get('total_amount')
     
     # Lấy thời gian hiện tại và trừ đi 2 phút
@@ -270,7 +269,6 @@ def check_transaction(request):
     two_minutes_ago = current_time - timedelta(minutes=2)
 
     try:
-        # Gửi yêu cầu GET đến SePay API để lấy danh sách giao dịch
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
             transactions = response.json().get("transactions", [])
@@ -304,56 +302,33 @@ def check_transaction(request):
             "error": str(e)
         }, status=500)
 
-# myapp/views.py
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product, Category, Order, User  # Import các model cần thiết
-from .forms import ProductForm, CategoryForm  # Import các form cần thiết
-from django.shortcuts import render
-from django.db.models import Sum
-from .models import Order, Product, Category
-from django.contrib.auth.models import User
-from decimal import Decimal
-from django.db.models.functions import TruncMonth
-from .forms import ProductForm, ProductVariantForm  # Form cho sản phẩm và biến thể
-
-
-# View cho trang Dashboard (Tổng quan)
-
-# View cho trang dashboard
 def dashboard_view(request):
-    # Chỉ đếm các đơn hàng có trạng thái 'delivered'
     total_orders = Order.objects.filter(status='delivered').count()
-
-    # Chỉ tính tổng doanh thu từ các đơn hàng có trạng thái 'delivered'
-    total_sales = Order.objects.filter(status='delivered').aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
-    
+    total_sales = Order.objects.filter(status='delivered').aggregate(total_sales=Sum('total_price'))['total_sales'] or 0  
     # Tính lợi nhuận dựa trên tổng doanh thu (giả sử lợi nhuận là 10%)
-    total_profit = total_sales * Decimal('0.1')  # Lợi nhuận giả định 10% tổng doanh thu
+    total_profit = total_sales * Decimal('0.1')
 
     # Lấy dữ liệu doanh thu theo tháng (chỉ đơn hàng 'delivered')
     sales_data = (Order.objects.filter(status='delivered')
-                  .annotate(month=TruncMonth('order_time'))  # Lấy tháng từ ngày đặt hàng
-                  .values('month')  # Nhóm theo tháng
-                  .annotate(sales=Sum('total_price'))  # Tính tổng doanh thu cho từng tháng
-                  .order_by('month'))  # Sắp xếp theo tháng
+                  .annotate(month=TruncMonth('order_time'))  
+                  .annotate(sales=Sum('total_price'))  # Tính
+                  .order_by('month')) 
 
     context = {
         'total_orders': total_orders,
         'total_sales': total_sales,
         'total_profit': total_profit,
-        'sales_data': list(sales_data),  # Chuyển sales_data thành danh sách để dùng trong template
+        'sales_data': list(sales_data),  
     }
 
     return render(request, 'dashboard_overview.html', context)
 
-# View cho danh sách sản phẩm
 def product_list_view(request):
-    products = Product.objects.prefetch_related('variants').all()  # Lấy tất cả sản phẩm và biến thể liên quan
+    products = Product.objects.prefetch_related('variants').all()  
 
-    # Tạo danh sách chứa thông tin từng sản phẩm và biến thể của nó
     product_data = []
     for product in products:
-        for variant in product.variants.all():  # Duyệt qua từng biến thể
+        for variant in product.variants.all():
             product_detail = None
             if hasattr(product, 'phonedetail'):
                 product_detail = {
@@ -376,7 +351,6 @@ def product_list_view(request):
                     'screen_size': product.smartwatchdetail.screen_size,
                 }
 
-            # Thêm từng biến thể vào danh sách
             product_data.append({
                 'product': product,
                 'variant': variant,
@@ -385,92 +359,33 @@ def product_list_view(request):
 
     return render(request, 'product_list.html', {'product_data': product_data})
 
-# View cho chỉnh sửa sản phẩm
-def edit_product(request, product_id, variant_id):
-    product = get_object_or_404(Product, id=product_id)
-    variant = get_object_or_404(ProductVariant, id=variant_id)  # Lấy biến thể cụ thể
-
-    if request.method == 'POST':
-        product_form = ProductForm(request.POST, instance=product)
-        variant_form = ProductVariantForm(request.POST, instance=variant)
-
-        if product_form.is_valid() and variant_form.is_valid():
-            product_form.save()
-            variant_form.save()
-            return redirect('product_list')  # Sau khi lưu, quay lại danh sách sản phẩm
-    else:
-        product_form = ProductForm(instance=product)
-        variant_form = ProductVariantForm(instance=variant)
-
-    return render(request, 'edit_product.html', {
-        'product_form': product_form,
-        'variant_form': variant_form,  # Chỉ truyền form của một biến thể cụ thể vào template
-    })
-
-# View cho danh sách danh mục
-def category_list_view(request):
-    categories = Category.objects.all()  # Lấy tất cả danh mục từ database
-    return render(request, 'category_list.html', {'categories': categories})
-
-# View cho chỉnh sửa danh mục
-def edit_category(request, category_id):
-    category = get_object_or_404(Category, id=category_id)
-    
-    if request.method == 'POST':
-        form = CategoryForm(request.POST, request.FILES, instance=category)
-        if form.is_valid():
-            form.save()
-            return redirect('category_list')  # Điều hướng về trang danh sách danh mục sau khi lưu
-    else:
-        form = CategoryForm(instance=category)
-    
-    return render(request, 'edit_category.html', {'form': form})
-
-# View cho quản lý đơn hàng
-def order_list_view(request):
-    orders = Order.objects.all()  # Lấy tất cả đơn hàng
-    return render(request, 'order_list.html', {'orders': orders})
-
-# View cho danh sách người dùng
-def user_list_view(request):
-    users = User.objects.all()  # Lấy tất cả người dùng
-    return render(request, 'user_list.html', {'users': users})
-
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Order
-from .forms import OrderStatusForm
-
-def order_list_view(request):
-    orders = Order.objects.all()  # Lấy danh sách tất cả các đơn hàng
-
-    # Kiểm tra nếu người dùng gửi form để cập nhật trạng thái
-    if request.method == 'POST':
-        order_id = request.POST.get('order_id')  # Lấy ID của đơn hàng từ form
-        order = get_object_or_404(Order, id=order_id)  # Lấy đơn hàng dựa trên ID
-        form = OrderStatusForm(request.POST, instance=order)  # Form cập nhật trạng thái của đơn hàng
-
-        if form.is_valid():
-            form.save()  # Lưu trạng thái mới vào cơ sở dữ liệu
-            return redirect('order_list')  # Sau khi lưu, điều hướng lại danh sách đơn hàng
-
-    return render(request, 'order_list.html', {'orders': orders})
-
-from django.shortcuts import render, redirect
-from .models import Product, PhoneDetail, ComputerDetail, SmartwatchDetail, HeadphoneDetail, Category
-from .forms import ProductForm, PhoneDetailForm, ComputerDetailForm, SmartwatchDetailForm, HeadphoneDetailForm, ProductVariantForm
-
 def add_product_view(request):
     if request.method == 'POST':
         product_form = ProductForm(request.POST)
-        variant_form = ProductVariantForm(request.POST)
+        variant_formset = ProductVariantFormSet(request.POST, request.FILES)
+        image_formset = ProductImageFormSet(request.POST, request.FILES)
 
-        if product_form.is_valid() and variant_form.is_valid():
+        if product_form.is_valid() and variant_formset.is_valid() and image_formset.is_valid():
             product = product_form.save()
-            variant = variant_form.save(commit=False)
-            variant.product = product
-            variant.save()
 
-            # Dựa vào category, ta sẽ hiển thị form chi tiết tương ứng
+            variants = variant_formset.save(commit=False)  
+            for variant in variants:
+                variant.product = product
+                variant.save()
+
+            images = image_formset.save(commit=False)
+            for image in images:
+                image.product = product
+                image.save()
+
+            for form in variant_formset.deleted_forms:
+                if form.instance.pk:
+                    form.instance.delete()
+
+            for form in image_formset.deleted_forms:
+                if form.instance.pk:
+                    form.instance.delete()
+
             category_name = product.category.name
 
             if category_name == "Smart Phones":
@@ -479,18 +394,21 @@ def add_product_view(request):
                     phone_detail = phone_detail_form.save(commit=False)
                     phone_detail.product = product
                     phone_detail.save()
+
             elif category_name == "Computers":
                 computer_detail_form = ComputerDetailForm(request.POST)
                 if computer_detail_form.is_valid():
                     computer_detail = computer_detail_form.save(commit=False)
                     computer_detail.product = product
                     computer_detail.save()
+
             elif category_name == "Smart Watches":
                 smartwatch_detail_form = SmartwatchDetailForm(request.POST)
                 if smartwatch_detail_form.is_valid():
                     smartwatch_detail = smartwatch_detail_form.save(commit=False)
                     smartwatch_detail.product = product
                     smartwatch_detail.save()
+
             elif category_name == "Headphones":
                 headphone_detail_form = HeadphoneDetailForm(request.POST)
                 if headphone_detail_form.is_valid():
@@ -501,28 +419,95 @@ def add_product_view(request):
             return redirect('product_list')
     else:
         product_form = ProductForm()
-        variant_form = ProductVariantForm()
+        variant_formset = ProductVariantFormSet(queryset=ProductVariant.objects.none())
+        image_formset = ProductImageFormSet(queryset=ProductImage.objects.none())
 
     return render(request, 'add_product.html', {
         'product_form': product_form,
-        'variant_form': variant_form,
+        'variant_formset': variant_formset,
+        'image_formset': image_formset,
         'phone_detail_form': PhoneDetailForm(),
         'computer_detail_form': ComputerDetailForm(),
         'smartwatch_detail_form': SmartwatchDetailForm(),
         'headphone_detail_form': HeadphoneDetailForm(),
     })
 
-from django.shortcuts import render, redirect
-from .models import Category
-from .forms import CategoryForm
+def edit_product(request, product_id, variant_id):
+    product = get_object_or_404(Product, id=product_id)
+    variant = get_object_or_404(ProductVariant, id=variant_id)  
+
+    if request.method == 'POST':
+        product_form = ProductForm(request.POST, instance=product)
+        variant_form = ProductVariantForm(request.POST, instance=variant)
+
+        if product_form.is_valid() and variant_form.is_valid():
+            product_form.save()
+            variant_form.save()
+            return redirect('product_list') 
+    else:
+        product_form = ProductForm(instance=product)
+        variant_form = ProductVariantForm(instance=variant)
+
+    return render(request, 'edit_product.html', {
+        'product_form': product_form,
+        'variant_form': variant_form,  
+    })
+
+def delete_product_view(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    product.delete()
+    return redirect('product_list')
+
+def category_list_view(request):
+    categories = Category.objects.all() 
+    return render(request, 'category_list.html', {'categories': categories})
 
 def add_category_view(request):
     if request.method == 'POST':
-        form = CategoryForm(request.POST, request.FILES)  # Sử dụng request.FILES để xử lý ảnh
+        form = CategoryForm(request.POST, request.FILES) 
         if form.is_valid():
             form.save()
-            return redirect('category_list')  # Điều hướng về trang danh sách Category sau khi lưu thành công
+            return redirect('category_list')
     else:
         form = CategoryForm()
 
     return render(request, 'add_category.html', {'form': form})
+
+def edit_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, request.FILES, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('category_list') 
+    else:
+        form = CategoryForm(instance=category)
+    
+    return render(request, 'edit_category.html', {'form': form})
+
+def delete_category_view(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    category.delete()
+    return redirect('category_list')
+
+def user_list_view(request):
+    users = User.objects.all()  
+    return render(request, 'user_list.html', {'users': users})
+
+def order_list_view(request):
+    orders = Order.objects.all()  
+
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')  
+        order = get_object_or_404(Order, id=order_id)  
+        form = OrderStatusForm(request.POST, instance=order) 
+
+        if form.is_valid():
+            form.save()  
+            return redirect('order_list')  
+
+    return render(request, 'order_list.html', {'orders': orders})
+
+
+

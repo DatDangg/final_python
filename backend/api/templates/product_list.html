@@ -15,6 +15,7 @@
             <th>Biến thể (Màu, Dung lượng, Giá, Số lượng)</th>
             <th>Chi tiết</th>
             <th>Sửa</th>
+            <th>Xóa</th>
         </tr>
     </thead>
     <tbody>
@@ -35,8 +36,8 @@
                 No details available
                 {% endif %}
             </td>
-            <!-- Cập nhật liên kết sửa để truyền cả product_id và variant_id -->
             <td><a href="{% url 'edit_product' item.product.id item.variant.id %}">Sửa</a></td>
+            <td><a href="{% url 'delete_product' item.product.id %}" class="text-danger" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">Xóa</a></td>
         </tr>
         {% endfor %}
     </tbody>

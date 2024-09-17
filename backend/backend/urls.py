@@ -18,10 +18,10 @@ router.register(r'reviews', views.ReviewView, basename='reviews')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),  # Đường dẫn cho các API viewsets
-    path('auth/', include('api.urls')),  # Đường dẫn cho các API xác thực và người dùng
-    path('wishlist/<int:product_id>/toggle/', WishlistToggleView.as_view(), name='wishlist-toggle'),  # Wishlist toggle URL
-    path('wishlist/<int:product_id>/', WishlistStatusView.as_view(), name='wishlist-status'),  # Wishlist status URL
+    path('api/', include(router.urls)),  
+    path('auth/', include('api.urls')),  
+    path('wishlist/<int:product_id>/toggle/', WishlistToggleView.as_view(), name='wishlist-toggle'), 
+    path('wishlist/<int:product_id>/', WishlistStatusView.as_view(), name='wishlist-status'),  
     path('wishlist/', WishlistListView.as_view(), name='wishlist-list'),
     path('products/<int:product_id>/upload_images/', upload_product_images, name='upload_product_images'),
     path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
@@ -35,6 +35,8 @@ urlpatterns = [
     path('users/', views.user_list_view, name='user_list'),
     path('add-product/', views.add_product_view, name='add_product'),
     path('add-category/', views.add_category_view, name='add_category'),
+    path('delete-product/<int:product_id>/', views.delete_product_view, name='delete_product'), 
+    path('delete-category/<int:category_id>/', views.delete_category_view, name='delete_category'), 
 ]
 
 # Serve media files during development

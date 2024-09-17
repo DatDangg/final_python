@@ -5,22 +5,20 @@
 {% block content %}
 <h1>Edit Product</h1>
 
-<!-- Form chỉnh sửa sản phẩm -->
 <form method="POST">
     {% csrf_token %}
     <div>
         <h2>Product Information</h2>
-        {{ product_form.as_p }}  <!-- Hiển thị form chỉnh sửa sản phẩm -->
+        {{ product_form.as_p }}  
     </div>
 
-    <!-- Form chỉnh sửa biến thể -->
     <div>
         <h2>Variant Information</h2>
-        {{ variant_form.as_p }}  <!-- Hiển thị form chỉnh sửa biến thể cụ thể -->
+        {{ variant_form.as_p }}  
     </div>
 
     <button type="submit">Save Changes</button>
 </form>
 
-<a href="{% url 'product_list' %}">Cancel</a>  <!-- Nút hủy bỏ quay lại danh sách sản phẩm -->
+<a href="{% url 'product_list' %}">Cancel</a> 
 {% endblock %}

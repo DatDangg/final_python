@@ -5,30 +5,62 @@
 {% block content %}
 <h1>Add Product</h1>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ product_form.as_p }}
-    {{ variant_form.as_p }}
+    {{ variant_formset.management_form }}  
+    
+    <div id="variant-formset">
+        {% for form in variant_formset %}
+            <h1>Variant {{ forloop.counter }}</h1>
+            <div class="variant-form">
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+    </div>
+    
+    <button type="button" id="add-variant">Add Another Variant</button>
+    
+    <div id="empty-form-template" style="display: none;">
+        <h1>Variant __prefix__</h1>
+        <div class="variant-form">
+            {{ variant_formset.empty_form.as_p }}
+        </div>
+    </div>
 
-    <!-- Form chi tiết cho Smart Phones -->
+    {{ image_formset.management_form }}
+
+    <div id="image-formset">
+        {% for form in image_formset %}
+            <div class="image-form">
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="empty-image-form-template" style="display: none;">
+        <div class="image-form">
+            {{ image_formset.empty_form.as_p }}
+        </div>
+    </div>
+
+    <button type="button" id="add-image">Add Another Image</button>
+
     <div id="phone-details" style="display: none;">
         <h2>Phone Details</h2>
         {{ phone_detail_form.as_p }}
     </div>
 
-    <!-- Form chi tiết cho Computers -->
     <div id="computer-details" style="display: none;">
         <h2>Computer Details</h2>
         {{ computer_detail_form.as_p }}
     </div>
 
-    <!-- Form chi tiết cho Smart Watches -->
     <div id="smartwatch-details" style="display: none;">
         <h2>Smartwatch Details</h2>
         {{ smartwatch_detail_form.as_p }}
     </div>
 
-    <!-- Form chi tiết cho Headphones -->
     <div id="headphone-details" style="display: none;">
         <h2>Headphone Details</h2>
         {{ headphone_detail_form.as_p }}
@@ -41,30 +73,27 @@
     document.getElementById('id_category').addEventListener('change', function () {
         var category = this.options[this.selectedIndex].text;
 
-        // Tạo hàm để bật hoặc tắt các form dựa trên category đã chọn
         function toggleFormDetails(formId, enabled) {
             var form = document.getElementById(formId);
             var inputs = form.querySelectorAll('input, select, textarea');
             if (enabled) {
-                form.style.display = 'block'; // Hiển thị form
+                form.style.display = 'block';
                 inputs.forEach(function(input) {
-                    input.disabled = false; // Kích hoạt lại input
+                    input.disabled = false;
                 });
             } else {
-                form.style.display = 'none'; // Ẩn form
+                form.style.display = 'none'; 
                 inputs.forEach(function(input) {
-                    input.disabled = true; // Vô hiệu hóa input để nó không được kiểm tra
+                    input.disabled = true;
                 });
             }
         }
 
-        // Ẩn tất cả các form chi tiết trước
         toggleFormDetails('phone-details', false);
         toggleFormDetails('computer-details', false);
         toggleFormDetails('smartwatch-details', false);
         toggleFormDetails('headphone-details', false);
 
-        // Hiển thị form tương ứng với Category đã chọn và kích hoạt các input
         if (category == 'Smart Phones') {
             toggleFormDetails('phone-details', true);
         } else if (category == 'Computers') {
@@ -76,8 +105,47 @@
         }
     });
 
-    // Gọi hàm khi trang load để đảm bảo form tương ứng được hiển thị đúng
     document.getElementById('id_category').dispatchEvent(new Event('change'));
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+    let variantFormsetDiv = document.getElementById('variant-formset');
+    let addVariantBtn = document.getElementById('add-variant');
+    let totalVariantForms = document.getElementById('id_form-TOTAL_FORMS'); 
+    let variantFormIndex = totalVariantForms ? parseInt(totalVariantForms.value) : 0;
+
+    addVariantBtn.addEventListener('click', function () {
+        let newVariantFormHtml = document.getElementById('empty-form-template').innerHTML;
+        newVariantFormHtml = newVariantFormHtml.replace(/__prefix__/g, variantFormIndex);
+        const newVariantFormDiv = document.createElement('div');
+        newVariantFormDiv.innerHTML = newVariantFormHtml;
+        variantFormsetDiv.appendChild(newVariantFormDiv);
+        variantFormIndex++;
+
+        if (totalVariantForms) {
+            totalVariantForms.value = variantFormIndex; 
+        }
+    });
+
+    let imageFormsetDiv = document.getElementById('image-formset');
+    let addImageBtn = document.getElementById('add-image');
+    let totalImageForms = document.getElementById('id_image-TOTAL_FORMS');  
+    let imageFormIndex = totalImageForms ? parseInt(totalImageForms.value) : 0;  
+
+    addImageBtn.addEventListener('click', function () {
+        let newImageFormHtml = document.getElementById('empty-image-form-template').innerHTML;
+        newImageFormHtml = newImageFormHtml.replace(/__prefix__/g, imageFormIndex);
+        const newImageFormDiv = document.createElement('div');
+        newImageFormDiv.innerHTML = newImageFormHtml;
+        imageFormsetDiv.appendChild(newImageFormDiv);
+
+        imageFormIndex++;
+        if (totalImageForms) {
+            totalImageForms.value = imageFormIndex;  
+        }
+    });
+});
+
 </script>
 
 {% endblock %}
