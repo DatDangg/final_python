@@ -101,21 +101,23 @@ function UserProfile() {
       const productDetails = await fetchProductDetails(item.product);
       const reviews = await fetchProductReviews(item.product);
       const hasReviewed = reviews.some(review => review.user === userData.id);
+  
       return {
         ...item,
         product_name: productDetails.title, 
         hasReviewed: hasReviewed,
       };
     }));
-    
+  
     // Cập nhật đơn hàng với thông tin sản phẩm mới
     setSelectedOrder({
       ...order,
       items: updatedItems,
     });
-    
+  
     document.getElementById('pills-contact-tab').click(); // Chuyển sang tab review
   };
+  
   
   
   const handleReviewSubmit = (productId) => {
