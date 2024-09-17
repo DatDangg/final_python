@@ -1,29 +1,14 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sửa danh mục</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <header>
-        <h1>Chỉnh sửa danh mục</h1>
-    </header>
+{% extends 'base.html' %}
 
-    <main>
-        <form method="POST" enctype="multipart/form-data">  <!-- Thêm enctype để tải ảnh -->
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Lưu thay đổi</button>
-        </form>
+{% block title %}Edit Category{% endblock %}
 
-        <a href="{% url 'dashboard' %}">Hủy</a>  <!-- Điều hướng về dashboard nếu người dùng muốn hủy -->
-    </main>
+{% block content %}
+<h1>Edit Category</h1>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+</form>
 
-    <footer>
-        <p>Footer của trang</p>
-    </footer>
-</body>
-</html>
+<a href="{% url 'dashboard' %}">Cancel</a>
+{% endblock %}

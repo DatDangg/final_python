@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Category List{% endblock %}
+
+{% block content %}
+<h1>Category List</h1>
+<table>
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên danh mục</th>
+            <th>Hình ảnh</th>
+            <th>Sửa</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ category.name }}</td>
+            <td><img src="{{ category.image.url }}" alt="{{ category.name }}" width="50"></td>
+            <td><a href="{% url 'edit_category' category.id %}">Sửa</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

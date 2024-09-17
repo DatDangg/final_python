@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Product List{% endblock %}
+
+{% block content %}
+<h1>Product List</h1>
+<table>
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên sản phẩm</th>
+            <th>Thương hiệu</th>
+            <th>Danh mục</th>
+            <th>Biến thể (Màu, Dung lượng, Giá, Số lượng)</th>
+            <th>Chi tiết</th>
+            <th>Sửa</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in product_data %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ item.product.title }}</td>
+            <td>{{ item.product.brand }}</td>
+            <td>{{ item.product.category.name }}</td>
+            <td>
+                Màu: {{ item.variant.color }} - Dung lượng: {{ item.variant.storage }} - 
+                Giá: {{ item.variant.listed_price }} - Số lượng: {{ item.variant.quantity }}
+            </td>
+            <td>
+                {% if item.detail %}
+                CPU: {{ item.detail.cpu }}{% if item.detail.main_camera %}, Camera chính: {{ item.detail.main_camera }}{% endif %}
+                {% else %}
+                No details available
+                {% endif %}
+            </td>
+            <!-- Cập nhật liên kết sửa để truyền cả product_id và variant_id -->
+            <td><a href="{% url 'edit_product' item.product.id item.variant.id %}">Sửa</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

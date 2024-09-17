@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Management{% endblock %}
+
+{% block content %}
+<h1>Order Management</h1>
+<table>
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên người đặt</th>
+            <th>Số điện thoại</th>
+            <th>Địa chỉ</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Cập nhật</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ forloop.counter }}</td> <!-- STT -->
+            <td>{{ order.full_name }}</td> <!-- Tên người đặt -->
+            <td>{{ order.phone_number }}</td> <!-- Số điện thoại -->
+            <td>{{ order.address }}</td> <!-- Địa chỉ -->
+            <td>${{ order.total_price }}</td> <!-- Tổng tiền -->
+            <td>{{ order.get_status_display }}</td> <!-- Trạng thái hiện tại -->
+
+            <td>
+                <!-- Form để cập nhật trạng thái đơn hàng -->
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{ order.id }}">  <!-- Đảm bảo gửi đúng order_id -->
+                    <select name="status">
+                        <option value="pending" {% if order.status == "pending" %}selected{% endif %}>Pending</option>
+                        <option value="shipped" {% if order.status == "shipped" %}selected{% endif %}>Shipped</option>
+                        <option value="delivered" {% if order.status == "delivered" %}selected{% endif %}>Delivered</option>
+                        <option value="cancelled" {% if order.status == "cancelled" %}selected{% endif %}>Cancelled</option>
+                    </select>
+                    <button type="submit">Update</button>  <!-- Nút cập nhật để gửi form -->
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
