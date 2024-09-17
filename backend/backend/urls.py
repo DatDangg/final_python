@@ -27,24 +27,14 @@ urlpatterns = [
     path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
     path('check-transaction/', views.check_transaction, name='check_transaction'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
-    
-    # Đường dẫn cho danh sách sản phẩm
     path('products/', views.product_list_view, name='product_list'),
-
-    # Đường dẫn cho trang chỉnh sửa sản phẩm
     path('products/edit/<int:product_id>/<int:variant_id>/', views.edit_product, name='edit_product'),
-    # Đường dẫn cho danh sách danh mục
     path('categories/', views.category_list_view, name='category_list'),
-
-    # Đường dẫn cho trang chỉnh sửa danh mục
     path('categories/edit/<int:category_id>/', views.edit_category, name='edit_category'),
-
-    # Đường dẫn cho danh sách đơn hàng
     path('orders/', views.order_list_view, name='order_list'),
-
-    # Đường dẫn cho danh sách người dùng
     path('users/', views.user_list_view, name='user_list'),
     path('add-product/', views.add_product_view, name='add_product'),
+    path('add-category/', views.add_category_view, name='add_category'),
 ]
 
 # Serve media files during development
