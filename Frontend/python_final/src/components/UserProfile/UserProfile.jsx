@@ -15,8 +15,8 @@ function UserProfile() {
     orders: []
   });
   const [selectedOrder, setSelectedOrder] = useState(null); // State để lưu đơn hàng được chọn
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
+  const [ratings, setRatings] = useState({}); // State cho rating của từng sản phẩm
+  const [comments, setComments] = useState({}); // State cho comment của từng sản phẩm
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -44,6 +44,35 @@ function UserProfile() {
         });
   }, []);
 
+  const fetchProductDetails = (productId) => {
+    const token = localStorage.getItem("token");
+    return axios.get(`http://127.0.0.1:8000/api/products/${productId}/`, {
+      headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }).then(response => response.data)
+      .catch(error => {
+        console.error('Error fetching product details:', error);
+      });
+  };
+  
+  const fetchProductReviews = async (productId) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/reviews/?product=${productId}`, {
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data; // Giả sử API trả về danh sách review của sản phẩm đó
+    } catch (error) {
+      console.error('Error fetching reviews for product:', productId, error);
+      return [];
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios.get("http://127.0.0.1:8000/api/orders/", {
@@ -67,21 +96,37 @@ function UserProfile() {
         });
   }, []);
 
-  const handleOrderClick = (order) => {
-    setSelectedOrder(order); // Khi chọn một đơn hàng, lưu đơn hàng đó vào state selectedOrder
+  const handleOrderClick = async (order) => {
+    const updatedItems = await Promise.all(order.items.map(async (item) => {
+      const productDetails = await fetchProductDetails(item.product);
+      const reviews = await fetchProductReviews(item.product);
+      const hasReviewed = reviews.some(review => review.user === userData.id);
+      return {
+        ...item,
+        product_name: productDetails.title, 
+        hasReviewed: hasReviewed,
+      };
+    }));
+    
+    // Cập nhật đơn hàng với thông tin sản phẩm mới
+    setSelectedOrder({
+      ...order,
+      items: updatedItems,
+    });
+    
     document.getElementById('pills-contact-tab').click(); // Chuyển sang tab review
   };
-
-  const handleReviewSubmit = () => {
-    const productId = selectedOrder.items[0]?.product;
+  
+  
+  const handleReviewSubmit = (productId) => {
     const token = localStorage.getItem("token");
     const payload = {
-      product: productId,  // Ensure this is just the ID
-      rating: rating,
-      comment: comment,
+      product: productId,  // Đảm bảo đây chỉ là ID
+      rating: ratings[productId],
+      comment: comments[productId],
     };
 
-    console.log("Payload being sent:", payload);  // Debug log to inspect the payload
+    console.log("Payload being sent:", payload);  // Debug log để kiểm tra payload
     axios.post("http://127.0.0.1:8000/api/reviews/", payload, {
       headers: {
         Authorization: `Token ${token}`,
@@ -90,7 +135,7 @@ function UserProfile() {
     })
         .then(response => {
           alert("Review submitted successfully");
-          setSelectedOrder(null); // After submitting the review, return to the order list
+          // setSelectedOrder(null); // Sau khi gửi đánh giá, quay lại danh sách đơn hàng
         })
         .catch(error => {
           if (error.response) {
@@ -102,6 +147,19 @@ function UserProfile() {
         });
   };
 
+  const handleRatingChange = (productId, value) => {
+    setRatings(prevRatings => ({
+      ...prevRatings,
+      [productId]: value,
+    }));
+  };
+
+  const handleCommentChange = (productId, value) => {
+    setComments(prevComments => ({
+      ...prevComments,
+      [productId]: value,
+    }));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -254,43 +312,59 @@ function UserProfile() {
                     )}
                   </div>
                 </div>
+
+                {/* phần review */}
                 <div className="tab-pane fade" id="pills-contact" role="tabpanel"
                      aria-labelledby="pills-contact-tab">
                   {selectedOrder ? (
                       <div className="review">
                         <div className="text-center">
                           <h2 className="mb-3">Đánh giá đơn hàng {selectedOrder.id} </h2>
-                          <div className="mb-3">
-                            <select
-                                name="rating"
-                                className="form-select mx-auto" // Căn giữa
-                                style={{width: '50%'}} // Đặt chiều rộng để căn giữa đẹp hơn
-                                value={rating}
-                                onChange={(e) => setRating(Number(e.target.value))}
-                            >
-                              <option value="0">Đánh giá từ 1 - 5</option>
-                              {[1, 2, 3, 4, 5].map((value) => (
-                                  <option key={value} value={value}>{value}</option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="mb-3">
-                            <textarea
-                                id="comment"
-                                className="form-control mx-auto text-review"
-                                style={{width: '50%'}}
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
-                            />
-                          </div>
-                          <button
-                              className="btn btn-outline-dark mt-3 mb-5"
-                              onClick={() => handleReviewSubmit()} // Thay thế productId bằng giá trị thực tế
-                          >
-                            Gửi đánh giá
-                          </button>
+                          {selectedOrder.items && selectedOrder.items.length > 0 ? (
+                              selectedOrder.items.map((item) => (
+                                  <div key={item.product} className="mb-4">
+                                    <h4>Sản phẩm: {item.product_name || "Tên sản phẩm không có"}</h4>
+                                    {item.hasReviewed ? (
+                                      <div className="alert alert-info">Sản phẩm này đã được đánh giá</div>
+                                    ) : (
+                                      <>
+                                        <div className="mb-3">
+                                          <select
+                                              name="rating"
+                                              className="form-select mx-auto"
+                                              style={{width: '50%'}}
+                                              value={ratings[item.product] || 0}
+                                              onChange={(e) => handleRatingChange(item.product, Number(e.target.value))}
+                                          >
+                                            <option value="0">Đánh giá từ 1 - 5</option>
+                                            {[1, 2, 3, 4, 5].map((value) => (
+                                                <option key={value} value={value}>{value}</option>
+                                            ))}
+                                          </select>
+                                        </div>
+                                        <div className="mb-3">
+                                          <textarea
+                                              id={`comment-${item.product}`}
+                                              className="form-control mx-auto text-review"
+                                              style={{width: '50%'}}
+                                              value={comments[item.product] || ""}
+                                              onChange={(e) => handleCommentChange(item.product, e.target.value)}
+                                          />
+                                        </div>
+                                        <button
+                                            className="btn btn-outline-dark mt-3 mb-5"
+                                            onClick={() => handleReviewSubmit(item.product)}
+                                        >
+                                          Gửi đánh giá cho sản phẩm {item.product_name}
+                                        </button>
+                                      </>
+                                    )}
+                                  </div>
+                              ))
+                          ) : (
+                              <div>Không có sản phẩm nào trong đơn hàng.</div>
+                          )}
                         </div>
-
                       </div>
                   ) : (
                       <div>Vui lòng chọn một đơn hàng để xem chi tiết.</div>
