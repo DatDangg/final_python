@@ -1,4 +1,5 @@
 .product-item {
+  display: flex;
   position: relative;
   padding: 20px;
   background-color: #f8f9fa; /* Màu nền sáng hơn */
@@ -6,6 +7,8 @@
   border-radius: 12px; /* Tăng độ bo tròn */
   text-align: center;
   transition: box-shadow 0.3s ease, transform 0.3s ease; /* Thêm hiệu ứng khi hover */
+  font-family: "Inter", sans-serif;
+  width: 350px;
 }
 
 .product-item:hover {
@@ -16,10 +19,12 @@
 .product-item .item-product-link {
   text-decoration: none;
   color: #212529; /* Đổi màu chữ để tương phản tốt hơn */
+  height: 350px;
 }
 
 .product-item .item-product-img {
-  width: 100%;
+  width: 300px;
+  align-items: center;
   height: 220px; /* Chiều cao của ảnh */
   background-size: contain; /* Đảm bảo toàn bộ ảnh được hiển thị mà không bị cắt */
   background-repeat: no-repeat; /* Tránh lặp lại ảnh nếu ảnh nhỏ hơn khung */
@@ -37,6 +42,8 @@
   font-weight: bold;
   margin: 15px 0 5px 0; /* Điều chỉnh khoảng cách giữa tên sản phẩm và ảnh */
   color: #343a40; /* Đổi màu chữ cho phù hợp */
+
+
 }
 
 .product-item .item-product-price {
@@ -45,9 +52,10 @@
 }
 
 .product-item .buy-now-button {
-  background-color: #007bff; /* Đổi màu nền nút */
+
+  background-color: black; /* Đổi màu nền nút */
   color: white;
-  padding: 12px 25px; /* Tăng kích thước padding */
+  padding: 12px 30px; /* Tăng kích thước padding */
   border: none;
   border-radius: 50px; /* Bo tròn nút hơn */
   cursor: pointer;
@@ -82,3 +90,4 @@
 .product-item .wishlist-icon:hover svg {
   transform: scale(1.2); /* Tăng kích thước icon khi hover */
 }
+

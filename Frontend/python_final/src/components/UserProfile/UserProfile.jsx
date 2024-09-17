@@ -222,7 +222,7 @@ function UserProfile() {
                 {/*thông tin đơn hang*/}
                 <div className="tab-pane fade" id="pills-profile" role="tabpanel"
                      aria-labelledby="pills-profile-tab">
-                  <div className="order-list">
+                  <div className="order-list mb-4">
                     {userData.orders.length > 0 ? (
                         <div>
                           <table className="table table-custom">

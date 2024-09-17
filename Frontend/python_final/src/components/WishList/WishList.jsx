@@ -25,17 +25,17 @@ function WishList() {
   }, [token]);
 
   return (
-    <div className="wishlist-container">
-      <h2>Your Wishlist</h2>
-      <div className="product-list">
-        {wishListProducts.length > 0 ? (
-          wishListProducts.map((product) => (
-            <ProductItem key={product.id} product={product} token={token} />
-          ))
-        ) : (
-          <p>Your wishlist is empty.</p>
-        )}
-      </div>
+    <div className="f-inter wishlist-container">
+            <h2 className="text-center mb-4 fw-bold">Your Wishlist</h2>
+                <div className="product-list d-flex flex-row flex-wrap mb-4 gap-2">
+                    {wishListProducts.length > 0 ? (
+                        wishListProducts.map((product) => (
+                            <ProductItem key={product.id} product={product} token={token}/>
+                        ))
+                    ) : (
+                        <h5 className="text pt-5 text-danger fw-bold">Your wishlist is empty!</h5>
+                    )}
+                </div>
     </div>
   );
 }

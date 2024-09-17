@@ -7,6 +7,10 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.user{
+    height: 700px;
+}
+
 
 .user h1 {
     text-align: center;
@@ -49,6 +53,24 @@
 
 .user .edit-form button[type="button"] {
     background-color: #6c757d;
+}
+
+.order-list {
+    max-height: 500px; /* Đặt chiều cao tối đa cho bảng */
+    overflow-y: auto; /* Tạo thanh cuộn dọc khi bảng vượt quá chiều cao */
+    overflow-x: auto; /* Tạo thanh cuộn ngang nếu bảng rộng hơn container */
+    width: 100%; /* Đảm bảo bảng chiếm toàn bộ chiều rộng của container */
+}
+.table-custom {
+    background-color: transparent;
+}
+
+.table-custom th, .table-custom td {
+    background-color: rgba(0, 0, 128, 0.2); /* Màu tím mờ */
+}
+
+.thead-dark {
+    background-color: rgba(0, 0, 128, 0.2); /* Màu tím mờ */
 }
 
 
@@ -139,5 +161,5 @@
 }
 
 .table-custom tbody tr:hover {
-    background-color: gray; /* Màu nền khi hover lên hàng */
+    background-color: darkgray; /* Màu nền khi hover lên hàng */
 }
