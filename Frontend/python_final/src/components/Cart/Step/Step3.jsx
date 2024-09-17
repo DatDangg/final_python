@@ -142,7 +142,7 @@ const Step3 = () => {
   
 
   return (
-    <div className="step3-container">
+    <div className="step3-container container">
       <div className="summary-section">
         <h2>Summary</h2>
         {cartItems.map((item) => {

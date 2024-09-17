@@ -389,17 +389,6 @@ function ProductDetail() {
                             </div>
 
                           </div>
-                          <div className="col-sm-4 d-flex border-bottom ">
-                            <div className="col-4 align-items-center pt-3 ml-2">
-                              <img className="icon-value" src="/photos/main-camera.png" alt=""/>
-                            </div>
-                            <div className="col-8 pt-2">
-                              <span className="ml-5">Battery Life</span>
-                              <p className="ml-5 fw-bold">{product.computer_details.battery_life}</p>
-                            </div>
-                          </div>
-
-
                         </div>
                       </div>
 

@@ -24,6 +24,7 @@
 
 .cart-item-image {
   flex: 0 0 100px;
+
 }
 
 .cart-item-image img {
@@ -44,6 +45,7 @@ a {
 }
 
 .cart-item-details h3 {
+  width: 300px;
   margin: 0;
   font-size: 16px;
 }

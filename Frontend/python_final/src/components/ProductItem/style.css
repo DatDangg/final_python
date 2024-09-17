@@ -34,7 +34,7 @@
 }
 
 .product-item .item-product-img:hover {
-  transform: scale(1.05); /* Phóng to ảnh khi hover */
+  /*transform: scale(1.05); !* Phóng to ảnh khi hover *!*/
 }
 
 .product-item .item-product-name {
@@ -70,8 +70,8 @@
 
 .product-item .wishlist-icon {
   position: absolute;
-  top: 15px; /* Đẩy icon wishlist xuống một chút */
-  right: 15px;
+  top: 5px; /* Đẩy icon wishlist xuống một chút */
+  right: 5px;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
