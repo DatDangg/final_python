@@ -12,6 +12,7 @@
             <th>Tên danh mục</th>
             <th>Hình ảnh</th>
             <th>Sửa</th>
+            <th>Xóa</th>
         </tr>
     </thead>
     <tbody>
@@ -21,6 +22,7 @@
             <td>{{ category.name }}</td>
             <td><img src="{{ category.image.url }}" alt="{{ category.name }}" width="50"></td>
             <td><a href="{% url 'edit_category' category.id %}">Sửa</a></td>
+            <td><a href="{% url 'delete_category' category.id %}" class="text-danger" onclick="return confirm('Bạn có chắc muốn xóa danh mục này?')">Xóa</a></td>
         </tr>
         {% endfor %}
     </tbody>

@@ -1,36 +1,50 @@
 from django import forms
-from .models import Product, ProductVariant, Category, Order
-from .models import Product, PhoneDetail, SmartwatchDetail, ComputerDetail, HeadphoneDetail, ProductVariant
+from django.forms import modelformset_factory
+from .models import Product, PhoneDetail, SmartwatchDetail, ComputerDetail, HeadphoneDetail, ProductVariant, ProductImage, Category, Order
 from django.core.exceptions import ValidationError
 
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['name', 'image']  # Các trường bạn muốn chỉnh sửa
+        fields = ['name', 'image']  
 
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['title', 'brand', 'category', 'description']  # Các trường bạn muốn sửa đổi
+        fields = ['title', 'brand', 'category', 'description']  
 
 class ProductVariantForm(forms.ModelForm):
     class Meta:
         model = ProductVariant
-        fields = ['color', 'storage', 'listed_price', 'quantity', 'cost_price', 'SKU']  # Ensure 'SKU' is included
+        fields = ['color', 'storage', 'listed_price', 'quantity', 'cost_price', 'SKU']  
 
     def clean_SKU(self):
-        # Lấy giá trị SKU từ form
         SKU = self.cleaned_data.get('SKU')
-        
-        # Kiểm tra xem có sản phẩm nào khác có SKU trùng không
         if SKU:
-            # Nếu form đang chỉnh sửa một biến thể, lấy ID của biến thể đó
             instance = self.instance
-            # Kiểm tra xem SKU đã tồn tại chưa, ngoại trừ biến thể hiện tại
             if ProductVariant.objects.filter(SKU=SKU).exclude(id=instance.id).exists():
                 raise ValidationError("Product variant with this SKU already exists.")
         
         return SKU
+
+ProductVariantFormSet = modelformset_factory(
+    ProductVariant,
+    form=ProductVariantForm,
+    extra=0,  # Không tạo thêm form tự động
+    can_delete=True  # Cho phép xóa biến thể
+)
+
+class ProductImageForm(forms.ModelForm):
+    class Meta:
+        model = ProductImage
+        fields = ['image', 'is_primary']
+
+ProductImageFormSet = modelformset_factory(
+    ProductImage,
+    form=ProductImageForm,
+    extra=1,  # Số form trống ban đầu
+    can_delete=True  # Cho phép xóa ảnh
+)        
 
 class OrderStatusForm(forms.ModelForm):
     class Meta:
