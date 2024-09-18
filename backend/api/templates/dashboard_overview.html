@@ -4,6 +4,8 @@
 
 {% block content %}
 {% load static %}
+{% load humanize %}  <!-- Thêm dòng này để sử dụng bộ lọc intcomma -->
+
 <h1>Dashboard Overview</h1>
 
 <div class="dashboard-stats">
@@ -13,39 +15,13 @@
     </div>
     <div class="stat-box">
         <h3>Total Sales</h3>
-        <p>${{ total_sales }}</p>
+        <p>{{ total_sales|floatformat:0|intcomma }} VNĐ</p>  <!-- Sử dụng intcomma để thêm dấu phẩy -->
     </div>
     <div class="stat-box">
         <h3>Total Profit</h3>
-        <p>${{ total_profit }}</p>
+        <p>{{ total_profit|floatformat:0|intcomma }} VNĐ</p> <!-- Sử dụng intcomma để thêm dấu phẩy -->
     </div>
 </div>
-
-<!-- <img id="moving-image" src="{% static 'images/lantern.png' %}" alt="Lantern">
-<script>
-    let img = document.getElementById("moving-image");
-    let posX = 0;
-    let posY = 0;
-    let directionX = 1;
-    let directionY = 1;
-    function moveImage() {
-        let containerWidth = window.innerWidth;
-        let containerHeight = window.innerHeight;
-        posX += directionX * 2; 
-        posY += directionY * 2; 
-
-        if (posX + img.offsetWidth > containerWidth || posX < 0) {
-            directionX = -directionX;
-        }
-        if (posY + img.offsetHeight > containerHeight || posY < 0) {
-            directionY = -directionY;
-        }
-
-        img.style.transform = `translate(${posX}px, ${posY}px)`;
-        requestAnimationFrame(moveImage);
-    }
-    moveImage();
-</script> -->
 
 <div class="chart-container">
     <canvas id="salesChart"></canvas>
@@ -76,6 +52,5 @@
         }
     });
 </script> 
-
 
 {% endblock %}
