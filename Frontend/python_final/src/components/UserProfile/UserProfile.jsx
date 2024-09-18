@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import './style.css';
 
 function UserProfile() {
@@ -272,8 +272,14 @@ function UserProfile() {
                              onChange={handleChange}
                       />
                     </div>
-                    <div className="pt-5 submit">
+                    <div className="pt-5 submit gap-3">
                       <button className="btn btn-outline-dark" type="submit">Cập nhật hồ sơ</button>
+                      <Link
+                          to="/change-password"
+                          className="btn btn-outline-dark"
+                      >
+                        Đổi mật khẩu
+                      </Link>
                     </div>
                   </form>
                 </div>
@@ -285,7 +291,7 @@ function UserProfile() {
                     {userData.orders.length > 0 ? (
                         <div>
                           <table className="table table-custom">
-                            <thead className="thead-dark">
+                            <thead className="thead-dark text-white">
                             <tr className="text-uppercase">
                               <th scope="col">STT</th>
                               <th scope="col">Mã đơn hàng</th>
@@ -372,6 +378,9 @@ function UserProfile() {
                       <div>Vui lòng chọn một đơn hàng để xem chi tiết.</div>
                   )}
                 </div>
+
+                {/*changepassword*/}
+
               </div>
             </div>
           </div>

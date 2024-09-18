@@ -1,0 +1,32 @@
+.change-pw{
+    background-color: #f8f8f8;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    height: 500px;
+}
+
+.change-pw label{
+    font-size: 18px;
+}
+
+.change-pw h2{
+    padding-top: 70px;
+    align-items: center;
+}
+
+.box{
+    border-radius: 5px;
+    width: 320px;
+    height: 35px;
+    padding-left: 10px;
+    border-color: #1c1c1e;
+    border-width: 1px;
+    padding-bottom: 4px;
+    margin-left: 15px;
+}
+
+.ml{
+    margin-left: 25px;
+}

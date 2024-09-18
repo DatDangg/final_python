@@ -66,11 +66,11 @@
 }
 
 .table-custom th, .table-custom td {
-    background-color: rgba(0, 0, 128, 0.2); /* Màu tím mờ */
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .thead-dark {
-    background-color: rgba(0, 0, 128, 0.2); /* Màu tím mờ */
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 
@@ -96,7 +96,7 @@
 
 
 .user1{
-    background-color: #EDEDED;
+    background-color: #f8f8f8;
     border-radius: 10px;
     align-items: center;
 }
@@ -126,8 +126,11 @@
 }
 
 .submit{
-    padding-left: 215px;
+    padding-left: 230px;
     padding-bottom: 50px;
+}
+.submit button{
+    margin-right: 15px;
 }
 
 .text-review{
