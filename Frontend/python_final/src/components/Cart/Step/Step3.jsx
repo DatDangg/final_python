@@ -149,7 +149,8 @@ const Step3 = () => {
       {/*section-left*/}
       <div className="summary-section col-md-6">
         {/*summary*/}
-        <h2 className="fw-bold">Order Details</h2>
+        <h2 className="fw-bold">
+          Chi tiết đặt hàng</h2>
         {cartItems.map((item) => {
           const primaryImage =
             item.product.images.find((image) => image.is_primary)?.image ||
@@ -178,7 +179,7 @@ const Step3 = () => {
         {/*address*/}
         <div className="right-top">
           <div className="address-section">
-            <h3 className="fw-bold">Address</h3>
+            <h3 className="fw-bold">Địa chỉ</h3>
             <div className="text-address">
               {selectedAddress ? (
                 <p>
@@ -186,14 +187,14 @@ const Step3 = () => {
                   {selectedAddress.phone_number}
                 </p>
               ) : (
-                <p>No address selected</p>
+                <p>Không có địa chỉ nào được chọn</p>
               )}
             </div>
           </div>
           <div className="price-details">
-            <h3 className="fw-bold mb-2">Summary</h3>
+            <h3 className="fw-bold mb-2">Tóm tắt đơn hàng</h3>
             <p>
-              Subtotal:{" "}
+              Tổng sản phẩm:{" "}
               <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
               {formatPrice(
                 cartItems.reduce(
@@ -204,12 +205,12 @@ const Step3 = () => {
               )}
             </p>
             <p>
-              Estimated Shipping & Handling:{" "}
+              Phí vận chuyển:{" "}
               <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
               {formatPrice(Number(shippingCost).toFixed(0))}
             </p>
             <h3 className="fw-bold pt-3">
-              Total:{" "}
+              Tổng tiền:{" "}
               <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
               {formatPrice(calculateTotal())}
             </h3>
@@ -218,7 +219,7 @@ const Step3 = () => {
 
         {/*payment*/}
         <div className="right-bottom mb-4">
-          <h2 className="mb-4 fw-bold">Payment</h2>
+          <h2 className="mb-4 fw-bold">Thanh toán</h2>
           <div className="payment-methods">
             <button
               className={paymentMethod === "qrCode" ? "active" : ""}
@@ -230,21 +231,22 @@ const Step3 = () => {
               className={paymentMethod === "cashOnDelivery" ? "active" : ""}
               onClick={() => setPaymentMethod("cashOnDelivery")}
             >
-              Cash on Delivery
+              Tiền mặt khi giao hàng
             </button>
           </div>
 
           {paymentMethod === "qrCode" && !qrCodeVisible && (
             <div className="qr-code-prompt pt-3">
               <button onClick={() => setQrCodeVisible(true)}>
-                Confirm and Show QR Code
+                Xác nhận và hiển thị mã QR
               </button>
             </div>
           )}
 
           {qrCodeVisible && (
             <div className="qr-code-details pt-3">
-              <p>Scan the QR code to complete your payment.</p>
+              <p>
+                Quét mã QR để hoàn tất thanh toán của bạn.</p>
               <img
                 src={`https://qr.sepay.vn/img?acc=4220112003&bank=MBBANK&amount=${calculateTotal()}`}
                 alt="QR Code"
@@ -253,7 +255,7 @@ const Step3 = () => {
                 className="btn btn-outline-primary"
                 onClick={handleCheckTransaction}
               >
-                Check Transaction
+                Kiểm tra giao dịch
               </button>
             </div>
           )}
@@ -261,20 +263,20 @@ const Step3 = () => {
           {paymentMethod === "cashOnDelivery" && (
             <div className="cash-on-delivery-details">
               <p className="pt-4">
-                You will pay in cash upon receiving the order.
+                Bạn sẽ thanh toán bằng tiền mặt khi nhận được đơn hàng.
               </p>
               <button className="pay-button" onClick={handleConfirmOrder}>
-                Confirm Order
+                Xác nhận đơn hàng
               </button>
             </div>
           )}
-          <div className="actions">
-            {transactionSuccess ? (
-              <button className="pay-button" onClick={handleConfirmOrder}>
-                Confirm Order
-              </button>
-            ) : null}
-          </div>
+          {/*<div className="actions">*/}
+          {/*  {transactionSuccess ? (*/}
+          {/*    <button className="pay-button" onClick={handleConfirmOrder}>*/}
+          {/*      Xác nhận đơn hàng*/}
+          {/*    </button>*/}
+          {/*  ) : null}*/}
+          {/*</div>*/}
         </div>
         <button
           className="back btn btn-outline-dark"

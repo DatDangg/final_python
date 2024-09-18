@@ -48,7 +48,7 @@ function Cart() {
   return (
     <div className="cart-container container">
       <div className="cart-items pt-5 row">
-        <h2 className="mb-4">Shopping Cart</h2>
+        <h2 className="mb-4">Giỏ hàng</h2>
         <div className="items">
           <ul>
             {cartItems.map((item) => {
@@ -126,7 +126,7 @@ function Cart() {
               </div>
             </div>
             <button className="check-button text-white" onClick={handleCheckout}>
-              Checkout
+              Thanh toán
             </button>
           </div>
         </div>

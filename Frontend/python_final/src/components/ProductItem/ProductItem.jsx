@@ -112,7 +112,7 @@ function ProductItem({ product, token }) {
           </div>
           <div className="mb-3">
             <Link to={`/product/${id}`} className="buy-now-link">
-              <button className="buy-now-button">Buy Now</button>
+              <button className="buy-now-button">Mua</button>
             </Link>
           </div>
         </div>

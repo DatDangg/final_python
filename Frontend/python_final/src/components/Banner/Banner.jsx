@@ -10,10 +10,10 @@ function Banner() {
             <span className="subtype">Pro</span>
           </h2>
           <p className="description">
-            Created to change everything for the better. For everyone
+            Luôn luôn lắng nghe, luôn luôn thấu hiểu
           </p>
           <a href="/product" className="shop-button">
-            Shop Now
+            Mua ngay
           </a>
         </div>
         <div className="image-column">

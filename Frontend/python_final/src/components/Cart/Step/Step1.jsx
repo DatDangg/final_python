@@ -71,7 +71,7 @@ function Step1() {
           <button onClick={handleNextStep}>Next</button>
         </div>
         <div className="col-md-5 justify-content-beetween">
-          <h2>Select Address</h2>
+          <h2 className=" text-primary">Chọn địa chỉ giao hàng</h2>
           <ul className="address-list">
             {addresses.map((address) => (
                 <li
@@ -103,11 +103,11 @@ function Step1() {
         </div>
         <div className="col-md-7">
           <div className="add-address-form">
-            <h2 className="mb-3">Add New Address</h2>
+            <h2 className="mb-3 text-primary">Thêm mới địa chỉ</h2>
             <input
                 className="form-button"
                 type="text"
-                placeholder="Full Name"
+                placeholder="Họ và tên"
                 value={newAddress.full_name}
                 onChange={(e) =>
                     setNewAddress({...newAddress, full_name: e.target.value})
@@ -116,7 +116,7 @@ function Step1() {
             <input
                 className="form-button"
                 type="text"
-                placeholder="Phone Number"
+                placeholder="Số điện thoại"
                 value={newAddress.phone_number}
                 onChange={(e) =>
                     setNewAddress({...newAddress, phone_number: e.target.value})
@@ -125,7 +125,7 @@ function Step1() {
             <input
                 className="form-button"
                 type="text"
-                placeholder="Specific Address"
+                placeholder="Địa chỉ"
                 value={newAddress.specific_address}
                 onChange={(e) =>
                     setNewAddress({...newAddress, specific_address: e.target.value})
@@ -141,7 +141,7 @@ function Step1() {
               <option value="HOME">Home</option>
               <option value="OFFICE">Office</option>
             </select>
-            <button className="address d-flex btn btn-outline-dark" onClick={handleAddAddress}>Add Address</button>
+            <button className="address d-flex btn btn-outline-dark" onClick={handleAddAddress}>Thêm địa chỉ</button>
           </div>
         </div>
       </div>

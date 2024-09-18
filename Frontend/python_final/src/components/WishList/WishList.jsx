@@ -41,7 +41,7 @@ function WishList() {
 
   return (
     <div className="f-inter wishlist-container">
-      <h2 className="text-center mb-4 fw-bold">Your Wishlist</h2>
+      <h2 className="text-center mb-4 fw-bold">Yêu thích</h2>
       <div className="product-list d-flex flex-row flex-wrap mb-4 gap-2">
         {currentProducts.length > 0 ? (
           currentProducts.map((product) => (

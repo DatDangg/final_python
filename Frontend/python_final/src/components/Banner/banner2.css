@@ -1,4 +1,6 @@
-
+.f-abril{
+    font-family: "Abril Fatface", serif;
+}
 .banner-container2 {
     width: 100%;
     min-height: 400px; /* Chiều cao tùy chọn cho banner */
