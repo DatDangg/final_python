@@ -19,6 +19,9 @@ function UserProfile() {
   const [comments, setComments] = useState({}); // State cho comment của từng sản phẩm
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const formatPrice = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -374,87 +377,105 @@ function UserProfile() {
               <div className="modal-body">
                 {selectedOrder && (
                   <div>
-                    <p><strong>Ngày mua:</strong> {new Date(selectedOrder.order_time).toISOString().split('T')[0]}</p>
-                    <p><strong>Mã đơn hàng:</strong> {selectedOrder.id}</p>
-                    <p><strong>Tổng tiền:</strong> {selectedOrder.total_price}đ</p>
-                    <p><strong>Phương thức thanh toán:</strong> {selectedOrder.payment_method}</p>
-                    <p><strong>Họ và tên người mua:</strong> {selectedOrder.full_name}</p>
-                    <p><strong>Địa chỉ giao hàng:</strong> {selectedOrder.address}</p>
-                    <p><strong>Số điện thoại:</strong> {selectedOrder.phone_number}</p>
-                    <p><strong>Trạng thái đơn hàng:</strong> {selectedOrder.status}</p>
+                    <div className="border-bottom">
+                      <p><strong>Ngày mua:</strong> {new Date(selectedOrder.order_time).toISOString().split('T')[0]}</p>
+                      <p><strong>Mã đơn hàng:</strong> {selectedOrder.id}</p>
+                      <p><strong>Tổng tiền:</strong> {formatPrice(Number(selectedOrder.total_price).toFixed(0))}đ</p>
+                      <p><strong>Phương thức thanh toán:</strong> {selectedOrder.payment_method}</p>
+                    </div>
+                    <div className="pt-3">
+                      <p><strong>Họ và tên người mua:</strong> {selectedOrder.full_name}</p>
+                      <p><strong>Địa chỉ giao hàng:</strong> {selectedOrder.address}</p>
+                      <p><strong>Số điện thoại:</strong> {selectedOrder.phone_number}</p>
+                      <p><strong>Trạng thái đơn hàng:</strong> <a className="text-danger fw-bold">{selectedOrder.status}</a></p>
+                    </div>
+
 
                     {selectedOrder.status !== 'Cancelled' && (
-                      <button
-                        className="btn btn-danger mt-3"
-                        onClick={() => handleCancelOrder(selectedOrder.id)}
-                      >
-                        Hủy đơn hàng
-                      </button>
+                        <button
+                            className="btn btn-danger mt-1 mb-3 "
+                            onClick={() => handleCancelOrder(selectedOrder.id)}
+                        >
+                          Hủy đơn hàng
+                        </button>
                     )}
+                    <div className="container">
+                      <div className="row">
+                        <h5 className="border-top pt-3">Các mặt hàng:</h5>
+                        <ul>
+                          {selectedOrder.items.map(item => (
+                              <li key={item.product} className="d-flex align-items-center mb-3">
+                                {/* Hiển thị ảnh sản phẩm */}
+                                <div className="col d-flex justify-content-center">
+                                  <img
+                                      src={item.product_image}
+                                      alt={item.product_name}
+                                      className="product-image me-3"
+                                      style={{width: '80px', height: '80px', objectFit: 'cover'}}
+                                  />
+                                </div>
+                                <div className="col">
+                                  {/* Hiển thị tên và giá sản phẩm */}
+                                  <div className="flex-grow-1">
+                                    <p><strong>{item.product_name}</strong></p>
+                                  </div>
 
-                    <h5>Các mặt hàng:</h5>
-                    <ul>
-                      {selectedOrder.items.map(item => (
-                        <li key={item.product} className="d-flex align-items-center mb-3">
-                          {/* Hiển thị ảnh sản phẩm */}
-                          <img
-                            src={item.product_image}
-                            alt={item.product_name}
-                            className="product-image me-3"
-                            style={{ width: '80px', height: '80px', objectFit: 'cover' }}
-                          />
-                          
-                          {/* Hiển thị tên và giá sản phẩm */}
-                          <div className="flex-grow-1">
-                            <p><strong>{item.product_name}</strong></p>
-                            <p>Giá: {item.price}đ</p>
-                          </div>
-                          
-                          {/* Hiển thị số lượng */}
-                          <div>
-                            <p>Số lượng: {item.quantity}</p>
-                          </div>
+                                  {/* Hiển thị số lượng */}
+                                  <div>
+                                    <p>Số lượng: {item.quantity}</p>
+                                  </div>
 
-                          {/* Hiển thị tổng giá */}
-                          <div className="ms-3">
-                            <p>Tổng giá: {item.price * item.quantity}đ</p>
-                          </div>
+                                  {/* Hiển thị tổng giá */}
+                                  <div className="">
+                                    <p>Tổng: {formatPrice(item.price * item.quantity)}đ</p>
+                                  </div>
+                                </div>
+                                <div className="col">
+                                  {/* Phần đánh giá sản phẩm */}
+                                  <div className="ms-3">
+                                    {item.hasReviewed ? (
+                                        <div className="alert alert-info">Sản phẩm này đã được đánh giá</div>
+                                    ) : (
+                                        <>
+                                          <select
+                                              name="rating"
+                                              value={ratings[item.product] || 0}
+                                              onChange={(e) => handleRatingChange(item.product, Number(e.target.value))}
+                                              className="form-select mb-2"
+                                          >
+                                            <option value="0">Đánh giá từ 1 - 5</option>
+                                            {[1, 2, 3, 4, 5].map((value) => (
+                                                <option key={value} value={value}>{value}</option>
+                                            ))}
+                                          </select>
+                                          <textarea
+                                              className="form-control mb-2 w-100"
+                                              placeholder="Viết đánh giá"
+                                              value={comments[item.product] || ""}
+                                              onChange={(e) => handleCommentChange(item.product, e.target.value)}
+                                          />
+                                          <button
+                                              className="btn btn-primary"
+                                              onClick={() => handleReviewSubmit(item.product, selectedOrder.id)}
+                                          >
+                                            Gửi đánh giá
+                                          </button>
+                                        </>
+                                    )}
+                                  </div>
+                                </div>
 
-                          {/* Phần đánh giá sản phẩm */}
-                          <div className="ms-3">
-                            {item.hasReviewed ? (
-                              <div className="alert alert-info">Sản phẩm này đã được đánh giá</div>
-                            ) : (
-                              <>
-                                <select
-                                  name="rating"
-                                  value={ratings[item.product] || 0}
-                                  onChange={(e) => handleRatingChange(item.product, Number(e.target.value))}
-                                  className="form-select mb-2"
-                                >
-                                  <option value="0">Đánh giá từ 1 - 5</option>
-                                  {[1, 2, 3, 4, 5].map((value) => (
-                                    <option key={value} value={value}>{value}</option>
-                                  ))}
-                                </select>
-                                <textarea
-                                  className="form-control mb-2"
-                                  placeholder="Viết đánh giá"
-                                  value={comments[item.product] || ""}
-                                  onChange={(e) => handleCommentChange(item.product, e.target.value)}
-                                />
-                                <button
-                                  className="btn btn-primary"
-                                  onClick={() => handleReviewSubmit(item.product, selectedOrder.id)}
-                                >
-                                  Gửi đánh giá
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
+
+
+
+
+                              </li>
+                          ))}
+                        </ul>
+
+                      </div>
+                    </div>
+
                   </div>
                 )}
               </div>
