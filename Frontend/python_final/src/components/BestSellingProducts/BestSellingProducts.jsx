@@ -6,50 +6,53 @@ import ProductItem from '../ProductItem/ProductItem'; // Import ProductItem comp
 const BestSellingProducts = () => {
     const [products, setProducts] = useState([]);
     const token = localStorage.getItem("token");
-    const containerRef = useRef(null); // Ref for scrollable container
-    const itemWidth = 240; // Chiều rộng của mỗi sản phẩm cộng với margin
+    const containerRef = useRef(null); // Ref cho container cuộn
+    const [scrollPosition, setScrollPosition] = useState(0); // Vị trí cuộn hiện tại
+    const itemWidth = 240; // Chiều rộng của mỗi sản phẩm
 
     // Fetch dữ liệu từ API
     useEffect(() => {
         axios.get('http://localhost:8000/best-selling-products/', {
             headers: {
-              Authorization: `Token ${token}`,
-              "Content-Type": "application/json",
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
             },
-          })
-          .then(response => {
-            console.log(response.data); // Log dữ liệu từ API
+        })
+        .then(response => {
             setProducts(response.data);
-          })
-          .catch(error => {
+        })
+        .catch(error => {
             console.error('Error fetching best selling products:', error);
-          });
-      }, [token]);
-    
+        });
+    }, [token]);
+
     const scrollLeft = () => {
-        // Cuộn danh sách sang trái
         if (containerRef.current) {
-            containerRef.current.scrollBy({ left: -itemWidth * 4, behavior: 'smooth' });
+            const maxScrollLeft = 0;
+            const newPosition = Math.max(scrollPosition - itemWidth * 3, maxScrollLeft);
+            setScrollPosition(newPosition);
+            containerRef.current.style.transform = `translateX(-${newPosition}px)`;
         }
     };
 
     const scrollRight = () => {
-        // Cuộn danh sách sang phải
         if (containerRef.current) {
-            containerRef.current.scrollBy({ left: itemWidth * 4, behavior: 'smooth' });
+            const maxScrollRight = (products.length * itemWidth) - itemWidth * 3;
+            const newPosition = Math.min(scrollPosition + itemWidth * 3, maxScrollRight);
+            setScrollPosition(newPosition);
+            containerRef.current.style.transform = `translateX(-${newPosition}px)`;
         }
     };
 
     return (
-      <div>
-        <div className="header-container container">
-            <div className="item row d-flex justify-content-center align-items-center">
-                <div className="col">
-                    <h4 className="fw-bold">Best Selling Products</h4>
-                </div>
-                <div className="col">
-                    <div className="scroll-buttons-container">
-                        <div className="">
+        <div>
+            <div className="header-container container">
+                <div className="item row d-flex justify-content-center align-items-center">
+                    <div className="col">
+                        <h4 className="fw-bold">Best Selling Products</h4>
+                    </div>
+                    <div className="col">
+                        <div className="scroll-buttons-container">
                             <button className="scroll-button" onClick={scrollLeft}>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -64,8 +67,6 @@ const BestSellingProducts = () => {
                                     />
                                 </svg>
                             </button>
-                        </div>
-                        <div className="">
                             <button className="scroll-button" onClick={scrollRight}>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -86,22 +87,18 @@ const BestSellingProducts = () => {
                 </div>
             </div>
 
+            <div className="best-selling-products-container">
+                <div className="best-selling-products" ref={containerRef}>
+                    {products.length > 0 ? (
+                        products.map((product, index) => (
+                            <ProductItem key={index} product={product} token={token} />
+                        ))
+                    ) : (
+                        <p>No best selling products found</p>
+                    )}
+                </div>
+            </div>
         </div>
-          <div className="container">
-              <div className="row d-flex">
-                  <div className="best-selling-products gap-3">
-                      {products.length > 0 ? (
-                          products.map((product, index) => (
-                              // Sử dụng ProductItem để hiển thị từng sản phẩm
-                              <ProductItem key={index} product={product} token={localStorage.getItem('token')}/>
-                          ))
-                      ) : (
-                          <p>No best selling products found</p>
-                      )}
-                  </div>
-              </div>
-          </div>
-      </div>
     );
 };
 

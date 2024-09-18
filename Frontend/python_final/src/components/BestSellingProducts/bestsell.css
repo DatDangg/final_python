@@ -1,21 +1,29 @@
+.best-selling-products-container {
+  width: 720px; /* 240px x 3 sản phẩm */
+  overflow: hidden; /* Ẩn phần sản phẩm ngoài màn hình */
+  margin: 0 auto;
+}
+
 .best-selling-products {
-    display: flex;
-    flex-wrap: wrap;
-    margin-left: 11%;
-  }
-  
-  .product-card {
-    border: 1px solid #ddd;
-    padding: 16px;
-    margin: 8px;
-    width: 200px;
-    text-align: center;
-  }
-  
-  .product-card img {
-    width: 100%;
-    height: auto;
-  }
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin: 8px;
+  width: 240px; /* Kích thước của mỗi sản phẩm */
+  text-align: center;
+  flex-shrink: 0; /* Ngăn không cho các sản phẩm bị co lại */
+}
+
+.product-card img {
+  width: 100%;
+  height: auto;
+}
+
+
   
   .variant-info {
     margin-top: 10px;
