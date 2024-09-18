@@ -19,7 +19,7 @@ function UserProfile() {
   const [comments, setComments] = useState({}); // State cho comment của từng sản phẩm
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [avatar, setAvatar] = useState(null); 
+  const [avatar, setAvatar] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -277,12 +277,13 @@ function UserProfile() {
                       <input className="box" type="file" name="avatar" onChange={handleAvatarChange} />
                     </div>
                     <div className="pt-3">
-  {userData.profile.avatar ? (
-    <img src={`http://127.0.0.1:8000${userData.profile.avatar}`} alt="User Avatar" className="user-avatar" />
-  ) : (
-    <p>Avatar chưa được tải lên</p>
-  )}
-</div>
+                        {userData.profile.avatar ? (
+                          <img src={`http://127.0.0.1:8000${userData.profile.avatar}`}
+                               alt="User Avatar" className="user-avatar" />
+                        ) : (
+                          <p>Avatar chưa được tải lên</p>
+                        )}
+                    </div>
 
                     <div className="pt-3">
                       <label className="col-2">Email:</label>
