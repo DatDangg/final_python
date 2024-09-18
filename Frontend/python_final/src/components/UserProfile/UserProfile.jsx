@@ -137,10 +137,11 @@ function UserProfile() {
     }
   };
   
-  const handleReviewSubmit = (productId) => {
+  const handleReviewSubmit = (productId, orderId) => {
     const token = localStorage.getItem("token");
     const payload = {
-      product: productId,  // Đảm bảo đây chỉ là ID
+      product: productId,  
+      order: orderId,
       rating: ratings[productId],
       comment: comments[productId],
     };
