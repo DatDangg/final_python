@@ -9,6 +9,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
+from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, update_session_auth_hash
@@ -42,9 +43,25 @@ def change_password(request):
 class ProductListView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [filters.SearchFilter]
-    filterset_fields = ['category']  
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['category', 'brand', 'variants__storage']
     search_fields = ['title', 'brand', 'description']
+    ordering_fields = ['variants__listed_price'] 
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Lấy tham số giá trị tối thiểu và tối đa từ request
+        min_price = self.request.query_params.get('variants__listed_price__gte')
+        max_price = self.request.query_params.get('variants__listed_price__lte')
+
+        # Áp dụng lọc nếu có giá trị min_price hoặc max_price
+        if min_price:
+            queryset = queryset.filter(variants__listed_price__gte=min_price).distinct()
+        if max_price:
+            queryset = queryset.filter(variants__listed_price__lte=max_price).distinct()
+
+        return queryset
 
     @action(detail=True, methods=['patch'], url_path='update-variant')
     def update_variant(self, request, pk=None):

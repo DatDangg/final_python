@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_extensions',
     'django.contrib.humanize',
+    'django_filters',
 ]
 
 REST_FRAMEWORK = {

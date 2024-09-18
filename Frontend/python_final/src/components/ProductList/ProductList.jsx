@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProductItem from "../ProductItem/ProductItem";
+import Aside from "../Aside/Aside";
 import "./style.css";
 
 function ProductList({
@@ -10,63 +11,63 @@ function ProductList({
   searchQuery,
 }) {
   const [productList, setProductList] = useState([]);
+  const [filters, setFilters] = useState({
+    brand: '',
+    minPrice: '',
+    maxPrice: '',
+    storage: ''
+  });
   const token = localStorage.getItem("token");
-  
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
+
   useEffect(() => {
-    if (token) {
-      fetch("http://localhost:8000/api/products/", {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          let filteredProducts = data;
-
-          if (Array.isArray(data)) {
-            if (selectedCategory) {
-              filteredProducts = filteredProducts.filter(
-                (product) => product.category === selectedCategory.id
-              );
-            }
-
-            if (searchQuery) {
-              filteredProducts = filteredProducts.filter((product) =>
-                product.title.toLowerCase().includes(searchQuery.toLowerCase())
-              );
-            }
-
-            setTotalProducts(filteredProducts.length);
-
-            const startIndex = (currentPage - 1) * productsPerPage;
-            const endIndex = startIndex + productsPerPage;
-            setProductList(filteredProducts.slice(startIndex, endIndex));
-          } else {
-            console.error(
-              "Expected data to be an array, but got:",
-              typeof data
-            );
-          }
-        })
-        .catch((error) => console.error("Error fetching products:", error));
-    } else {
-      console.error("No token found");
-    }
-  }, [
-    selectedCategory,
-    currentPage,
-    productsPerPage,
-    searchQuery,
-    setTotalProducts,
-    token,
-  ]);
+    const fetchProducts = async () => {
+      if (token) {
+        let url = `http://localhost:8000/api/products/?category=${selectedCategory?.id || ''}&search=${searchQuery || ''}`;
+        
+        if (filters.brand) url += `&brand=${filters.brand}`;
+        if (filters.storage) url += `&variants__storage=${filters.storage}`;
+        if (filters.minPrice) url += `&variants__listed_price__gte=${filters.minPrice}`;
+        if (filters.maxPrice) url += `&variants__listed_price__lte=${filters.maxPrice}`;
+        
+        console.log("Request URL:", url);  // Log URL để debug
+        
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        });
+        const data = await response.json();
+        
+        if (Array.isArray(data)) {
+          setTotalProducts(data.length);
+          const startIndex = (currentPage - 1) * productsPerPage;
+          const endIndex = startIndex + productsPerPage;
+          setProductList(data.slice(startIndex, endIndex));
+        } else {
+          console.error("Expected data to be an array, but got:", typeof data);
+        }
+      } else {
+        console.error("No token found");
+      }
+    };
+    
+    fetchProducts();
+  }, [selectedCategory, currentPage, productsPerPage, searchQuery, setTotalProducts, token, filters]);
+  
 
   return (
-    <div className="product-container">
-      <div className="product-list">
-        {productList.map((product, index) => (
-          <ProductItem key={index} product={product} token={token} />
-        ))}
+    <div className="product-page">
+      <Aside onFilterChange={handleFilterChange} />
+      <div className="product-container">
+        <div className="product-list">
+          {productList.map((product, index) => (
+            <ProductItem key={index} product={product} token={token} />
+          ))}
+        </div>
       </div>
     </div>
   );
