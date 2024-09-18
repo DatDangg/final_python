@@ -596,12 +596,12 @@ function ProductDetail() {
                                     key={i}
                                     src="https://salt.tikicdn.com/ts/upload/e3/f0/86/efd76e1d41c00ad8ebb7287c66b559fd.png"
                                     alt={`${review.rating} stars`}
-                                    style={{ width: '20px', height: '20px', marginRight: '5px' }}
+                                    style={{width: '20px', height: '20px', marginRight: '5px'}}
                                 />
                             ))}
                             rated {review.rating} stars
                           </div>
-                          
+                          <small>Ngày đánh giá: {new Date(review.created_at).toLocaleDateString()}</small>
                           <p className="pt-3">Comments: {review.comment}</p>
                         </div>
                     ))
