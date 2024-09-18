@@ -262,6 +262,20 @@ class ReviewView(viewsets.ModelViewSet):
             queryset = queryset.filter(product__id=product_id)
         return queryset
 
+@api_view(['GET'])
+def get_reviews_by_order(request, order_id):
+    reviews = Review.objects.filter(order=order_id, user=request.user)
+    
+    review_data = []
+    for review in reviews:
+        review_data.append({
+            'product': review.product.id,
+            'rating': review.rating,
+            'comment': review.comment
+        })
+    
+    return Response(review_data)
+
 class ResetPasswordView(APIView):
     def post(self, request):
         username = request.data.get('username')

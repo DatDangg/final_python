@@ -94,7 +94,7 @@ function Cart() {
                       </button>
                     </div>
                     <div className="cart-item-price m-3">
-                      <span>${Number(item.variant.listed_price)}</span>
+                      <span><>đ</>{Number(item.variant.listed_price)}</span>
                     </div>
                     <div className="cart-item-remove m-3">
                       <button
@@ -112,7 +112,7 @@ function Cart() {
           <div className="order-summary">
             <div className="summary-totals">
               <div className="summary-item total">
-                <span>Total: $</span>
+                <span>Total: <>đ</></span>
                 <span>{Number(totalAmount).toFixed(0)}</span>
               </div>
             </div>

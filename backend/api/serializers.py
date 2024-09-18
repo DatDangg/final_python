@@ -168,9 +168,15 @@ class OrderSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['id', 'user', 'product', 'rating', 'comment', 'created_at']
+        fields = ['id', 'user', 'product', 'order', 'rating', 'comment', 'created_at']
         read_only_fields = ['user', 'created_at']
 
     def create(self, validated_data):
-        return Review.objects.create(**validated_data)
+        order = validated_data.get('order')
+        product = validated_data.get('product')
+
+        if Review.objects.filter(order=order, product=product).exists():
+            raise serializers.ValidationError("Sản phẩm này đã được đánh giá trong đơn hàng này.")
+        
+        return super().create(validated_data)
 

@@ -56,8 +56,6 @@ class ProductAdmin(admin.ModelAdmin):
 
     image_count.short_description = 'Number of Images'
 
-
-
 class CategoryAdmin(admin.ModelAdmin):  # Corrected typo in class name
     list_display = ("name", "image")
 

@@ -66,7 +66,7 @@ function UserProfile() {
           'Content-Type': 'application/json',
         },
       });
-      return response.data; // Giả sử API trả về danh sách review của sản phẩm đó
+      return response.data // Giả sử API trả về danh sách review của sản phẩm đó
     } catch (error) {
       console.error('Error fetching reviews for product:', productId, error);
       return [];
@@ -96,29 +96,46 @@ function UserProfile() {
         });
   }, []);
 
-  const handleOrderClick = async (order) => {
+  const handleOrderClick = async (order, orderIndex) => {
+    const reviews = await fetchOrderReviews(order.id);
+  
     const updatedItems = await Promise.all(order.items.map(async (item) => {
       const productDetails = await fetchProductDetails(item.product);
-      const reviews = await fetchProductReviews(item.product);
-      const hasReviewed = reviews.some(review => review.user === userData.id);
+  
+      const hasReviewed = reviews.some(review => review.product === item.product);
   
       return {
         ...item,
-        product_name: productDetails.title, 
+        product_name: productDetails.title,
         hasReviewed: hasReviewed,
       };
     }));
   
-    // Cập nhật đơn hàng với thông tin sản phẩm mới
     setSelectedOrder({
       ...order,
       items: updatedItems,
+      orderIndex: orderIndex + 1,
     });
   
-    document.getElementById('pills-contact-tab').click(); // Chuyển sang tab review
+    document.getElementById('pills-contact-tab').click(); 
   };
   
-  
+
+  const fetchOrderReviews = async (orderId) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/reviews/order/${orderId}/`, {
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data; // Trả về danh sách review của đơn hàng
+    } catch (error) {
+      console.error('Error fetching reviews for order:', orderId, error);
+      return [];
+    }
+  };
   
   const handleReviewSubmit = (productId) => {
     const token = localStorage.getItem("token");
@@ -302,8 +319,8 @@ function UserProfile() {
                             </tr>
                             </thead>
                             <tbody>
-                            {userData.orders.map((order, index) => (
-                                <tr key={order.id} onClick={() => handleOrderClick(order)}>
+                              {userData.orders.map((order, index) => (
+                                <tr key={order.id} onClick={() => handleOrderClick(order, index)}>
                                   <th scope="row">Đơn hàng {index + 1}</th>
                                   <td>{order.id}</td>
                                   <td>{order.full_name}</td>
@@ -311,7 +328,7 @@ function UserProfile() {
                                   <td>{order.status}</td>
                                   <td>{order.payment_method}</td>
                                 </tr>
-                            ))}
+                              ))}
                             </tbody>
                           </table>
                         </div>
@@ -327,52 +344,53 @@ function UserProfile() {
                   {selectedOrder ? (
                       <div className="review">
                         <div className="text-center">
-                          <h2 className="mb-3">Đánh giá đơn hàng {selectedOrder.id} </h2>
+                          <h2 className="mb-3">Đánh giá đơn hàng {selectedOrder.orderIndex} </h2>
                           {selectedOrder.items && selectedOrder.items.length > 0 ? (
                               selectedOrder.items.map((item) => (
-                                  <div key={item.product} className="mb-4">
-                                    <h4>Sản phẩm: {item.product_name || "Tên sản phẩm không có"}</h4>
-                                    {item.hasReviewed ? (
-                                      <div className="alert alert-info">Sản phẩm này đã được đánh giá</div>
-                                    ) : (
-                                      <>
-                                        <div className="mb-3">
-                                          <select
-                                              name="rating"
-                                              className="form-select mx-auto"
-                                              style={{width: '50%'}}
-                                              value={ratings[item.product] || 0}
-                                              onChange={(e) => handleRatingChange(item.product, Number(e.target.value))}
-                                          >
-                                            <option value="0">Đánh giá từ 1 - 5</option>
-                                            {[1, 2, 3, 4, 5].map((value) => (
-                                                <option key={value} value={value}>{value}</option>
-                                            ))}
-                                          </select>
-                                        </div>
-                                        <div className="mb-3">
-                                          <textarea
-                                              id={`comment-${item.product}`}
-                                              className="form-control mx-auto text-review"
-                                              style={{width: '50%'}}
-                                              value={comments[item.product] || ""}
-                                              onChange={(e) => handleCommentChange(item.product, e.target.value)}
-                                          />
-                                        </div>
-                                        <button
-                                            className="btn btn-outline-dark mt-3 mb-5"
-                                            onClick={() => handleReviewSubmit(item.product)}
+                                <div key={item.product} className="mb-4">
+                                  <h4>Sản phẩm: {item.product_name || "Tên sản phẩm không có"}</h4>
+                                  {item.hasReviewed ? (
+                                    <div className="alert alert-info">Sản phẩm này đã được đánh giá</div>
+                                  ) : (
+                                    <>
+                                      <div className="mb-3">
+                                        <select
+                                          name="rating"
+                                          className="form-select mx-auto"
+                                          style={{width: '50%'}}
+                                          value={ratings[item.product] || 0}
+                                          onChange={(e) => handleRatingChange(item.product, Number(e.target.value))}
                                         >
-                                          Gửi đánh giá cho sản phẩm {item.product_name}
-                                        </button>
-                                      </>
-                                    )}
-                                  </div>
+                                          <option value="0">Đánh giá từ 1 - 5</option>
+                                          {[1, 2, 3, 4, 5].map((value) => (
+                                            <option key={value} value={value}>{value}</option>
+                                          ))}
+                                        </select>
+                                      </div>
+                                      <div className="mb-3">
+                                        <textarea
+                                          id={`comment-${item.product}`}
+                                          className="form-control mx-auto text-review"
+                                          style={{width: '50%'}}
+                                          value={comments[item.product] || ""}
+                                          onChange={(e) => handleCommentChange(item.product, e.target.value)}
+                                        />
+                                      </div>
+                                      <button
+                                        className="btn btn-outline-dark mt-3 mb-5"
+                                        onClick={() => handleReviewSubmit(item.product, selectedOrder.id)} 
+                                      >
+                                        Gửi đánh giá cho sản phẩm {item.product_name}
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
                               ))
-                          ) : (
+                            ) : (
                               <div>Không có sản phẩm nào trong đơn hàng.</div>
-                          )}
+                            )}
                         </div>
+
                       </div>
                   ) : (
                       <div>Vui lòng chọn một đơn hàng để xem chi tiết.</div>
