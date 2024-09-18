@@ -9,6 +9,9 @@ function ProductItem({ product, token }) {
   const [loading, setLoading] = useState(true);
   const [primaryImage, setPrimaryImage] = useState(null);
 
+  // Lấy giá từ variant đầu tiên
+  const listedPrice = variants.length > 0 ? variants[0].listed_price : "N/A";
+
   useEffect(() => {
     // Fetch wishlist status
     axios
@@ -90,6 +93,9 @@ function ProductItem({ product, token }) {
                 }} // Use primary image or a placeholder
             ></div>
             <h3 className="item-product-name text-wrap">{title}</h3>
+
+            {/* Hiển thị giá dưới tên sản phẩm */}
+            <p className="item-product-price">Price: đ{listedPrice}</p>
 
             <Link to={`/product/${id}`} className="buy-now-link">
               <button className="buy-now-button">Buy Now</button>

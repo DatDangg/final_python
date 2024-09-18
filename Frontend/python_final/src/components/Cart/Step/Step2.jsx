@@ -45,7 +45,7 @@ function Step2() {
           />
           <label htmlFor="express">
             <div className="shipping-option">
-              <span className="shipping-title"><></>20000đ</span>
+              <span className="shipping-title"><>đ</>20.000</span>
               <span className="shipping-description">
                 -- Get your delivery as soon as possible --
               </span>
@@ -64,7 +64,7 @@ function Step2() {
           />
           <label htmlFor="schedule">
             <div className="shipping-option">
-              <span className="shipping-title"><></>10000đ</span>
+              <span className="shipping-title"><>đ</>10.000</span>
               <span className="shipping-description">
                -- Schedule delivery at your convenience --
               </span>
