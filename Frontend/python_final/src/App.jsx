@@ -24,6 +24,7 @@ import Footer from "./components/Footer/Footer.jsx";
 import Banner2 from "./components/Banner/Banner2.jsx";
 import ListHome from "./components/ListHome/ListHome.jsx";
 import ChangePassword from './components/ChangePw/ChangePw.jsx';
+import Contact from "./components/Contact/Contact.jsx";
 
 
 function ProtectedRoute({ children }) {
@@ -71,6 +72,7 @@ function App() {
                       <Route path="/checkout/payment" element={<Step3 />} />
                       <Route path="/order/:orderId" element={<Order />} />
                       <Route path="/change-password" element={<ChangePassword />} />
+                      <Route path="/contact" element={<Contact />} />
                     </Routes>
                     <Footer/>
                   </ProtectedRoute>

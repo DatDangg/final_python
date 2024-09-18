@@ -1,0 +1,25 @@
+.f-abril{
+    font-family: "Abril Fatface", serif;
+}
+.contact{
+    background-color: #f8f8f8;
+    height: 600px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.contact h1{
+    font-size: 60px;
+    padding-top: 50px;
+}
+
+.top{
+    height: 100px;
+}
+
+.bottom{
+    padding: 200px;
+}
+
