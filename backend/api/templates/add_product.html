@@ -122,7 +122,7 @@
     document.addEventListener('DOMContentLoaded', function () {
     let variantFormsetDiv = document.getElementById('variant-formset');
     let addVariantBtn = document.getElementById('add-variant');
-    let totalVariantForms = document.getElementById('id_form-TOTAL_FORMS');
+    let totalVariantForms = document.getElementById('id_variant-TOTAL_FORMS');  // Thay đổi để sử dụng đúng prefix 'variant'
     let variantFormIndex = totalVariantForms ? parseInt(totalVariantForms.value) : 0;
 
     addVariantBtn.addEventListener('click', function () {
@@ -134,10 +134,9 @@
         variantFormIndex++;
 
         if (totalVariantForms) {
-            totalVariantForms.value = variantFormIndex;
+            totalVariantForms.value = variantFormIndex;  // Cập nhật số lượng form
         }
     });
-
     let imageFormsetDiv = document.getElementById('image-formset');
     let addImageBtn = document.getElementById('add-image');
     let totalImageForms = document.getElementById('id_image-TOTAL_FORMS');

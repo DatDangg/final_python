@@ -45,8 +45,7 @@ const Step3 = () => {
       (total, item) => total + item.variant.listed_price * item.quantity,
       0
     );
-    const estimatedTax = 50; // Replace with actual tax calculation if needed
-    return subtotal + estimatedTax + shippingCost;
+    return subtotal + shippingCost;
   };
 
   const handleConfirmOrder = () => {
@@ -191,7 +190,7 @@ const Step3 = () => {
             <div className="price-details">
               <h3 className="fw-bold mb-2">Summary</h3>
               <p>
-                Subtotal:{" $"}
+                Subtotal:{" đ"}
                 {cartItems.reduce(
                     (total, item) =>
                         total + item.variant.listed_price * item.quantity,
@@ -199,9 +198,8 @@ const Step3 = () => {
                 )}{" "}
 
               </p>
-              <p>Estimated Tax: $1 </p>
-              <p>Estimated Shipping & Handling: ${Number(shippingCost).toFixed(2)} </p>
-              <h3 className="fw-bold pt-3">Total: ${Number(calculateTotal())} </h3>
+              <p>Estimated Shipping & Handling: đ{Number(shippingCost).toFixed(0)} </p>
+              <h3 className="fw-bold pt-3">Total: đ{Number(calculateTotal())} </h3>
             </div>
           </div>
 

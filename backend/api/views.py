@@ -398,22 +398,26 @@ def product_list_view(request):
 def add_product_view(request):
     if request.method == 'POST':
         product_form = ProductForm(request.POST)
-        variant_formset = ProductVariantFormSet(request.POST, request.FILES)
-        image_formset = ProductImageFormSet(request.POST, request.FILES)
+        variant_formset = ProductVariantFormSet(request.POST, request.FILES, prefix='variant')
+        image_formset = ProductImageFormSet(request.POST, request.FILES, prefix='image')
 
         if product_form.is_valid() and variant_formset.is_valid() and image_formset.is_valid():
+            # Lưu product
             product = product_form.save()
 
-            variants = variant_formset.save(commit=False)  
+            # Lưu các variant của product
+            variants = variant_formset.save(commit=False)  # Chưa commit ngay lập tức
             for variant in variants:
-                variant.product = product
+                variant.product = product  # Gán sản phẩm cho mỗi variant
                 variant.save()
 
-            images = image_formset.save(commit=False)
+            # Lưu các hình ảnh của product
+            images = image_formset.save(commit=False)  # Chưa commit ngay lập tức
             for image in images:
-                image.product = product
+                image.product = product  # Gán sản phẩm cho mỗi image
                 image.save()
 
+            # Xóa các form được đánh dấu là xóa (trong formset)
             for form in variant_formset.deleted_forms:
                 if form.instance.pk:
                     form.instance.delete()
@@ -422,6 +426,7 @@ def add_product_view(request):
                 if form.instance.pk:
                     form.instance.delete()
 
+            # Xử lý lưu chi tiết sản phẩm dựa trên category
             category_name = product.category.name
 
             if category_name == "Smart Phones":
@@ -455,8 +460,8 @@ def add_product_view(request):
             return redirect('product_list')
     else:
         product_form = ProductForm()
-        variant_formset = ProductVariantFormSet(queryset=ProductVariant.objects.none())
-        image_formset = ProductImageFormSet(queryset=ProductImage.objects.none())
+        variant_formset = ProductVariantFormSet(queryset=ProductVariant.objects.none(), prefix='variant')
+        image_formset = ProductImageFormSet(queryset=ProductImage.objects.none(), prefix='image')
 
     return render(request, 'add_product.html', {
         'product_form': product_form,
