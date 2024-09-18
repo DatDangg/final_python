@@ -94,7 +94,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['date_of_birth', 'gender', 'phone_number', 'avatar']
+        fields = ['date_of_birth', 'gender', 'phone_number']
 
 class UserSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer()
@@ -113,12 +113,6 @@ class UserSerializer(serializers.ModelSerializer):
         profile.date_of_birth = profile_data.get('date_of_birth', profile.date_of_birth)
         profile.gender = profile_data.get('gender', profile.gender)
         profile.phone_number = profile_data.get('phone_number', profile.phone_number)
-
-        # Xử lý upload avatar
-        avatar = profile_data.get('avatar')
-        if avatar:
-            profile.avatar = avatar
-
         profile.save()
 
         return instance
