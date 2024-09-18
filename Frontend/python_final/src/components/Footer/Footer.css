@@ -1,3 +1,6 @@
+.f-abril{
+    font-family: "Abril Fatface", serif;
+}
 .footer {
     height: 100%;
     background-color: black;
@@ -18,4 +21,9 @@
 .giaohang{
     height: 200px;
     width: 200px;
+}
+
+.giaohangnhanh{
+    width: 150px;
+    height: 100px;
 }
