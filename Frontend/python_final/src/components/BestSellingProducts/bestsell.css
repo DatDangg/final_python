@@ -2,11 +2,13 @@
   width: 720px; /* 240px x 3 sản phẩm */
   overflow: hidden; /* Ẩn phần sản phẩm ngoài màn hình */
   margin: 0 auto;
+
 }
 
 .best-selling-products {
   display: flex;
   transition: transform 0.3s ease-in-out;
+    gap: 10px;
 }
 
 .product-card {
@@ -37,7 +39,8 @@
  .scroll-buttons-container {
   display: flex;
   gap: 15px;
-     justify-content: end;
+     justify-content: center;
+     margin-left: 250px;
 
 
 }

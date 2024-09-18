@@ -292,6 +292,9 @@ function ProductDetail() {
                       <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
                       {formatPrice(Number(selectedVariant.listed_price).toFixed(0))}
                     </span>
+                      <small className="sale">
+                       -{100-((Number(selectedVariant.cost_price) / Number(selectedVariant.listed_price) * 100).toFixed(0))}%
+                      </small>
                   </p>
                 )}
 
