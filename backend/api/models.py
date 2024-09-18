@@ -16,7 +16,11 @@ class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
 
     def primary_image(self):
-        return self.images.filter(is_primary=True).first()
+        # Kiểm tra nếu có ảnh chính
+        primary_image = self.images.filter(is_primary=True).first()
+        if primary_image:
+            return primary_image.image.url  # Trả về URL của trường image
+        return None
 
     def __str__(self):
         return self.title

@@ -6,7 +6,7 @@
 {% load humanize %}  <!-- Thêm dòng này để sử dụng bộ lọc humanize -->
 
 <h1>Order Management</h1>
-<div class="table-responsive pt-4" style="max-height: 535px; overflow-y: auto;">
+<div class="table-responsive pt-4">
     <table class="table table-bordered">
         <thead class="text-center">
         <tr>
@@ -16,7 +16,7 @@
             <th>Địa chỉ</th>
             <th>Tổng tiền</th>
             <th>Trạng thái</th>
-            <th>Cập nhật</th>
+            <th>Hành động</th>
         </tr>
         </thead>
         <tbody>
@@ -26,22 +26,67 @@
                 <td>{{ order.full_name }}</td>
                 <td>{{ order.phone_number }}</td>
                 <td>{{ order.address }}</td>
-                <td>{{ order.total_price|floatformat:0|intcomma }} VNĐ</td>  <!-- Sử dụng floatformat:0 để bỏ số thập phân -->
+                <td>{{ order.total_price|floatformat:0|intcomma }} VNĐ</td>
                 <td>{{ order.get_status_display }}</td>
                 <td>
-                    <form class="text-center" method="POST" action="">
-                        {% csrf_token %}
-                        <input type="hidden" name="order_id" value="{{ order.id }}">
-                        <select name="status" class="btn btn-outline-secondary">
-                            <option value="pending" {% if order.status == "pending" %}selected{% endif %}>Pending</option>
-                            <option value="shipped" {% if order.status == "shipped" %}selected{% endif %}>Shipped</option>
-                            <option value="delivered" {% if order.status == "delivered" %}selected{% endif %}>Delivered</option>
-                            <option value="cancelled" {% if order.status == "cancelled" %}selected{% endif %}>Cancelled</option>
-                        </select>
-                        <button class=" btn btn-outline-dark" type="submit">Update</button>
-                    </form>
+                    <!-- Nút bấm để mở modal -->
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#orderModal{{ order.id }}">
+                        Xem chi tiết
+                    </button>
                 </td>
             </tr>
+
+            <!-- Modal để hiển thị chi tiết đơn hàng -->
+            <div class="modal fade" id="orderModal{{ order.id }}" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel{{ order.id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="orderModalLabel{{ order.id }}">Chi tiết đơn hàng #{{ order.id }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Ngày mua:</strong> {{ order.order_time }}</p>
+                            <p><strong>Mã đơn hàng:</strong> {{ order.id }}</p>
+                            <p><strong>Tổng tiền:</strong> {{ order.total_price|floatformat:0|intcomma }} VNĐ</p>
+                            <p><strong>Phương thức thanh toán:</strong> {{ order.payment_method }}</p>
+                            <p><strong>Họ tên người mua:</strong> {{ order.full_name }}</p>
+                            <p><strong>Địa chỉ giao hàng:</strong> {{ order.address }}</p>
+                            <p><strong>Số điện thoại:</strong> {{ order.phone_number }}</p>
+
+                            <form method="POST" action="{% url 'order_list' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="order_id" value="{{ order.id }}">
+                                <p><strong>Trạng thái đơn hàng:</strong>
+                                    <select name="status" class="form-control">
+                                        <option value="pending" {% if order.status == "pending" %}selected{% endif %}>Pending</option>
+                                        <option value="shipped" {% if order.status == "shipped" %}selected{% endif %}>Shipped</option>
+                                        <option value="delivered" {% if order.status == "delivered" %}selected{% endif %}>Delivered</option>
+                                        <option value="cancelled" {% if order.status == "cancelled" %}selected{% endif %}>Cancelled</option>
+                                    </select>
+                                </p>
+                                <button type="submit" class="btn btn-outline-dark">Cập nhật</button>
+                            </form>
+                            
+
+                            <h5 class="mt-4">Các mặt hàng</h5>
+                            <ul class="list-group">
+                                {% for item in order.items.all %}
+                                <li class="list-group-item">
+                                    <img src="{{ item.product.primary_image }}" alt="{{ item.product.title }}" style="width: 50px; height: 50px;">
+
+                                    <strong>{{ item.product.title }}</strong>  {{ item.quantity }} x {{ item.price|floatformat:0|intcomma }} VNĐ  <strong>{{ item.total_price|floatformat:0|intcomma }} VNĐ</strong>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endfor %}
         </tbody>
     </table>

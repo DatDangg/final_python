@@ -412,34 +412,49 @@ def product_list_view(request):
 
     product_data = []
     for product in products:
-        for variant in product.variants.all():
-            product_detail = None
-            if hasattr(product, 'phonedetail'):
-                product_detail = {
-                    'cpu': product.phonedetail.cpu,
-                    'main_camera': product.phonedetail.main_camera,
-                }
-            elif hasattr(product, 'computerdetail'):
-                product_detail = {
-                    'processor': product.computerdetail.processor,
-                    'ram': product.computerdetail.ram,
-                }
-            elif hasattr(product, 'headphonedetail'):
-                product_detail = {
-                    'wireless': product.headphonedetail.wireless,
-                    'battery_life': product.headphonedetail.battery_life,
-                }
-            elif hasattr(product, 'smartwatchdetail'):
-                product_detail = {
-                    'strap_type': product.smartwatchdetail.strap_type,
-                    'screen_size': product.smartwatchdetail.screen_size,
-                }
+        # Collecting details based on product category
+        product_detail = None
+        if product.category.name == "Smart Phones" and hasattr(product, 'phonedetail'):
+            product_detail = {
+                'cpu': product.phonedetail.cpu,
+                'main_camera': product.phonedetail.main_camera,
+                'front_camera': product.phonedetail.front_camera,
+                'battery_capacity': product.phonedetail.battery_capacity,
+                'screen_size': product.phonedetail.screen_size,
+                'refresh_rate': product.phonedetail.refresh_rate,
+                'pixel_density': product.phonedetail.pixel_density,
+                'screen_type': product.phonedetail.screen_type,
+            }
+        elif product.category.name == "Computers" and hasattr(product, 'computerdetail'):
+            product_detail = {
+                'processor': product.computerdetail.processor,
+                'ram': product.computerdetail.ram,
+                'graphics_card': product.computerdetail.graphics_card,
+                'screen_size': product.computerdetail.screen_size,
+                'battery_life': product.computerdetail.battery_life,
+            }
+        elif product.category.name == "Smart Watches" and hasattr(product, 'smartwatchdetail'):
+            product_detail = {
+                'strap_type': product.smartwatchdetail.strap_type,
+                'screen_size': product.smartwatchdetail.screen_size,
+                'battery_capacity': product.smartwatchdetail.battery_capacity,
+                'water_resistance': product.smartwatchdetail.water_resistance,
+                'heart_rate_monitor': product.smartwatchdetail.heart_rate_monitor,
+            }
+        elif product.category.name == "Headphones" and hasattr(product, 'headphonedetail'):
+            product_detail = {
+                'wireless': product.headphonedetail.wireless,
+                'battery_life': product.headphonedetail.battery_life,
+                'noise_cancellation': product.headphonedetail.noise_cancellation,
+                'driver_size': product.headphonedetail.driver_size,
+            }
 
-            product_data.append({
-                'product': product,
-                'variant': variant,
-                'detail': product_detail,
-            })
+        # Adding product and its details to the list
+        product_data.append({
+            'product': product,
+            'variants': product.variants.all(),
+            'details': product_detail,
+        })
 
     return render(request, 'product_list.html', {'product_data': product_data})
 
@@ -525,21 +540,60 @@ def edit_product(request, product_id, variant_id):
     product = get_object_or_404(Product, id=product_id)
     variant = get_object_or_404(ProductVariant, id=variant_id)  
 
+    # Get or create the correct detail form based on the category
+    phone_detail_form = None
+    computer_detail_form = None
+    smartwatch_detail_form = None
+    headphone_detail_form = None
+
+    if product.category.name == "Smart Phones":
+        phone_detail, created = PhoneDetail.objects.get_or_create(product=product)
+        phone_detail_form = PhoneDetailForm(request.POST or None, instance=phone_detail)
+
+    elif product.category.name == "Computers":
+        computer_detail, created = ComputerDetail.objects.get_or_create(product=product)
+        computer_detail_form = ComputerDetailForm(request.POST or None, instance=computer_detail)
+
+    elif product.category.name == "Smart Watches":
+        smartwatch_detail, created = SmartwatchDetail.objects.get_or_create(product=product)
+        smartwatch_detail_form = SmartwatchDetailForm(request.POST or None, instance=smartwatch_detail)
+
+    elif product.category.name == "Headphones":
+        headphone_detail, created = HeadphoneDetail.objects.get_or_create(product=product)
+        headphone_detail_form = HeadphoneDetailForm(request.POST or None, instance=headphone_detail)
+
     if request.method == 'POST':
         product_form = ProductForm(request.POST, instance=product)
         variant_form = ProductVariantForm(request.POST, instance=variant)
 
+        # Check if all forms are valid
         if product_form.is_valid() and variant_form.is_valid():
             product_form.save()
             variant_form.save()
-            return redirect('product_list') 
+
+            # Save the corresponding detail form if it exists and is valid
+            if phone_detail_form and phone_detail_form.is_valid():
+                phone_detail_form.save()
+            elif computer_detail_form and computer_detail_form.is_valid():
+                computer_detail_form.save()
+            elif smartwatch_detail_form and smartwatch_detail_form.is_valid():
+                smartwatch_detail_form.save()
+            elif headphone_detail_form and headphone_detail_form.is_valid():
+                headphone_detail_form.save()
+
+            return redirect('product_list')  # Redirect to product list
+
     else:
         product_form = ProductForm(instance=product)
         variant_form = ProductVariantForm(instance=variant)
 
     return render(request, 'edit_product.html', {
         'product_form': product_form,
-        'variant_form': variant_form,  
+        'variant_form': variant_form,
+        'phone_detail_form': phone_detail_form,
+        'computer_detail_form': computer_detail_form,
+        'smartwatch_detail_form': smartwatch_detail_form,
+        'headphone_detail_form': headphone_detail_form,
     })
 
 def delete_product_view(request, product_id):
@@ -585,16 +639,20 @@ def user_list_view(request):
     return render(request, 'user_list.html', {'users': users})
 
 def order_list_view(request):
-    orders = Order.objects.all()  
+    orders = Order.objects.prefetch_related('items__product').all()  # Load cả các sản phẩm trong đơn hàng
+
+    for order in orders:
+        for item in order.items.all():
+            item.total_price = item.quantity * item.price  # Tính tổng tiền cho mỗi mặt hàng
 
     if request.method == 'POST':
-        order_id = request.POST.get('order_id')  
-        order = get_object_or_404(Order, id=order_id)  
-        form = OrderStatusForm(request.POST, instance=order) 
+        order_id = request.POST.get('order_id')
+        order = get_object_or_404(Order, id=order_id)
+        form = OrderStatusForm(request.POST, instance=order)
 
         if form.is_valid():
-            form.save()  
-            return redirect('order_list')  
+            form.save()
+            return redirect('order_list')  # Cập nhật trạng thái và reload trang
 
     return render(request, 'order_list.html', {'orders': orders})
 
