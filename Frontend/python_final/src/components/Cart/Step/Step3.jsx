@@ -199,9 +199,9 @@ const Step3 = () => {
                 )}{" "}
 
               </p>
-              <p>Estimated Tax: $1 </p>
-              <p>Estimated Shipping & Handling: ${Number(shippingCost).toFixed(2)} </p>
-              <h3 className="fw-bold pt-3">Total: ${Number(calculateTotal())} </h3>
+              <p>Estimated Tax: 10000đ </p>
+              <p>Estimated Shipping & Handling: {Number(shippingCost).toFixed(0)}đ </p>
+              <h3 className="fw-bold pt-3">Total: {Number(calculateTotal()).toFixed(0)}đ </h3>
             </div>
           </div>
 

@@ -123,9 +123,9 @@ function Header() {
             </svg>
           </Link>
           <div className="dropdown-menu">
-            <Link to="/profile" className="dropdown-item">Tài Khoản Của Tôi</Link>
+            <Link to="/profile" className="dropdown-item">Tài khoản của tôi</Link>
             <Link to="/change-password" className="dropdown-item">Đổi mật khẩu</Link>
-            <div className="dropdown-item" onClick={handleLogout}>Đăng Xuất</div>
+            <div className="dropdown-item" onClick={handleLogout}>Đăng xuất</div>
           </div>
         </div>
       </div>

@@ -94,7 +94,7 @@ function Cart() {
                       </button>
                     </div>
                     <div className="cart-item-price m-3">
-                      <span><>đ</>{Number(item.variant.listed_price)}</span>
+                      <span><></>{Number(item.variant.listed_price)}đ</span>
                     </div>
                     <div className="cart-item-remove m-3">
                       <button
@@ -112,8 +112,7 @@ function Cart() {
           <div className="order-summary">
             <div className="summary-totals">
               <div className="summary-item total">
-                <span>Total: <>đ</></span>
-                <span>{Number(totalAmount).toFixed(0)}</span>
+                <span>Total: {Number(totalAmount).toFixed(0)}đ</span>
               </div>
             </div>
             <button className="check-button text-white" onClick={handleCheckout}>

@@ -279,8 +279,8 @@ function ProductDetail() {
                 {/* Hiển thị giá của biến thể được chọn */}
                 {selectedVariant && (
                     <p className="product-price pt-1">
-                      <span className="current-price fw-bold"><>đ</>{Number(selectedVariant.cost_price).toFixed(0)}</span>
-                      <span className="original-price"><>đ</>{Number(selectedVariant.listed_price).toFixed(0)}</span>
+                      <span className="current-price fw-bold"><></>{Number(selectedVariant.cost_price).toFixed(0)}đ</span>
+                      <span className="original-price"><></>{Number(selectedVariant.listed_price).toFixed(0)}đ</span>
                     </p>
                 )}
 
