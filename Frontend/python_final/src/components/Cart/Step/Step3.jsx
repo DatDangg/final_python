@@ -45,8 +45,7 @@ const Step3 = () => {
       (total, item) => total + item.variant.listed_price * item.quantity,
       0
     );
-    const estimatedTax = 50; // Replace with actual tax calculation if needed
-    return subtotal + estimatedTax + shippingCost;
+    return subtotal + shippingCost;
   };
 
   const handleConfirmOrder = () => {
@@ -199,7 +198,6 @@ const Step3 = () => {
                 )}{"đ"}
 
               </p>
-              <p>Estimated Tax: 5000đ </p>
               <p>Estimated Shipping & Handling: {Number(shippingCost).toFixed(0)}đ </p>
               <h3 className="fw-bold pt-3">Total: {Number(calculateTotal())}đ </h3>
             </div>
