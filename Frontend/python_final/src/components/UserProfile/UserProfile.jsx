@@ -357,7 +357,7 @@ function UserProfile() {
       <div className="modal-body">
         {selectedOrder && (
           <div>
-            <p><strong>Ngày mua:</strong> {selectedOrder.order_time}</p>
+            <p><strong>Ngày mua:</strong> {new Date(selectedOrder.order_time).toISOString().split('T')[0]}</p>
             <p><strong>Mã đơn hàng:</strong> {selectedOrder.id}</p>
             <p><strong>Tổng tiền:</strong> {selectedOrder.total_price}đ</p>
             <p><strong>Phương thức thanh toán:</strong> {selectedOrder.payment_method}</p>
