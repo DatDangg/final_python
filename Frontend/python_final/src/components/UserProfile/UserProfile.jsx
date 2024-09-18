@@ -240,7 +240,7 @@ function UserProfile() {
                 </li>
               </ul>
               <div className="tab-content" id="pills-tabContent">
-                <div className="tab-pane fade show" id="pills-home" role="tabpanel"
+                <div className="tab-pane fade show active" id="pills-home" role="tabpanel"
                      aria-labelledby="pills-home-tab">
                   <form onSubmit={handleSubmit}>
                     <div className="pt-2">
