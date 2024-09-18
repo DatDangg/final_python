@@ -10,7 +10,7 @@ function ProductItem({ product, token }) {
   const [primaryImage, setPrimaryImage] = useState(null);
 
   // Lấy giá từ variant đầu tiên
-  const listedPrice = variants.length > 0 ? variants[0].listed_price : "N/A";
+  const listedPrice = variants.length > 0 ? variants[0].cost_price : "N/A";
 
   useEffect(() => {
     // Fetch wishlist status
@@ -92,14 +92,19 @@ function ProductItem({ product, token }) {
                   backgroundImage: `url(${primaryImage || "/placeholder.jpg"})`,
                 }} // Use primary image or a placeholder
             ></div>
-            <h3 className="item-product-name text-wrap">{title}</h3>
+            <div className="name">
+              <h3 className="item-product-name text-center text-wrap">{title}</h3>
+            </div>
+            <div className="">
+              {/* Hiển thị giá dưới tên sản phẩm */}
+              <p className="item-product-price text-danger">Price: {Number(listedPrice)}đ</p>
+            </div>
+            <div className="mb-3">
+              <Link to={`/product/${id}`} className="buy-now-link">
+                <button className="buy-now-button">Buy Now</button>
+              </Link>
+            </div>
 
-            {/* Hiển thị giá dưới tên sản phẩm */}
-            <p className="item-product-price">Price: đ{listedPrice}</p>
-
-            <Link to={`/product/${id}`} className="buy-now-link">
-              <button className="buy-now-button">Buy Now</button>
-            </Link>
           </div>
         </div>
       </div>

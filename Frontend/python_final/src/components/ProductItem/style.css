@@ -19,7 +19,7 @@
 .product-item .item-product-link {
   text-decoration: none;
   color: #212529; /* Đổi màu chữ để tương phản tốt hơn */
-  height: 350px;
+  height: 390px;
 }
 
 .product-item .item-product-img {
@@ -37,12 +37,15 @@
   /*transform: scale(1.05); !* Phóng to ảnh khi hover *!*/
 }
 
+.name{
+
+}
 .product-item .item-product-name {
   font-size: 20px; /* Tăng kích thước font chữ */
   font-weight: bold;
-  margin: 15px 0 5px 0; /* Điều chỉnh khoảng cách giữa tên sản phẩm và ảnh */
+  padding-top: 15px;
   color: #343a40; /* Đổi màu chữ cho phù hợp */
-
+  height: 60px;
 
 }
 
