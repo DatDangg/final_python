@@ -88,7 +88,7 @@ function Header() {
         </Link>
         <Link
           to="/product/:id"
-          className={`nav-item ${currentPath === '/about' ? 'active' : ''}`}
+          className={`nav-item ${currentPath === '/product' ? 'active' : ''}`}
         >
           Product
         </Link>
@@ -124,7 +124,7 @@ function Header() {
           </Link>
           <div className="dropdown-menu">
             <Link to="/profile" className="dropdown-item">Tài Khoản Của Tôi</Link>
-            <Link to="/cart" className="dropdown-item">Đơn Mua</Link>
+            <Link to="/change-password" className="dropdown-item">Đổi mật khẩu</Link>
             <div className="dropdown-item" onClick={handleLogout}>Đăng Xuất</div>
           </div>
         </div>

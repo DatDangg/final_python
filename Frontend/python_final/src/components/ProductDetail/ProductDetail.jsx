@@ -589,8 +589,7 @@ function ProductDetail() {
                 {reviews.length > 0 ? (
                     reviews.map((review) => (
                         <div key={review.id} className="border-bottom pt-3">
-                          <p className="fw-bold text-primary">Mã đơn hàng: {review.id}</p>
-                          <p>Người đánh giá: {userDetails[review.user]}</p>
+                          <p className="fw-bold text-primary">Người đánh giá: {userDetails[review.user]}</p>
                           <div>
                             {[...Array(review.rating)].map((_, i) => (
                                 <img
@@ -602,8 +601,8 @@ function ProductDetail() {
                             ))}
                             rated {review.rating} stars
                           </div>
-                          <p className="pt-3">Comments: {review.comment}</p>
                           <small>Ngày đánh giá: {new Date(review.created_at).toLocaleDateString()}</small>
+                          <p className="pt-3">Comments: {review.comment}</p>
                         </div>
                     ))
                 ) : (

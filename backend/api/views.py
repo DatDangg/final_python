@@ -4,19 +4,40 @@ from .serializers import ProductSerializer, CategorySerializer, UserSerializer, 
 from .forms import  ProductForm, CategoryForm, OrderStatusForm, PhoneDetailForm, ComputerDetailForm, SmartwatchDetailForm, HeadphoneDetailForm, ProductVariantForm, ProductImageFormSet, ProductVariantFormSet
 from rest_framework import viewsets, filters, generics, status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, update_session_auth_hash
 from django.http import JsonResponse
 from django.db.models import Sum
 from django.db.models.functions import TruncMonth
 from datetime import datetime, timedelta
 from decimal import Decimal
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Yêu cầu phải đăng nhập
+def change_password(request):
+    user = request.user
+    old_password = request.data.get('old_password')
+    new_password = request.data.get('new_password')
+
+    # Kiểm tra mật khẩu cũ
+    if not user.check_password(old_password):
+        return Response({"error": "Mật khẩu cũ không đúng."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Đặt mật khẩu mới
+    user.set_password(new_password)
+    user.save()
+
+    # Cập nhật session để người dùng không bị đăng xuất
+    update_session_auth_hash(request, user)
+
+    return Response({"success": "Đổi mật khẩu thành công!"}, status=status.HTTP_200_OK)
+
 
 class ProductListView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -70,7 +91,6 @@ def upload_product_images(request, product_id):
     for image in images:
         ProductImage.objects.create(product=product, image=image)
     return Response({'message': 'Images uploaded successfully'}, status=status.HTTP_201_CREATED)
-
 
 class CategoryListView(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -311,18 +331,20 @@ def dashboard_view(request):
     # Lấy dữ liệu doanh thu theo tháng (chỉ đơn hàng 'delivered')
     sales_data = (Order.objects.filter(status='delivered')
                   .annotate(month=TruncMonth('order_time'))  
-                  .annotate(sales=Sum('total_price'))  # Tính
-                  .order_by('month')) 
+                  .values('month')  
+                  .annotate(sales=Sum('total_price'))  
+                  .order_by('month'))
+
+    sales_data_list = list(sales_data)
 
     context = {
         'total_orders': total_orders,
         'total_sales': total_sales,
         'total_profit': total_profit,
-        'sales_data': list(sales_data),  
+        'sales_data': sales_data_list, 
     }
 
     return render(request, 'dashboard_overview.html', context)
-
 def product_list_view(request):
     products = Product.objects.prefetch_related('variants').all()  
 

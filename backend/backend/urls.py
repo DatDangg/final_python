@@ -18,6 +18,7 @@ router.register(r'reviews', views.ReviewView, basename='reviews')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('change-password/', views.change_password, name='change_password'),
     path('api/', include(router.urls)),  
     path('auth/', include('api.urls')),  
     path('wishlist/<int:product_id>/toggle/', WishlistToggleView.as_view(), name='wishlist-toggle'), 
