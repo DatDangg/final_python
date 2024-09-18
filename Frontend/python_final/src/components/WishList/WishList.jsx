@@ -7,7 +7,7 @@ import "./style.css";
 function WishList() {
   const [wishListProducts, setWishListProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // State cho trang hiện tại
-  const [productsPerPage] = useState(2); // Số sản phẩm trên mỗi trang
+  const [productsPerPage] = useState(8); // Số sản phẩm trên mỗi trang
   const token = localStorage.getItem("token");
 
   useEffect(() => {
