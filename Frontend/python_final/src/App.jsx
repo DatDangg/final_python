@@ -25,6 +25,8 @@ import Banner2 from "./components/Banner/Banner2.jsx";
 import ListHome from "./components/ListHome/ListHome.jsx";
 import ChangePassword from './components/ChangePw/ChangePw.jsx';
 import Contact from "./components/Contact/Contact.jsx";
+import ProductList from './components/ProductList/ProductList.jsx';
+import AllProductsPage from './components/Header/AllProductsPage.jsx';
 
 
 function ProtectedRoute({ children }) {
@@ -73,6 +75,8 @@ function App() {
                       <Route path="/order/:orderId" element={<Order />} />
                       <Route path="/change-password" element={<ChangePassword />} />
                       <Route path="/contact" element={<Contact />} />
+                      <Route path="/product" element={<AllProductsPage />} />
+
                     </Routes>
                     <Footer/>
                   </ProtectedRoute>

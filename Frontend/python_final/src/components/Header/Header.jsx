@@ -87,11 +87,13 @@ function Header() {
           Home
         </Link>
         <Link
-          to="/product/:id"
-          className={`nav-item ${currentPath === '/product' ? 'active' : ''}`}
-        >
-          Product
-        </Link>
+  to="/product" 
+  className={`nav-item ${currentPath === '/product' ? 'active' : ''}`}
+>
+  Product
+</Link>
+
+
         <Link
           to="/contact"
           className={`nav-item ${currentPath === '/contact' ? 'active' : ''}`}
