@@ -17,6 +17,10 @@ function Step2() {
   const [scheduledShippingCost, setScheduledShippingCost] = useState(0); // Phí cho tùy chọn ngày
   const navigate = useNavigate();
 
+  const formatPrice = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   // Tính phí cho giao hàng thường (free)
   const calculateFreeShippingCost = () => {
     setFreeShippingCost(0); // Miễn phí
@@ -130,7 +134,10 @@ function Step2() {
           />
           <label htmlFor="express">
             <div className="shipping-option">
-              <span className="shipping-title">đ{expressShippingCost}</span>
+              <span className="shipping-title">
+              <span style={{ fontSize: '12px', verticalAlign: 'super' }}>đ</span>
+              {formatPrice(expressShippingCost)}
+              </span>
               <span className="shipping-description">
                 -- Get your delivery as soon as possible --
               </span>
@@ -150,7 +157,10 @@ function Step2() {
           />
           <label htmlFor="schedule">
             <div className="shipping-option">
-              <span className="shipping-title">đ{scheduledShippingCost}</span>
+              <span className="shipping-title">
+                <span style={{ fontSize: '12px', verticalAlign: 'super' }}>đ</span>
+                {formatPrice(scheduledShippingCost)}
+              </span>
               <span className="shipping-description">
                  -- Schedule delivery at your convenience --
               </span>

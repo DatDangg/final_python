@@ -31,6 +31,11 @@ function Cart() {
     );
   }
 
+  // Hàm định dạng số với dấu phẩy
+  const formatPrice = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   const totalAmount = cartItems.reduce(
     (acc, item) => acc + Number(item.variant?.listed_price) * item.quantity,
     0
@@ -46,65 +51,67 @@ function Cart() {
         <h2 className="mb-4">Shopping Cart</h2>
         <div className="items">
           <ul>
-
             {cartItems.map((item) => {
               const primaryImage =
-                  item.product.images.find((image) => image.is_primary)?.image ||
-                  item.product.images[0]?.image;
+                item.product.images.find((image) => image.is_primary)?.image ||
+                item.product.images[0]?.image;
               return (
-              <li key={item.id} className="cart-item">
-                    <div className="cart-item-image">
-                      <img
-                          src={`http://localhost:8000${primaryImage}`}
-                          alt={item.product.title}
-                      />
-                    </div>
-                    <div className="cart-item-details">
-                      <Link to={`/product/${item.product.id}`}>
-                        <h3>{item.product.title}</h3>
-                        <p>#{item.variant.SKU}</p>
-                      </Link>
-                    </div>
-                    <div className="cart-item-quantity">
-                      <button
-                          className="checkout-button btn btn-outline-dark fw-bold"
-                          onClick={() =>
-                              handleQuantityChange(item.id, item.quantity - 1)
-                          }
-                          disabled={item.quantity <= 1} // Không giảm quá 1
-                      >
-                        -
-                      </button>
-                      <input
-                          className="text-button"
-                          type="number"
-                          value={item.quantity}
-                          onChange={(e) =>
-                              handleQuantityChange(item.id, e.target.value)
-                          }
-                      />
-                      <button
-                          className="checkout-button btn btn-outline-dark fw-bold"
-                          onClick={() =>
-                              handleQuantityChange(item.id, item.quantity + 1)
-                          }
-                          disabled={item.quantity >= item.variant.quantity} // Không tăng quá tồn kho
-                      >
-                        +
-                      </button>
-                    </div>
-                    <div className="cart-item-price m-3">
-                      <span><></>{Number(item.variant.listed_price)}đ</span>
-                    </div>
-                    <div className="cart-item-remove m-3">
-                      <button
-                          className="checkout-button"
-                          onClick={() => removeFromCart(item.id)} // Sử dụng removeFromCart từ context để xóa sản phẩm
-                      >
-                        x
-                      </button>
-                    </div>
-                  </li>
+                <li key={item.id} className="cart-item">
+                  <div className="cart-item-image">
+                    <img
+                      src={`http://localhost:8000${primaryImage}`}
+                      alt={item.product.title}
+                    />
+                  </div>
+                  <div className="cart-item-details">
+                    <Link to={`/product/${item.product.id}`}>
+                      <h3>{item.product.title}</h3>
+                      <p>#{item.variant.SKU}</p>
+                    </Link>
+                  </div>
+                  <div className="cart-item-quantity">
+                    <button
+                      className="checkout-button btn btn-outline-dark fw-bold"
+                      onClick={() =>
+                        handleQuantityChange(item.id, item.quantity - 1)
+                      }
+                      disabled={item.quantity <= 1} // Không giảm quá 1
+                    >
+                      -
+                    </button>
+                    <input
+                      className="text-button"
+                      type="number"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        handleQuantityChange(item.id, e.target.value)
+                      }
+                    />
+                    <button
+                      className="checkout-button btn btn-outline-dark fw-bold"
+                      onClick={() =>
+                        handleQuantityChange(item.id, item.quantity + 1)
+                      }
+                      disabled={item.quantity >= item.variant.quantity} // Không tăng quá tồn kho
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div className="cart-item-price m-3">
+                    <span>
+                      <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
+                      {formatPrice(Number(item.variant.listed_price))}
+                    </span>
+                  </div>
+                  <div className="cart-item-remove m-3">
+                    <button
+                      className="checkout-button"
+                      onClick={() => removeFromCart(item.id)} // Sử dụng removeFromCart từ context để xóa sản phẩm
+                    >
+                      x
+                    </button>
+                  </div>
+                </li>
               );
             })}
           </ul>
@@ -112,7 +119,10 @@ function Cart() {
           <div className="order-summary">
             <div className="summary-totals">
               <div className="summary-item total">
-                <span>Total: {Number(totalAmount).toFixed(0)}đ</span>
+                <span>
+                  <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
+                  {formatPrice(Number(totalAmount).toFixed(0))}
+                </span>
               </div>
             </div>
             <button className="check-button text-white" onClick={handleCheckout}>

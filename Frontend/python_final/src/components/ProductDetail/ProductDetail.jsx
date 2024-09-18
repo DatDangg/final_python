@@ -26,6 +26,10 @@ function ProductDetail() {
   const slider1 = useRef(null);
   const slider2 = useRef(null);
 
+  const formatPrice = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   useEffect(() => {
     // Set liên kết giữa các slider
     setNav1(slider1.current);
@@ -279,9 +283,15 @@ function ProductDetail() {
                 {/* Hiển thị giá của biến thể được chọn */}
                 {selectedVariant && (
                     <p className="product-price pt-1">
-                      <span className="current-price fw-bold"><></>{Number(selectedVariant.cost_price).toFixed(0)}đ</span>
-                      <span className="original-price"><></>{Number(selectedVariant.listed_price).toFixed(0)}đ</span>
-                    </p>
+                    <span className="current-price fw-bold">
+                      <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
+                      {formatPrice(Number(selectedVariant.cost_price).toFixed(0))}
+                    </span>
+                    <span className="original-price">
+                      <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
+                      {formatPrice(Number(selectedVariant.listed_price).toFixed(0))}
+                    </span>
+                  </p>
                 )}
 
                 {/* Dropdown cho biến thể */}
