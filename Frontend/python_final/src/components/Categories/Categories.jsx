@@ -30,7 +30,6 @@ function Categories() {
     <div className="categories-container">
       <div className="header-container">
         <h2 className="browse-title">Browse By Category</h2>
-        
       </div>
 
       <div className="categories" ref={categoriesRef}>
