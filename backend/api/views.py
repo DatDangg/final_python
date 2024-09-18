@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, update_session_auth_hash
 from django.http import JsonResponse
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.db.models.functions import TruncMonth
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -83,12 +83,6 @@ class ProductListView(viewsets.ModelViewSet):
                 product_data['smartwatch_details'] = SmartwatchDetailSerializer(smartwatch_details).data
 
         return Response(product_data)
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from django.db.models import Count
-from .models import Product, OrderItem
-from .serializers import ProductSerializer
 
 @api_view(['GET'])
 def best_selling_products(request):
@@ -263,6 +257,25 @@ class OrderView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+@api_view(['PUT'])
+def cancel_order(request, order_id):
+    try:
+        # Lấy đơn hàng dựa trên ID
+        order = Order.objects.get(id=order_id)
+        
+        # Kiểm tra nếu đơn hàng đã bị hủy
+        if order.status == 'Cancelled':
+            return Response({"error": "Order has already been cancelled."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Cập nhật trạng thái đơn hàng thành 'Cancelled'
+        order.status = 'Cancelled'
+        order.save()
+
+        return Response({"message": "Order cancelled successfully"}, status=status.HTTP_200_OK)
+    
+    except Order.DoesNotExist:
+        return Response({"error": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
 
 class ReviewView(viewsets.ModelViewSet):
     queryset = Review.objects.all()
