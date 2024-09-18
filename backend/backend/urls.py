@@ -21,6 +21,7 @@ urlpatterns = [
     path('change-password/', views.change_password, name='change_password'),
     path('api/', include(router.urls)),  
     path('auth/', include('api.urls')),  
+    path('reviews/order/<int:order_id>/', views.get_reviews_by_order, name='get-reviews-by-order'),
     path('wishlist/<int:product_id>/toggle/', WishlistToggleView.as_view(), name='wishlist-toggle'), 
     path('wishlist/<int:product_id>/', WishlistStatusView.as_view(), name='wishlist-status'),  
     path('wishlist/', WishlistListView.as_view(), name='wishlist-list'),
