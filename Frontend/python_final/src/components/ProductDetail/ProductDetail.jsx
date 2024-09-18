@@ -232,6 +232,7 @@ function ProductDetail() {
                   {categoryName}
                 </Link>
               </li>
+              <li>{product.brand}</li>
               <li>{product.title}</li>
             </ul>
           </nav>
