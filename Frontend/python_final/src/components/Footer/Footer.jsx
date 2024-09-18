@@ -10,38 +10,47 @@ function Footer(){
             <div className="container-fluid gap-5 pt-3 justify-content-between">
                 <div className="row content1 ">
                     <div className="col-4 gap-1 text-start">
-                        <h5 className="font-medium text-lg text-white">
+                        <h5 className="font-medium text-lg text-white mb-4 text-uppercase">
                             Hỗ trợ khách hàng
                         </h5>
-                        <a className="text-decoration-none text-footer text-danger" href="/">Hotline: 1900-6035</a>
-                        <Link to="/" className="text-decoration-none d-block text-footer my-2"> Các câu hỏi thường gặp</Link>
-                        <Link to="/" className="text-decoration-none d-block text-footer my-2"> Gửi yêu cầu hỗ trợ</Link>
-                        <Link to="/" className="text-decoration-none d-block text-footer my-2"> Hướng dẫn đặt hàng</Link>
-                        <Link to="/" className="text-decoration-none d-block text-footer my-2"> Phương thức vận chuyển</Link>
-                        <Link to="/" className="text-decoration-none d-block text-footer my-2"> Chính sách đổi trả</Link>
-                        <Link to="/" className="text-decoration-none d-block text-footer my-2"> Hướng dẫn trả góp</Link>
-                        <Link to="/" className="text-decoration-none d-block text-footer my-2"> Chính sách hàng nhập khẩu</Link>
-                        <p className="fs-14 text-footer p-0 my-2">Hỗ trợ khách hàng: <span>
-                        <Link to="/" className="text-decoration-none text-danger">hotro@cyber.vn</Link>
-                            </span></p>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Các câu hỏi thường gặp</Link>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Gửi yêu cầu hỗ trợ</Link>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Hướng dẫn đặt hàng</Link>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Phương thức vận chuyển</Link>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Chính sách đổi trả</Link>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Hướng dẫn trả góp</Link>
+
 
                     </div>
 
-                    <div className="col-4 d-flex gap-1">
-                        <h5 className="font-medium text-lg text-white">
+                    <div className="col-4  gap-1">
+                        <h5 className="font-medium text-lg text-white mb-4 text-uppercase">
                             Dịch vụ giao hàng
                         </h5>
-                        <img className="giaohang pt-3" src="/photos/nhangnho.png" alt=""/>
+                        <div className="d-flex">
+                            <div className="d-block">
+                                <div className="col-4 ">
+                                    <img className="giaohangnhanh" src="/photos/shipnhanh.png" alt=""/>
+                                </div>
+                                <div className=" text-white">
+                                    <span className="ml-5 fs-6">Giao hàng nhanh mọi lúc</span>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
                     </div>
                     <div className="col-4 gap-1">
-                    <h5 className=" text-white">
+                        <h5 className=" text-white mb-2 text-uppercase">
                             Kết nối với chúng tôi
                         </h5>
                         <div className="flex gap-2">
-                            <a href="https://www.facebook.com/">
+                            <a className="p-2" href="https://www.facebook.com/">
                                 <svg
-                                    width="24"
-                                    height="24"
+                                    width="30"
+                                    height="30"
                                     viewBox="0 0 32 33"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -56,10 +65,10 @@ function Footer(){
                                     ></path>
                                 </svg>
                             </a>
-                            <a href="https://www.youtube.com/">
+                            <a className="p-2" href="https://www.youtube.com/">
                                 <svg
-                                    width="24"
-                                    height="24"
+                                    width="30"
+                                    height="30"
                                     viewBox="0 0 32 33"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -78,10 +87,10 @@ function Footer(){
                                     ></path>
                                 </svg>
                             </a>
-                            <a href="https://chat.zalo.me/">
+                            <a className="p-2" href="https://chat.zalo.me/">
                                 <svg
-                                    width="24"
-                                    height="24"
+                                    width="30"
+                                    height="30"
                                     viewBox="0 0 32 33"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"

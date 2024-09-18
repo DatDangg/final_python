@@ -16,7 +16,7 @@ function Banner2() {
                 <p className="description">
                     Created to change everything for the better. For everyone
                 </p>
-                <a href="#" className="Shop btn btn-outline-secondary text-white">
+                <a href="/product" className="Shop btn btn-outline-secondary text-white">
                     Shop Now
                 </a>
             </div>
