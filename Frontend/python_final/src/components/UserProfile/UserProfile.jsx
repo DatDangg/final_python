@@ -72,11 +72,26 @@ function UserProfile() {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
       },
-    }).then(response => response.data)
-      .catch(error => {
-        console.error('Error fetching product details:', error);
-      });
+    }).then(response => {
+      const product = response.data;
+  
+      // Đảm bảo rằng chúng ta có dữ liệu về hình ảnh
+      const primaryImage = product.images.find(img => img.is_primary) || {}; // Chỉ lấy ảnh chính
+  
+      // Kiểm tra thông tin về ảnh sản phẩm
+      console.log('Product Data:', product);
+      console.log('Primary Image URL:', primaryImage.image);
+  
+      return {
+        ...product,
+        image_url: primaryImage.image || '', // URL của ảnh chính hoặc để rỗng nếu không có
+      };
+    })
+    .catch(error => {
+      console.error('Error fetching product details:', error);
+    });
   };
+  
 
   const fetchOrderReviews = async (orderId) => {
     const token = localStorage.getItem("token");
@@ -96,28 +111,30 @@ function UserProfile() {
 
   const handleOrderClick = async (order, orderIndex) => {
     const reviews = await fetchOrderReviews(order.id);
-
+  
     const updatedItems = await Promise.all(order.items.map(async (item) => {
-      const productDetails = await fetchProductDetails(item.product);
-
+      const productDetails = await fetchProductDetails(item.product); // Lấy chi tiết sản phẩm từ API
+  
       const hasReviewed = reviews.some(review => review.product === item.product);
-
+  
       return {
         ...item,
         product_name: productDetails.title,
+        product_image: productDetails.image_url, // Gán đúng URL của ảnh chính cho sản phẩm
         hasReviewed: hasReviewed,
       };
     }));
-
+  
     setSelectedOrder({
       ...order,
       items: updatedItems,
       orderIndex: orderIndex + 1,
     });
-
+  
     const orderModal = new window.bootstrap.Modal(document.getElementById('orderModal'));
     orderModal.show(); // Hiển thị modal sau khi chọn đơn hàng
   };
+  
 
   const handleCancelOrder = (orderId) => {
     const token = localStorage.getItem("token");
@@ -348,72 +365,102 @@ function UserProfile() {
 
         {/* Modal chi tiết đơn hàng */}
         <div className="modal fade" id="orderModal" tabIndex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
-  <div className="modal-dialog modal-lg">
-    <div className="modal-content">
-      <div className="modal-header">
-        <h5 className="modal-title" id="orderModalLabel">Chi tiết đơn hàng</h5>
-        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div className="modal-body">
-        {selectedOrder && (
-          <div>
-            <p><strong>Ngày mua:</strong> {selectedOrder.order_time}</p>
-            <p><strong>Mã đơn hàng:</strong> {selectedOrder.id}</p>
-            <p><strong>Tổng tiền:</strong> {selectedOrder.total_price}đ</p>
-            <p><strong>Phương thức thanh toán:</strong> {selectedOrder.payment_method}</p>
-            <p><strong>Họ và tên người mua:</strong> {selectedOrder.full_name}</p>
-            <p><strong>Địa chỉ giao hàng:</strong> {selectedOrder.address}</p>
-            <p><strong>Số điện thoại:</strong> {selectedOrder.phone_number}</p>
-            <p><strong>Trạng thái đơn hàng:</strong> {selectedOrder.status}</p>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="orderModalLabel">Chi tiết đơn hàng</h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                {selectedOrder && (
+                  <div>
+                    <p><strong>Ngày mua:</strong> {new Date(selectedOrder.order_time).toISOString().split('T')[0]}</p>
+                    <p><strong>Mã đơn hàng:</strong> {selectedOrder.id}</p>
+                    <p><strong>Tổng tiền:</strong> {selectedOrder.total_price}đ</p>
+                    <p><strong>Phương thức thanh toán:</strong> {selectedOrder.payment_method}</p>
+                    <p><strong>Họ và tên người mua:</strong> {selectedOrder.full_name}</p>
+                    <p><strong>Địa chỉ giao hàng:</strong> {selectedOrder.address}</p>
+                    <p><strong>Số điện thoại:</strong> {selectedOrder.phone_number}</p>
+                    <p><strong>Trạng thái đơn hàng:</strong> {selectedOrder.status}</p>
 
-            {selectedOrder.status !== 'Cancelled' && (
-              <button
-                className="btn btn-danger mt-3"
-                onClick={() => handleCancelOrder(selectedOrder.id)}
-              >
-                Hủy đơn hàng
-              </button>
-            )}
-
-            <h5>Các mặt hàng:</h5>
-            <ul>
-              {selectedOrder.items.map(item => (
-                <li key={item.product}>
-                  {item.product_name}: {item.quantity} x {item.price}đ
-                  {item.hasReviewed ? (
-                    <div className="alert alert-info">Sản phẩm này đã được đánh giá</div>
-                  ) : (
-                    <>
-                      <select
-                        name="rating"
-                        value={ratings[item.product] || 0}
-                        onChange={(e) => handleRatingChange(item.product, Number(e.target.value))}
+                    {selectedOrder.status !== 'Cancelled' && (
+                      <button
+                        className="btn btn-danger mt-3"
+                        onClick={() => handleCancelOrder(selectedOrder.id)}
                       >
-                        <option value="0">Đánh giá từ 1 - 5</option>
-                        {[1, 2, 3, 4, 5].map((value) => (
-                          <option key={value} value={value}>{value}</option>
-                        ))}
-                      </select>
-                      <textarea
-                        value={comments[item.product] || ""}
-                        onChange={(e) => handleCommentChange(item.product, e.target.value)}
-                      />
-                      <button onClick={() => handleReviewSubmit(item.product, selectedOrder.id)}>
-                        Gửi đánh giá
+                        Hủy đơn hàng
                       </button>
-                    </>
-                  )}
-                </li>
-              ))}
-            </ul>
+                    )}
+
+                    <h5>Các mặt hàng:</h5>
+                    <ul>
+                      {selectedOrder.items.map(item => (
+                        <li key={item.product} className="d-flex align-items-center mb-3">
+                          {/* Hiển thị ảnh sản phẩm */}
+                          <img
+                            src={item.product_image}
+                            alt={item.product_name}
+                            className="product-image me-3"
+                            style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                          />
+                          
+                          {/* Hiển thị tên và giá sản phẩm */}
+                          <div className="flex-grow-1">
+                            <p><strong>{item.product_name}</strong></p>
+                            <p>Giá: {item.price}đ</p>
+                          </div>
+                          
+                          {/* Hiển thị số lượng */}
+                          <div>
+                            <p>Số lượng: {item.quantity}</p>
+                          </div>
+
+                          {/* Hiển thị tổng giá */}
+                          <div className="ms-3">
+                            <p>Tổng giá: {item.price * item.quantity}đ</p>
+                          </div>
+
+                          {/* Phần đánh giá sản phẩm */}
+                          <div className="ms-3">
+                            {item.hasReviewed ? (
+                              <div className="alert alert-info">Sản phẩm này đã được đánh giá</div>
+                            ) : (
+                              <>
+                                <select
+                                  name="rating"
+                                  value={ratings[item.product] || 0}
+                                  onChange={(e) => handleRatingChange(item.product, Number(e.target.value))}
+                                  className="form-select mb-2"
+                                >
+                                  <option value="0">Đánh giá từ 1 - 5</option>
+                                  {[1, 2, 3, 4, 5].map((value) => (
+                                    <option key={value} value={value}>{value}</option>
+                                  ))}
+                                </select>
+                                <textarea
+                                  className="form-control mb-2"
+                                  placeholder="Viết đánh giá"
+                                  value={comments[item.product] || ""}
+                                  onChange={(e) => handleCommentChange(item.product, e.target.value)}
+                                />
+                                <button
+                                  className="btn btn-primary"
+                                  onClick={() => handleReviewSubmit(item.product, selectedOrder.id)}
+                                >
+                                  Gửi đánh giá
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        )}
-      </div>
-    </div>
-  </div>
-</div>
-
-
+        </div>
       </div>
     </div>
   );
