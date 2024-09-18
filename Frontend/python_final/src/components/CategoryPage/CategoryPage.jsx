@@ -12,7 +12,6 @@ function CategoryPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(8); // chỉnh sửa số lượng sản phẩm trên 1 trang
   const [totalProducts, setTotalProducts] = useState(0);
-
   useEffect(() => {
     const token = localStorage.getItem("token");
 

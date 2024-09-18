@@ -59,23 +59,6 @@
   padding: 0 20px;
 }
 
-.categories-container .scroll-buttons-container {
-  display: flex;
-  gap: 15px;
-}
-
-.categories-container .scroll-button {
-  background-color: transparent;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 10px;
-}
-
-.categories-container .scroll-button:hover {
-  color: #333;
-}
-
 @media (max-width: 768px) {
   .categories-container {
     flex-direction: column;

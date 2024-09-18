@@ -1,0 +1,43 @@
+.best-selling-products {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .product-card {
+    border: 1px solid #ddd;
+    padding: 16px;
+    margin: 8px;
+    width: 200px;
+    text-align: center;
+  }
+  
+  .product-card img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .variant-info {
+    margin-top: 10px;
+  }
+  
+  .variant-info p {
+    margin: 5px 0;
+  }
+  
+  
+ .scroll-buttons-container {
+  display: flex;
+  gap: 15px;
+}
+
+ .scroll-button {
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+ .scroll-button:hover {
+  color: #333;
+}
