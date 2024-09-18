@@ -152,7 +152,7 @@ function Step2() {
             <div className="shipping-option">
               <span className="shipping-title">đ{scheduledShippingCost}</span>
               <span className="shipping-description">
-                -- Schedule delivery at your convenience --
+                 -- Schedule delivery at your convenience --
               </span>
               <input
                 type="number"
