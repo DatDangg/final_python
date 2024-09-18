@@ -10,14 +10,14 @@ function Banner2() {
             />
             <div className="text-overlay position-absolute top-50 start-50 translate-middle text-white text-center">
                 <h2 className="Textline">
-                    <span className="type2">Big Autumn</span>
-                    <span className="subtype fw-bold">Sale</span>
+                    <span className="type2 f-abril">Big</span>
+                    <span className="subtype f-abril">Sale</span>
                 </h2>
                 <p className="description">
-                    Created to change everything for the better. For everyone
+                    Luôn luôn lắng nghe, luôn luôn thấu hiểu
                 </p>
                 <a href="/product" className="Shop btn btn-outline-secondary text-white">
-                    Shop Now
+                    Mua ngay
                 </a>
             </div>
         </div>

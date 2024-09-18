@@ -49,7 +49,7 @@ const BestSellingProducts = () => {
             <div className="header-container container">
                 <div className="item row d-flex justify-content-center align-items-center">
                     <div className="col">
-                        <h4 className="fw-bold">Best Selling Products</h4>
+                        <h4 className="fw-bold">Sản phẩm bán chạy</h4>
                     </div>
                     <div className="col">
                         <div className="scroll-buttons-container">

@@ -29,7 +29,7 @@ function Categories() {
   return (
     <div className="categories-container">
       <div className="header-container">
-        <h2 className="browse-title">Browse By Category</h2>
+        <h2 className="browse-title">Danh mục sản phẩm </h2>
       </div>
 
       <div className="categories" ref={categoriesRef}>

@@ -96,7 +96,7 @@ function Step2() {
 
   return (
     <div className="shipping-step-container">
-      <h2 className="mb-4 fw-bold">Shipment Method</h2>
+      <h2 className="mb-4 fw-bold">Phương thức vận chuyển</h2>
       <ul className="shipping-options">
         <li>
           <input
@@ -114,7 +114,7 @@ function Step2() {
           <label htmlFor="free">
             <div className="shipping-option">
               <span className="shipping-title">Free</span>
-              <span className="shipping-description">-- Regular shipment --</span>
+              <span className="shipping-description">-- Giao hàng thường --</span>
               <span className="shipping-date">{getDeliveryDate(10)}</span>
             </div>
           </label>
@@ -139,7 +139,7 @@ function Step2() {
               {formatPrice(expressShippingCost)}
               </span>
               <span className="shipping-description">
-                -- Get your delivery as soon as possible --
+                -- Giao hàng nhanh --
               </span>
               <span className="shipping-date">{getDeliveryDate(4)}</span>
             </div>
@@ -162,7 +162,7 @@ function Step2() {
                 {formatPrice(scheduledShippingCost)}
               </span>
               <span className="shipping-description">
-                 -- Schedule delivery at your convenience --
+                 -- Lên lịch giao hàng một cách thuận tiện --
               </span>
               <input
                 type="number"
