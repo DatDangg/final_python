@@ -84,6 +84,23 @@ class ProductListView(viewsets.ModelViewSet):
 
         return Response(product_data)
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.db.models import Count
+from .models import Product, OrderItem
+from .serializers import ProductSerializer
+
+@api_view(['GET'])
+def best_selling_products(request):
+    # Lấy những sản phẩm có số lượng bán nhiều nhất (dựa trên OrderItem)
+    best_selling_products = (Product.objects.annotate(total_sold=Count('orderitem'))
+                             .order_by('-total_sold')[:10])  # Lấy top 10 sản phẩm bán chạy nhất
+
+    # Serialize dữ liệu
+    serializer = ProductSerializer(best_selling_products, many=True)
+    return Response(serializer.data)
+
+
 @api_view(['POST'])
 def upload_product_images(request, product_id):
     product = get_object_or_404(Product, id=product_id)

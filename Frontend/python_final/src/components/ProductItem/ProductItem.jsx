@@ -35,13 +35,16 @@ function ProductItem({ product, token }) {
         setLoading(false);
       });
 
-    // Find primary image
+    // Xử lý URL hình ảnh
     const primary = images.find((image) => image.is_primary);
-    if (primary) {
-      setPrimaryImage(primary.image);
-    } else if (images.length > 0) {
-      setPrimaryImage(images[0].image); // Fallback to first image if no primary image
+    let imageUrl = primary ? primary.image : (images.length > 0 ? images[0].image : null);
+
+    // Nếu imageUrl không bắt đầu bằng "http", ta ghép với URL đầy đủ
+    if (imageUrl && !imageUrl.startsWith("http")) {
+      imageUrl = `http://localhost:8000${imageUrl}`;
     }
+
+    setPrimaryImage(imageUrl || "/placeholder.jpg"); // Fallback nếu không có ảnh
   }, [id, token, images]);
 
   const handleWishlistClick = () => {
@@ -94,8 +97,8 @@ function ProductItem({ product, token }) {
           <div
             className="item-product-img"
             style={{
-              backgroundImage: `url(${primaryImage || "/placeholder.jpg"})`,
-            }} // Use primary image or a placeholder
+              backgroundImage: `url(${primaryImage})`,
+            }} // Sử dụng primary image hoặc một ảnh placeholder
           ></div>
           <div className="name">
             <h3 className="item-product-name text-center text-wrap">{title}</h3>
