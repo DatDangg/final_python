@@ -359,6 +359,7 @@ def dashboard_view(request):
     }
 
     return render(request, 'dashboard_overview.html', context)
+
 def product_list_view(request):
     products = Product.objects.prefetch_related('variants').all()  
 

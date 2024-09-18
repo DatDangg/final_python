@@ -73,7 +73,12 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-
+.user-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+  }
+  
 
 @media (max-width: 768px) {
     .user .edit-form label {

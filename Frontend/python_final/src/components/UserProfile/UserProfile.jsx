@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {Link, useNavigate} from "react-router-dom";
+import { Link } from "react-router-dom";
 import './style.css';
 
 function UserProfile() {
@@ -19,7 +19,7 @@ function UserProfile() {
   const [comments, setComments] = useState({}); // State cho comment của từng sản phẩm
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [avatar, setAvatar] = useState(null); 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -181,6 +181,10 @@ function UserProfile() {
     }));
   };
 
+  const handleAvatarChange = (e) => {
+    setAvatar(e.target.files[0]);
+  };  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData(prevState => ({
@@ -194,18 +198,34 @@ function UserProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put("http://127.0.0.1:8000/auth/profile/", userData, {
+    
+    const formData = new FormData();  // Sử dụng FormData để gửi cả ảnh và thông tin khác
+    
+    formData.append("username", userData.username);
+    formData.append("email", userData.email);
+    formData.append("profile.date_of_birth", userData.profile.date_of_birth);
+    formData.append("profile.gender", userData.profile.gender);
+    formData.append("profile.phone_number", userData.profile.phone_number);
+  
+    if (avatar) {
+      formData.append("profile.avatar", avatar); // Thêm avatar vào formData nếu có
+    }
+  
+    axios.put("http://127.0.0.1:8000/auth/profile/", formData, {
       headers: {
         Authorization: `Token ${localStorage.getItem("token")}`,
+        "Content-Type": "multipart/form-data",  // Phải đặt header này để xử lý form data
       },
     })
-        .then(response => {
-          alert("Cập nhật hồ sơ thành công!");
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      .then(response => {
+        alert("Cập nhật hồ sơ thành công!");
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
+  
+  
 
   if (loading) {
     return <div>Đang tải...</div>;
@@ -252,6 +272,18 @@ function UserProfile() {
                              disabled
                       />
                     </div>
+                    <div className="pt-3">
+                      <label className="col-2">Avatar:</label>
+                      <input className="box" type="file" name="avatar" onChange={handleAvatarChange} />
+                    </div>
+                    <div className="pt-3">
+  {userData.profile.avatar ? (
+    <img src={`http://127.0.0.1:8000${userData.profile.avatar}`} alt="User Avatar" className="user-avatar" />
+  ) : (
+    <p>Avatar chưa được tải lên</p>
+  )}
+</div>
+
                     <div className="pt-3">
                       <label className="col-2">Email:</label>
                       <input className="box"
