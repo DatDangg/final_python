@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import './aside.css'; // Tạo file CSS riêng để style cho phần aside
+import React, { useState, useEffect, useCallback } from 'react';
+import './aside.css';
+import { debounce } from 'lodash'; // Import hàm debounce
 
 function Aside({ onFilterChange }) {
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -7,33 +8,31 @@ function Aside({ onFilterChange }) {
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedStorage, setSelectedStorage] = useState('');
 
+  // Sử dụng debounce để trì hoãn việc thay đổi giá
+  const debouncedPriceChange = useCallback(
+    debounce(() => {
+      onFilterChange({
+        brand: selectedBrand,
+        minPrice,
+        maxPrice,
+        storage: selectedStorage,
+      });
+    }, 10), // 500ms là thời gian trì hoãn
+    [selectedBrand, minPrice, maxPrice, selectedStorage]
+  );
+
+  useEffect(() => {
+    debouncedPriceChange();
+    // Cleanup debounce khi component unmount
+    return () => debouncedPriceChange.cancel();
+  }, [minPrice, maxPrice, selectedBrand, selectedStorage]);
+
   const handleBrandChange = (e) => {
     setSelectedBrand(e.target.value);
-    onFilterChange({
-      brand: e.target.value,
-      minPrice,
-      maxPrice,
-      storage: selectedStorage,
-    });
-  };
-
-  const handlePriceChange = () => {
-    onFilterChange({
-      brand: selectedBrand,
-      minPrice,
-      maxPrice,
-      storage: selectedStorage,
-    });
   };
 
   const handleStorageChange = (e) => {
     setSelectedStorage(e.target.value);
-    onFilterChange({
-      brand: selectedBrand,
-      minPrice,
-      maxPrice,
-      storage: e.target.value,
-    });
   };
 
   return (
@@ -58,14 +57,12 @@ function Aside({ onFilterChange }) {
           placeholder="Giá tối thiểu"
           value={minPrice}
           onChange={(e) => setMinPrice(e.target.value)}
-          onBlur={handlePriceChange}
         />
         <input
           type="number"
           placeholder="Giá tối đa"
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
-          onBlur={handlePriceChange}
         />
       </div>
       
