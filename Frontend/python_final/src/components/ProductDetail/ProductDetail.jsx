@@ -286,14 +286,14 @@ function ProductDetail() {
                     <p className="product-price pt-1">
                     <span className="current-price fw-bold">
                       <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
-                      {formatPrice(Number(selectedVariant.cost_price).toFixed(0))}
+                      {formatPrice(Number(selectedVariant.listed_price).toFixed(0))}
                     </span>
                     <span className="original-price">
                       <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
-                      {formatPrice(Number(selectedVariant.listed_price).toFixed(0))}
+                      {formatPrice(Number(selectedVariant.cost_price).toFixed(0))}
                     </span>
                       <small className="sale">
-                       -{100-((Number(selectedVariant.cost_price) / Number(selectedVariant.listed_price) * 100).toFixed(0))}%
+                       -{100-((Number(selectedVariant.listed_price) / Number(selectedVariant.cost_price) * 100).toFixed(0))}%
                       </small>
                   </p>
                 )}
