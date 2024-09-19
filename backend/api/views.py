@@ -112,6 +112,19 @@ def best_selling_products(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def discounted_products(request):
+    # Lấy những sản phẩm có discount > 50%
+    discounted_variants = ProductVariant.objects.filter(discount__gt=50)
+    
+    # Lấy danh sách sản phẩm unique từ các variant
+    discounted_products = set([variant.product for variant in discounted_variants])
+    
+    # Serialize dữ liệu
+    serialized_products = ProductSerializer(discounted_products, many=True).data
+    
+    return Response(serialized_products)
+
+@api_view(['GET'])
 def brand_list(request):
     # Lấy danh sách các thương hiệu từ bảng Product và loại bỏ các thương hiệu trùng lặp
     brands = Product.objects.values('brand').annotate(count=Count('brand')).order_by('brand')

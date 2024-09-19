@@ -27,7 +27,7 @@ import Contact from "./components/Contact/Contact.jsx";
 import AllProductsPage from './components/Header/AllProductsPage.jsx';
 import BestSellingProducts from './components/BestSellingProducts/BestSellingProducts.jsx';
 import Features from "./components/Features/Features.jsx";
-
+import DiscountedProducts from './components/DiscountedProducts/DiscountedProducts.jsx';
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useContext(AuthContext);
@@ -60,6 +60,7 @@ function App() {
                             <Categories />
                             <Features/>
                             <BestSellingProducts />
+                            <DiscountedProducts />
                             <Banner2 />
                           </>
                         }

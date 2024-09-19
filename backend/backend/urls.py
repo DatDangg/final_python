@@ -39,8 +39,9 @@ urlpatterns = [
     path('add-category/', views.add_category_view, name='add_category'),
     path('delete-product/<int:product_id>/', views.delete_product_view, name='delete_product'), 
     path('delete-category/<int:category_id>/', views.delete_category_view, name='delete_category'), 
-    path('best-selling-products/', views.best_selling_products, name='best-selling-products'),
     path('orders/<int:order_id>/cancel/', views.cancel_order, name='cancel_order'),
+    path('best-selling-products/', views.best_selling_products, name='best-selling-products'),
+    path('discounted-products/', views.discounted_products, name='discounted-products'),
     path('brands/', views.brand_list, name='brand-list'),
 
 ]
