@@ -1,9 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Footer.css"
-
-
-
+import "./footer.css"
 function Footer(){
     return(
         <div className="footer">
@@ -19,10 +16,7 @@ function Footer(){
                         <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Phương thức vận chuyển</Link>
                         <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Chính sách đổi trả</Link>
                         <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Hướng dẫn trả góp</Link>
-
-
                     </div>
-
                     <div className="col-4  gap-1">
                         <h5 className="font-medium text-lg text-white mb-4 text-uppercase">
                             Dịch vụ giao hàng
@@ -36,11 +30,7 @@ function Footer(){
                                     <span className="ml-5 fs-6">Giao hàng nhanh mọi lúc</span>
                                 </div>
                             </div>
-
-
                         </div>
-
-
                     </div>
                     <div className="col-4 gap-1">
                         <h5 className=" text-white mb-2 text-uppercase">
