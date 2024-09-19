@@ -103,8 +103,9 @@ class ProductListView(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def best_selling_products(request):
-    # Lấy những sản phẩm có số lượng bán nhiều nhất (dựa trên OrderItem)
+    # Lấy những sản phẩm có số lượng bán > 0 (dựa trên OrderItem)
     best_selling_products = (Product.objects.annotate(total_sold=Count('orderitem'))
+                             .filter(total_sold__gt=0)
                              .order_by('-total_sold')[:10])  # Lấy top 10 sản phẩm bán chạy nhất
 
     # Serialize dữ liệu
