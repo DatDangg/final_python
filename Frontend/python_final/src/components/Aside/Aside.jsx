@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './aside.css';
-import { debounce } from 'lodash'; // Import hàm debounce
+import { debounce } from 'lodash';
 
 function Aside({ onFilterChange }) {
+  const [brands, setBrands] = useState([]); // Tạo state để lưu danh sách thương hiệu
   const [selectedBrand, setSelectedBrand] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -17,15 +18,29 @@ function Aside({ onFilterChange }) {
         maxPrice,
         storage: selectedStorage,
       });
-    }, 10), // 500ms là thời gian trì hoãn
+    }, 5),
     [selectedBrand, minPrice, maxPrice, selectedStorage]
   );
 
   useEffect(() => {
     debouncedPriceChange();
-    // Cleanup debounce khi component unmount
     return () => debouncedPriceChange.cancel();
   }, [minPrice, maxPrice, selectedBrand, selectedStorage]);
+
+  useEffect(() => {
+    // Gọi API để lấy danh sách thương hiệu
+    const fetchBrands = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/brands/');
+        const data = await response.json();
+        setBrands(data); // Lưu danh sách thương hiệu vào state
+      } catch (error) {
+        console.error('Error fetching brands:', error);
+      }
+    };
+
+    fetchBrands();
+  }, []);
 
   const handleBrandChange = (e) => {
     setSelectedBrand(e.target.value);
@@ -38,18 +53,19 @@ function Aside({ onFilterChange }) {
   return (
     <aside className="filter-aside">
       <h4 className="text-primary">Lọc Sản Phẩm</h4>
-      
+
       <div className="filter-group">
         <label>Thương Hiệu</label>
         <select value={selectedBrand} onChange={handleBrandChange}>
           <option value="">Tất Cả</option>
-          <option value="Apple">Apple</option>
-          <option value="Samsung">Samsung</option>
-          <option value="Sony">Sony</option>
-          <option value="Xiaomi">Xiaomi</option>
+          {brands.map((brand, index) => (
+            <option key={index} value={brand}>
+              {brand}
+            </option>
+          ))}
         </select>
       </div>
-      
+
       <div className="filter-group">
         <label>Giá Tiền (VNĐ)</label>
         <input
@@ -65,16 +81,17 @@ function Aside({ onFilterChange }) {
           onChange={(e) => setMaxPrice(e.target.value)}
         />
       </div>
-      
-      {/*<div className="filter-group">*/}
-      {/*  <label>Bộ nhớ</label>*/}
-      {/*  <select value={selectedStorage} onChange={handleStorageChange}>*/}
-      {/*    <option value="">Tất Cả</option>*/}
-      {/*    <option value="64GB">64GB</option>*/}
-      {/*    <option value="128GB">128GB</option>*/}
-      {/*    <option value="256GB">256GB</option>*/}
-      {/*  </select>*/}
-      {/*</div>*/}
+
+      {/* Bạn có thể bật lại bộ lọc bộ nhớ nếu cần */}
+      {/* <div className="filter-group">
+        <label>Bộ nhớ</label>
+        <select value={selectedStorage} onChange={handleStorageChange}>
+          <option value="">Tất Cả</option>
+          <option value="64GB">64GB</option>
+          <option value="128GB">128GB</option>
+          <option value="256GB">256GB</option>
+        </select>
+      </div> */}
     </aside>
   );
 }

@@ -111,6 +111,15 @@ def best_selling_products(request):
     serializer = ProductSerializer(best_selling_products, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def brand_list(request):
+    # Lấy danh sách các thương hiệu từ bảng Product và loại bỏ các thương hiệu trùng lặp
+    brands = Product.objects.values('brand').annotate(count=Count('brand')).order_by('brand')
+    
+    # Tạo danh sách các thương hiệu
+    brand_list = [brand['brand'] for brand in brands if brand['brand']]
+
+    return Response(brand_list)
 
 @api_view(['POST'])
 def upload_product_images(request, product_id):

@@ -41,6 +41,7 @@ urlpatterns = [
     path('delete-category/<int:category_id>/', views.delete_category_view, name='delete_category'), 
     path('best-selling-products/', views.best_selling_products, name='best-selling-products'),
     path('orders/<int:order_id>/cancel/', views.cancel_order, name='cancel_order'),
+    path('brands/', views.brand_list, name='brand-list'),
 
 ]
 
