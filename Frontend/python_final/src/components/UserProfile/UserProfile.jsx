@@ -350,7 +350,7 @@ function UserProfile() {
                               <th scope="row">Đơn hàng {index + 1}</th>
                               <td>{order.id}</td>
                               <td>{order.full_name}</td>
-                              <td>{order.total_price}đ</td>
+                              <td>{formatPrice(Number(order.total_price).toFixed(0))}đ</td>
                               <td>{order.status}</td>
                             </tr>
                           ))}
