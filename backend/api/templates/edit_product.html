@@ -20,37 +20,37 @@
             </div>
 
             <!-- Conditionally show detail forms based on product category -->
-            <div class="row mt-4">
+            <div class="row">
                 {% if phone_detail_form %}
-                    <div class="col-md-12">
+                    <div class="col-md-8">
                         <h4 class="fw-lighter text-primary text-decoration-underline">Phone Details</h4>
                         {{ phone_detail_form.as_p }}
                     </div>
                 {% endif %}
 
                 {% if computer_detail_form %}
-                    <div class="col-md-12">
+                    <div class="col-md-8">
                         <h4 class="fw-lighter text-primary text-decoration-underline">Computer Details</h4>
                         {{ computer_detail_form.as_p }}
                     </div>
                 {% endif %}
 
                 {% if smartwatch_detail_form %}
-                    <div class="col-md-12">
+                    <div class="col-md-8">
                         <h4 class="fw-lighter text-primary text-decoration-underline">Smartwatch Details</h4>
                         {{ smartwatch_detail_form.as_p }}
                     </div>
                 {% endif %}
 
                 {% if headphone_detail_form %}
-                    <div class="col-md-12">
+                    <div class="col-md-8">
                         <h4 class="fw-lighter text-primary text-decoration-underline">Headphone Details</h4>
                         {{ headphone_detail_form.as_p }}
                     </div>
                 {% endif %}
             </div>
 
-            <button class="btn btn-outline-dark" style="margin-left: 10px;" type="submit">Save Changes</button>
+            <button class="btn btn-outline-dark" style=" height: 80px; width: 150px" type="submit">Save Changes</button>
         </div>
     </form>
 {% endblock %}

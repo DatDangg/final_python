@@ -30,7 +30,7 @@
                 <td>{{ order.get_status_display }}</td>
                 <td>
                     <!-- Nút bấm để mở modal -->
-                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#orderModal{{ order.id }}">
+                    <button type="button" class="btn btn-info text-center" style="margin-left: 20%" data-toggle="modal" data-target="#orderModal{{ order.id }}">
                         Xem chi tiết
                     </button>
                 </td>
@@ -47,18 +47,22 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p><strong>Ngày mua:</strong> {{ order.order_time }}</p>
-                            <p><strong>Mã đơn hàng:</strong> {{ order.id }}</p>
-                            <p><strong>Tổng tiền:</strong> {{ order.total_price|floatformat:0|intcomma }} VNĐ</p>
-                            <p><strong>Phương thức thanh toán:</strong> {{ order.payment_method }}</p>
-                            <p><strong>Họ tên người mua:</strong> {{ order.full_name }}</p>
-                            <p><strong>Địa chỉ giao hàng:</strong> {{ order.address }}</p>
-                            <p><strong>Số điện thoại:</strong> {{ order.phone_number }}</p>
+                            <div class="border-bottom">
+                                <p><strong>Ngày mua:</strong> {{ order.order_time }}</p>
+                                <p><strong>Mã đơn hàng:</strong> {{ order.id }}</p>
+                                <p><strong>Tổng tiền:</strong> {{ order.total_price|floatformat:0|intcomma }} VNĐ</p>
+                                <p><strong>Phương thức thanh toán:</strong> {{ order.payment_method }}</p>
+                            </div>
+                            <div class="border-bottom pt-2 mb-3">
+                                <p><strong>Họ tên người mua:</strong> {{ order.full_name }}</p>
+                                <p><strong>Địa chỉ giao hàng:</strong> {{ order.address }}</p>
+                                <p><strong>Số điện thoại:</strong> {{ order.phone_number }}</p>
+                            </div>
 
                             <form method="POST" action="{% url 'order_list' %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="order_id" value="{{ order.id }}">
-                                <p><strong>Trạng thái đơn hàng:</strong>
+                                <p ><strong class="mb-3 pt-3 text-primary">Trạng thái đơn hàng:</strong>
                                     <select name="status" class="form-control">
                                         <option value="pending" {% if order.status == "pending" %}selected{% endif %}>Pending</option>
                                         <option value="shipped" {% if order.status == "shipped" %}selected{% endif %}>Shipped</option>
@@ -70,13 +74,27 @@
                             </form>
                             
 
-                            <h5 class="mt-4">Các mặt hàng</h5>
+                            <h5 class="mt-4 fw-bold">Các mặt hàng</h5>
                             <ul class="list-group">
                                 {% for item in order.items.all %}
-                                <li class="list-group-item">
-                                    <img src="{{ item.product.primary_image }}" alt="{{ item.product.title }}" style="width: 50px; height: 50px;">
+                                <li class="list-group-item container">
+                                    <div class="row">
+                                        <div class="col text-center">
+                                            <img src="{{ item.product.primary_image }}" alt="{{ item.product.title }}" style="width: 50px; height: 50px;">
+                                        </div>
+                                        <div class="col">
+                                            <small class="fw-bold">{{ item.product.title }}</small>
+                                        </div>
+                                        <div class="col">
+                                            <small>
+                                                {{ item.quantity }} x {{ item.price|floatformat:0|intcomma }}
+                                            </small>
+                                        </div>
+                                        <div class="col">
+                                            <small>{{ item.total_price|floatformat:0|intcomma }} VNĐ</small>
+                                        </div>
+                                    </div>
 
-                                    <strong>{{ item.product.title }}</strong>  {{ item.quantity }} x {{ item.price|floatformat:0|intcomma }} VNĐ  <strong>{{ item.total_price|floatformat:0|intcomma }} VNĐ</strong>
                                 </li>
                                 {% endfor %}
                             </ul>

@@ -51,9 +51,9 @@
                         {% endif %}
                     </td>
                     <!-- Include both product_id and variant_id in the URL -->
-                    <td>
+                    <td >
                         {% for variant in item.variants %}
-                            <a href="{% url 'edit_product' item.product.id variant.id %}">Sửa</a><br>
+                            <a  href="{% url 'edit_product' item.product.id variant.id %}">Sửa</a><br>
                         {% endfor %}
                     </td>
                     <td><a href="{% url 'delete_product' item.product.id %}" class="text-danger">Xóa</a></td>
