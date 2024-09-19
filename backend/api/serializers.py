@@ -28,9 +28,10 @@ class HeadphoneDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductVariantSerializer(serializers.ModelSerializer):
+    discounted_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     class Meta:
         model = ProductVariant
-        fields = ['id', 'color', 'storage', 'cost_price', 'listed_price', 'quantity','SKU']
+        fields = ['id', 'color', 'storage', 'cost_price', 'listed_price', 'discount', 'discounted_price', 'quantity','SKU']
 
 class SmartwatchDetailSerializer(serializers.ModelSerializer):
     class Meta:

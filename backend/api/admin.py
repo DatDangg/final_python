@@ -24,7 +24,7 @@ class SmartwatchDetailInline(admin.StackedInline):
 class ProductVariantInline(admin.TabularInline):
     model = ProductVariant
     extra = 1
-    fields = ['color', 'storage', 'cost_price', 'listed_price', 'quantity', 'SKU']
+    fields = ['color', 'storage', 'cost_price', 'listed_price', 'discount', 'quantity', 'SKU']
 
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline, ProductVariantInline]  # Hiển thị các biến thể và hình ảnh

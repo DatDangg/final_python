@@ -4,8 +4,8 @@
 
 {% block content %}
     <h1>Product List</h1>
-    <a href="{% url 'add_product' %}" class="btn btn-primary mb-3">Thêm sản phẩm</a> <!-- Nút để chuyển tới trang Thêm sản phẩm -->
-    <div class="table-responsive" style="max-height: 520px; overflow-y: auto;"> <!-- Thêm style inline để kiểm tra -->
+    <a href="{% url 'add_product' %}" class="btn btn-primary mb-3">Thêm sản phẩm</a>
+    <div class="table-responsive" style="max-height: 520px; overflow-y: auto;">
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -13,7 +13,10 @@
                     <th>Tên sản phẩm</th>
                     <th>Thương hiệu</th>
                     <th>Danh mục</th>
-                    <th>Biến thể (Màu, Dung lượng, Giá, Số lượng)</th>
+                    <th>Màu</th>
+                    <th>Dung lượng</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
                     <th>Chi tiết</th>
                     <th>Sửa</th>
                     <th>Xóa</th>
@@ -22,45 +25,52 @@
             <tbody>
                 {% for item in product_data %}
                 <tr>
-                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.stt }}</td> <!-- Số thứ tự liên tục -->
                     <td>{{ item.product.title }}</td>
                     <td>{{ item.product.brand }}</td>
                     <td>{{ item.product.category.name }}</td>
-                    <td>
-                        {% for variant in item.variants %}
-                            Màu: {{ variant.color }} - Dung lượng: {{ variant.storage }} - Giá: {{ variant.listed_price }} - Số lượng: {{ variant.quantity }} <br>
-                        {% endfor %}
-                    </td>
+                    <td>{{ item.variant.color }}</td>
+                    <td>{{ item.variant.storage }}</td>
+                    <td>{{ item.variant.listed_price }}</td>
+                    <td>{{ item.variant.quantity }}</td>
                     <td>
                         {% if item.details %}
                             {% if item.product.category.name == "Smart Phones" %}
-                                CPU: {{ item.details.cpu }}, Camera chính: {{ item.details.main_camera }}<br>
-                                Pin: {{ item.details.battery_capacity }}, Màn hình: {{ item.details.screen_size }}<br>
+                                <strong>CPU:</strong> {{ item.details.cpu }}<br>
+                                <strong>Camera chính:</strong> {{ item.details.main_camera }}<br>
+                                <strong>Camera trước:</strong> {{ item.details.front_camera }}<br>
+                                <strong>Dung lượng pin:</strong> {{ item.details.battery_capacity }}<br>
+                                <strong>Kích thước màn hình:</strong> {{ item.details.screen_size }}<br>
+                                <strong>Tần số quét:</strong> {{ item.details.refresh_rate }}<br>
+                                <strong>Mật độ điểm ảnh:</strong> {{ item.details.pixel_density }}<br>
+                                <strong>Loại màn hình:</strong> {{ item.details.screen_type }}<br>
                             {% elif item.product.category.name == "Computers" %}
-                                Bộ xử lý: {{ item.details.processor }}, RAM: {{ item.details.ram }}<br>
-                                Card đồ họa: {{ item.details.graphics_card }}, Pin: {{ item.details.battery_life }}<br>
+                                <strong>Bộ xử lý:</strong> {{ item.details.processor }}<br>
+                                <strong>RAM:</strong> {{ item.details.ram }}<br>
+                                <strong>Card đồ họa:</strong> {{ item.details.graphics_card }}<br>
+                                <strong>Kích thước màn hình:</strong> {{ item.details.screen_size }}<br>
+                                <strong>Thời lượng pin:</strong> {{ item.details.battery_life }}<br>
                             {% elif item.product.category.name == "Smart Watches" %}
-                                Loại dây: {{ item.details.strap_type }}, Màn hình: {{ item.details.screen_size }}<br>
-                                Chống nước: {{ item.details.water_resistance }}, Pin: {{ item.details.battery_capacity }}<br>
+                                <strong>Loại dây:</strong> {{ item.details.strap_type }}<br>
+                                <strong>Kích thước màn hình:</strong> {{ item.details.screen_size }}<br>
+                                <strong>Dung lượng pin:</strong> {{ item.details.battery_capacity }}<br>
+                                <strong>Chống nước:</strong> {{ item.details.water_resistance }}<br>
+                                <strong>Theo dõi nhịp tim:</strong> {{ item.details.heart_rate_monitor }}<br>
                             {% elif item.product.category.name == "Headphones" %}
-                                Không dây: {{ item.details.wireless }}, Thời lượng pin: {{ item.details.battery_life }}<br>
-                                Khử tiếng ồn: {{ item.details.noise_cancellation }}<br>
+                                <strong>Không dây:</strong> {{ item.details.wireless }}<br>
+                                <strong>Thời lượng pin:</strong> {{ item.details.battery_life }}<br>
+                                <strong>Khử tiếng ồn:</strong> {{ item.details.noise_cancellation }}<br>
+                                <strong>Kích thước driver:</strong> {{ item.details.driver_size }}<br>
                             {% endif %}
                         {% else %}
                             Không có thông tin chi tiết
                         {% endif %}
                     </td>
-                    <!-- Include both product_id and variant_id in the URL -->
-                    <td >
-                        {% for variant in item.variants %}
-                            <a  href="{% url 'edit_product' item.product.id variant.id %}">Sửa</a><br>
-                        {% endfor %}
-                    </td>
+                    <td><a href="{% url 'edit_product' item.product.id item.variant.id %}">Sửa</a></td>
                     <td><a href="{% url 'delete_product' item.product.id %}" class="text-danger">Xóa</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        
     </div>
 {% endblock %}

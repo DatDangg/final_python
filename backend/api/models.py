@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from decimal import Decimal
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -85,11 +86,17 @@ class SmartwatchDetail(models.Model):
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE)
     color = models.CharField(max_length=100)
-    storage = models.CharField(max_length=100, blank=True, null=True)  # Allow blank and null
+    storage = models.CharField(max_length=100, blank=True, null=True)
     cost_price = models.DecimalField(max_digits=10, decimal_places=2)
     listed_price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount = models.PositiveIntegerField(default=0)  # Tỉ lệ giảm giá, lưu dưới dạng phần trăm
     quantity = models.PositiveIntegerField()
     SKU = models.CharField(max_length=100, unique=True)
+
+    def discounted_price(self):
+        """Tính toán giá sau khi giảm giá"""
+        discount_amount = (Decimal(self.discount) / Decimal(100)) * self.listed_price
+        return self.listed_price - discount_amount
 
     def __str__(self):
         return f"{self.product.title} - {self.color} - {self.storage} - {self.SKU}"

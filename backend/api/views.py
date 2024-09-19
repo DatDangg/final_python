@@ -408,9 +408,11 @@ def dashboard_view(request):
     return render(request, 'dashboard_overview.html', context)
 
 def product_list_view(request):
-    products = Product.objects.prefetch_related('variants').all()  
+    products = Product.objects.prefetch_related('variants').all()  # Lấy sản phẩm và biến thể
 
     product_data = []
+    counter = 1  # Khởi tạo biến đếm cho số thứ tự
+
     for product in products:
         # Collecting details based on product category
         product_detail = None
@@ -449,12 +451,15 @@ def product_list_view(request):
                 'driver_size': product.headphonedetail.driver_size,
             }
 
-        # Adding product and its details to the list
-        product_data.append({
-            'product': product,
-            'variants': product.variants.all(),
-            'details': product_detail,
-        })
+        # Lặp qua các biến thể của sản phẩm và thêm STT cho từng biến thể
+        for variant in product.variants.all():
+            product_data.append({
+                'stt': counter,  # Số thứ tự liên tục
+                'product': product,
+                'variant': variant,
+                'details': product_detail,
+            })
+            counter += 1  # Tăng biến đếm sau mỗi biến thể
 
     return render(request, 'product_list.html', {'product_data': product_data})
 
@@ -655,6 +660,3 @@ def order_list_view(request):
             return redirect('order_list')  # Cập nhật trạng thái và reload trang
 
     return render(request, 'order_list.html', {'orders': orders})
-
-
-

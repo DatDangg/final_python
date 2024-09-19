@@ -208,12 +208,16 @@ function ProductDetail() {
     addToCart(product.id, selectedVariant.id, 1);
   };
   
-
-  
   // Cập nhật variant khi người dùng thay đổi
   const handleVariantChange = (variantId) => {
     const variant = product.variants.find((v) => v.id === parseInt(variantId));
     setSelectedVariant(variant);
+  };
+
+  const calculateDiscountedPrice = (listedPrice, discount) => {
+    if (!discount) return listedPrice; // Nếu không có giảm giá, trả về giá niêm yết
+    const discountAmount = (listedPrice * discount) / 100;
+    return listedPrice - discountAmount;
   };
 
   if (!product || !product.images) {
@@ -284,17 +288,40 @@ function ProductDetail() {
                 {/* Hiển thị giá của biến thể được chọn */}
                 {selectedVariant && (
                     <p className="product-price pt-1">
-                    <span className="current-price fw-bold">
-                      <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
-                      {formatPrice(Number(selectedVariant.listed_price).toFixed(0))}
-                    </span>
-                    <span className="original-price">
-                      <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
-                      {formatPrice(Number(selectedVariant.cost_price).toFixed(0))}
-                    </span>
-                      <small className="sale">
-                       -{100-((Number(selectedVariant.listed_price) / Number(selectedVariant.cost_price) * 100).toFixed(0))}%
-                      </small>
+                    {selectedVariant.discount > 0 && (
+              <span className="current-price fw-bold">
+                <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
+                {formatPrice(
+                  Number(
+                    calculateDiscountedPrice(
+                      selectedVariant.listed_price,
+                      selectedVariant.discount
+                    )
+                  ).toFixed(0)
+                )}
+              </span>
+            )}
+
+            {/* Hiển thị giá niêm yết với dấu gạch ngang nếu có giảm giá */}
+            <span
+              className={`original-price ${
+                selectedVariant.discount > 0 ? "line-through" : ""
+              }`}
+              style={{
+                textDecoration: selectedVariant.discount > 0 ? "line-through" : "none",
+              }}
+            >
+              <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
+              {formatPrice(Number(selectedVariant.listed_price).toFixed(0))}
+            </span>
+
+            {/* Hiển thị phần trăm giảm giá nếu có */}
+            {selectedVariant.discount > 0 && (
+              <span className="discount-percentage text-danger">
+                {" "}
+                -{selectedVariant.discount}%
+              </span>
+            )}
                   </p>
                 )}
 
