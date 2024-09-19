@@ -10,7 +10,7 @@ function CategoryPage() {
   const location = useLocation();
   const [categoryName, setCategoryName] = useState(location.state?.categoryName || "Category");
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(8); // chỉnh sửa số lượng sản phẩm trên 1 trang
+  const [productsPerPage] = useState(6); // chỉnh sửa số lượng sản phẩm trên 1 trang
   const [totalProducts, setTotalProducts] = useState(0);
   useEffect(() => {
     const token = localStorage.getItem("token");

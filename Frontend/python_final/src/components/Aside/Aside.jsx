@@ -37,7 +37,7 @@ function Aside({ onFilterChange }) {
 
   return (
     <aside className="filter-aside">
-      <h3>Lọc Sản Phẩm</h3>
+      <h4 className="text-primary">Lọc Sản Phẩm</h4>
       
       <div className="filter-group">
         <label>Thương Hiệu</label>
@@ -66,15 +66,15 @@ function Aside({ onFilterChange }) {
         />
       </div>
       
-      <div className="filter-group">
-        <label>Bộ nhớ</label>
-        <select value={selectedStorage} onChange={handleStorageChange}>
-          <option value="">Tất Cả</option>
-          <option value="64GB">64GB</option>
-          <option value="128GB">128GB</option>
-          <option value="256GB">256GB</option>
-        </select>
-      </div>
+      {/*<div className="filter-group">*/}
+      {/*  <label>Bộ nhớ</label>*/}
+      {/*  <select value={selectedStorage} onChange={handleStorageChange}>*/}
+      {/*    <option value="">Tất Cả</option>*/}
+      {/*    <option value="64GB">64GB</option>*/}
+      {/*    <option value="128GB">128GB</option>*/}
+      {/*    <option value="256GB">256GB</option>*/}
+      {/*  </select>*/}
+      {/*</div>*/}
     </aside>
   );
 }

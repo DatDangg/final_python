@@ -6,7 +6,7 @@ import "./AllProductsPage.css"
 
 function AllProductsPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 8; // Số sản phẩm mỗi trang, bạn có thể thay đổi
+  const productsPerPage = 6; // Số sản phẩm mỗi trang, bạn có thể thay đổi
     const [totalProducts, setTotalProducts] = useState(0);
 
     const totalPages = Math.ceil(totalProducts / productsPerPage);

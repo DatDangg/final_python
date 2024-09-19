@@ -60,15 +60,23 @@ function ProductList({
   
 
   return (
-    <div className="product-page">
-      <Aside onFilterChange={handleFilterChange} />
-      <div className="product-container">
-        <div className="product-list">
-          {productList.map((product, index) => (
-            <ProductItem key={index} product={product} token={token} />
-          ))}
+    <div className="product-page container-fluid">
+      <div className="row d-flex p-0 m-0">
+        <div className="col-md-3 aside justify-content-center align-items-center ">
+          <Aside onFilterChange={handleFilterChange} />
+
+        </div>
+        <div className="col-md-8">
+          <div className="product-container">
+            <div className="product-list">
+              {productList.map((product, index) => (
+                  <ProductItem key={index} product={product} token={token}/>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
+
     </div>
   );
 }
