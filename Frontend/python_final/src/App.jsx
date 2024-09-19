@@ -26,6 +26,7 @@ import ChangePassword from './components/ChangePw/ChangePw.jsx';
 import Contact from "./components/Contact/Contact.jsx";
 import AllProductsPage from './components/Header/AllProductsPage.jsx';
 import BestSellingProducts from './components/BestSellingProducts/BestSellingProducts.jsx';
+import Features from "./components/Features/Features.jsx";
 
 
 function ProtectedRoute({ children }) {
@@ -57,6 +58,7 @@ function App() {
                           <>
                             <Banner />
                             <Categories />
+                            <Features/>
                             <BestSellingProducts />
                             <Banner2 />
                           </>
