@@ -3,7 +3,7 @@ import React from "react";
 
 function Features() {
     return (
-        <div className="container  pt-5 mb-5">
+        <div className="container-fluid  pt-5 mb-5">
             <div className="row features d-flex  justify-content-center align-items-center">
                 <div className="col d-flex justify-content-center mt-2 ">
                     <a className="pt-2">
@@ -15,7 +15,7 @@ function Features() {
                         <small className="pt-1 m-0">Tất cả đơn hàng </small>
                     </div>
                 </div>
-                <div className="col d-flex justify-content-center pt-3">
+                <div className="col d-flex justify-content-center mt-2">
                     <a className="pt-2">
                         <svg width="40px" height="50px" viewBox="0 0 15 15" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
@@ -29,8 +29,8 @@ function Features() {
                         <small className="pt-1 m-0">Tiết kiệm tối đa 25% </small>
                     </div>
                 </div>
-                <div className="col d-flex justify-content-center pt-2">
-                    <a className="pt-3">
+                <div className="col d-flex justify-content-center mt-2">
+                    <a className="pt-2 mt-4">
                         <svg fill="#000000" width="40px" height="50px" viewBox="0 0 30 30"
                              xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -38,12 +38,12 @@ function Features() {
                         </svg>
                     </a>
                     <div className="p-3">
-                        <p className="p-0 mb-2 fw-bold">Đội ngũ hỗ trợ 24/7</p>
+                        <p className="p-0 mb-2 fw-bold mt-3">Đội ngũ hỗ trợ 24/7</p>
                         <small className="pt-1 m-0">Mua sắm với những chuyên gia</small>
                     </div>
                 </div>
-                <div className="col d-flex justify-content-center">
-                    <a className="pt-3">
+                <div className="col d-flex justify-content-center mt-2">
+                    <a className="pt-2 mt-4">
                         <svg width="50px" height="50px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <g id="coupon">
                                 <path
@@ -54,12 +54,12 @@ function Features() {
                         </svg>
                     </a>
                     <div className="p-3">
-                        <p className="p-0 mb-2 fw-bold">Giá cả hợp lí</p>
+                        <p className="p-0 mb-2 fw-bold mt-3">Giá cả hợp lí</p>
                         <small className="pt-1 m-0">Sản phẩm được lấy từ nhà máy sản xuất</small>
                     </div>
                 </div>
-                <div className="col d-flex justify-content-center mb-4">
-                    <a className="pt-4 mt-3">
+                <div className="col d-flex justify-content-center mt-2">
+                    <a className="pt-2 mt-4">
                         <svg width="45px" height="50px" viewBox="0 0 24 24" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <g opacity="0.4">
@@ -75,8 +75,8 @@ function Features() {
                                 stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </a>
-                    <div className="p-3 mt-4">
-                        <p className="p-0 mb-2 fw-bold">Giao dịch an toàn</p>
+                    <div className="p-3">
+                        <p className="p-0 mb-2 fw-bold mt-3">Giao dịch an toàn</p>
                         <small className="pt-1 m-0">100% giao dịch đều được bảo mật</small>
                     </div>
                 </div>

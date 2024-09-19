@@ -10,6 +10,7 @@ function ProductItem({ product, token }) {
   const [primaryImage, setPrimaryImage] = useState(null);
   const [averageRating, setAverageRating] = useState(null);
 
+
   // Lấy giá gốc và giá đã giảm từ variant
   const listedPrice = variants.length > 0 ? parseFloat(variants[0].listed_price) : "N/A"; // Đảm bảo chuyển sang kiểu float
   const discount = variants.length > 0 ? parseFloat(variants[0].discount) : 0; // Chuyển sang kiểu float nếu có discount
@@ -92,6 +93,7 @@ function ProductItem({ product, token }) {
 
   return (
     <div className="product-item">
+      {/*wishlist*/}
       {!loading && (
         <div className="wishlist-icon" onClick={handleWishlistClick}>
           <svg
@@ -111,39 +113,47 @@ function ProductItem({ product, token }) {
           </svg>
         </div>
       )}
-      <br />
-      <div className="item-product-link">
+      {/*stem discount*/}
+      <div className="discount">
+        {discount > 0 && (
+            <a className="discount-percent text-white fw-bold bg-primary">
+              {" "}
+              -{discount}%
+            </a>
+        )}
+      </div>
+      <br/>
+      <div className="item-product-link mb-2">
         <div
-          className="item-product-img"
+            className="item-product-img"
           style={{
             backgroundImage: `url(${primaryImage})`,
           }}
         ></div>
         <div className="name">
-          <h3 className="item-product-name text-center text-wrap">{title}</h3>
+          <h3 className="item-product-name text-center text-wrap m-0">{title}</h3>
         </div>
         <div className="">
           {/* Hiển thị giá gốc và giá giảm */}
           {discount > 0 ? (
-            <>
-              <p className="item-product-price-original text-muted" style={{ textDecoration: "line-through" }}>
-                <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
-                {formatPrice(Number(listedPrice))}
-              </p>
-              <p className="item-product-price-discount text-danger">
-                <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
-                {formatPrice(Number(discountedPrice))}
-              </p>
-            </>
+              <>
+
+                <p className="item-product-price-discount pt-2">
+                  <span className="text-danger" style={{fontSize: "12px", verticalAlign: "super"}}>đ</span>
+                  <span className="fs-4 p-0 m-0 text-danger fw-bold">{formatPrice(Number(discountedPrice))}</span>
+                  <span style={{fontSize: "10px", verticalAlign: "super", marginLeft: "8px"}}>đ</span>
+                  <span style={{textDecoration: "line-through", fontSize: "12px"}}  >{formatPrice(Number(listedPrice))}</span>
+                </p>
+              </>
           ) : (
-            <p className="item-product-price text-danger">
-              <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
-              {formatPrice(Number(listedPrice))}
+              <p className="item-product-price text-danger">
+                <span style={{fontSize: "12px", verticalAlign: "super"}}>đ</span>
+                {formatPrice(Number(listedPrice))}
             </p>
           )}
         </div>
         {/* Hiển thị đánh giá trung bình */}
-        <div className="rating">
+        <div className="rating m-0 p-0">
           <p>Đánh giá: {averageRating} / 5</p>
         </div>
         <div className="mb-3">

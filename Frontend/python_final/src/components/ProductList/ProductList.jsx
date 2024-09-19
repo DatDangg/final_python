@@ -68,7 +68,7 @@ function ProductList({
         </div>
         <div className="col-md-8">
           <div className="product-container">
-            <div className="product-list">
+            <div className="product-list gap-2">
               {productList.map((product, index) => (
                   <ProductItem key={index} product={product} token={token}/>
               ))}

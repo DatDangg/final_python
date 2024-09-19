@@ -5,3 +5,55 @@
     padding-left: 30px;
     border-radius: 10px;
 }
+.pl-5{
+    padding-left: 5px;
+}
+
+.text-gray{
+    color: #909090;
+}
+
+/*features2*/
+.features2{
+    padding-bottom: 60px;
+    padding-top: 20px;
+    padding-left: 30px;
+    border-radius: 10px;
+}
+
+.features2 button{
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-left: 5px;
+
+}
+
+.group1{
+    width: 280px;
+    height: 330px;
+}
+
+.features-text{
+    font-size: 14px;
+    padding-right: 40px;
+    padding-top: 5px;
+    text-align: justify;
+}
+
+.ban1 img{
+    padding-right: 50px;
+    padding-top: 20px;
+}
+.ban2{
+    background-color: #f8f8f8;
+}
+.ban3{
+    background-color: #EAEAEA;
+}
+.ban4{
+    background-color: #2C2C2C;
+}
+
+.ban4 button a{
+    color: #f8f8f8;
+}

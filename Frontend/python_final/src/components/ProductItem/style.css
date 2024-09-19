@@ -9,6 +9,7 @@
   transition: box-shadow 0.3s ease, transform 0.3s ease; /* Thêm hiệu ứng khi hover */
   font-family: "Inter", sans-serif;
   width: 350px;
+  height: 460px;
 }
 
 .product-item:hover {
@@ -23,7 +24,7 @@
 }
 
 .product-item .item-product-img {
-  width: 300px;
+  width: 320px;
   align-items: center;
   height: 220px; /* Chiều cao của ảnh */
   background-size: contain; /* Đảm bảo toàn bộ ảnh được hiển thị mà không bị cắt */
@@ -45,8 +46,7 @@
   font-weight: bold;
   padding-top: 15px;
   color: #343a40; /* Đổi màu chữ cho phù hợp */
-  height: 60px;
-
+  height: 40px;
 }
 
 .product-item .item-product-price {
@@ -74,10 +74,28 @@
 .product-item .wishlist-icon {
   position: absolute;
   top: 5px; /* Đẩy icon wishlist xuống một chút */
-  right: 5px;
+  right: 10px;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
+
+.discount{
+  position: absolute;
+  transition: transform 0.3s ease;
+  left: 1px;
+  padding-top:20px;
+  ;
+}
+.discount-percent{
+  border-radius: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 12px;
+}
+
+
 
 .product-item .wishlist-icon svg {
   fill: none;

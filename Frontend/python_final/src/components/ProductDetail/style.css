@@ -63,6 +63,13 @@
   /*flex-direction: column;*/
 }
 
+.discount-percentage{
+  background-color: #f5f5fa;
+  border-radius: 20px;
+  margin-left: 10px;
+  padding: 5px;
+  font-size: 14px;
+}
 
 
 

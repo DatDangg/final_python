@@ -289,18 +289,19 @@ function ProductDetail() {
                 {selectedVariant && (
                     <p className="product-price pt-1">
                     {selectedVariant.discount > 0 && (
-              <span className="current-price fw-bold">
-                <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
-                {formatPrice(
-                  Number(
-                    calculateDiscountedPrice(
-                      selectedVariant.listed_price,
-                      selectedVariant.discount
-                    )
-                  ).toFixed(0)
-                )}
-              </span>
-            )}
+                    <span className="current-price fw-bold">
+                      <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
+                      {formatPrice(
+                        Number(
+                          calculateDiscountedPrice(
+                            selectedVariant.listed_price,
+                            selectedVariant.discount
+                          )
+                        ).toFixed(0)
+                      )}
+
+                    </span>
+                    )}
 
             {/* Hiển thị giá niêm yết với dấu gạch ngang nếu có giảm giá */}
             <span
@@ -317,7 +318,7 @@ function ProductDetail() {
 
             {/* Hiển thị phần trăm giảm giá nếu có */}
             {selectedVariant.discount > 0 && (
-              <span className="discount-percentage text-danger">
+              <span className="discount-percentage text-black fw-bold">
                 {" "}
                 -{selectedVariant.discount}%
               </span>
