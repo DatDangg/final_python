@@ -8,17 +8,25 @@ function ProductItem({ product, token }) {
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(true);
   const [primaryImage, setPrimaryImage] = useState(null);
-
-  // Lấy giá từ variant đầu tiên
+  const [averageRating, setAverageRating] = useState(null);
   const listedPrice = variants.length > 0 ? variants[0].cost_price : "N/A";
+  const primary = images.find((image) => image.is_primary);
 
-  // Hàm định dạng số với dấu phẩy
+  let imageUrl = primary ? primary.image : (images.length > 0 ? images[0].image : null);
+
   const formatPrice = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  // Hàm tính trung bình rating từ các đánh giá của sản phẩm hiện tại
+  const calculateAverageRating = (reviews) => {
+    const filteredReviews = reviews.filter((review) => review.product === id);
+    if (filteredReviews.length === 0) return "Chưa có đánh giá";
+    const totalRating = filteredReviews.reduce((sum, review) => sum + review.rating, 0);
+    return (totalRating / filteredReviews.length).toFixed(1);
+  };
+
   useEffect(() => {
-    // Fetch wishlist status
     axios
       .get(`http://127.0.0.1:8000/wishlist/${id}/`, {
         headers: {
@@ -28,23 +36,36 @@ function ProductItem({ product, token }) {
       })
       .then((response) => {
         setIsInWishlist(response.data.is_in_wishlist);
-        setLoading(false); // Set loading to false once the data is fetched
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching wishlist status:", error);
         setLoading(false);
       });
 
-    // Xử lý URL hình ảnh
-    const primary = images.find((image) => image.is_primary);
-    let imageUrl = primary ? primary.image : (images.length > 0 ? images[0].image : null);
-
-    // Nếu imageUrl không bắt đầu bằng "http", ta ghép với URL đầy đủ
     if (imageUrl && !imageUrl.startsWith("http")) {
       imageUrl = `http://localhost:8000${imageUrl}`;
     }
 
-    setPrimaryImage(imageUrl || "/placeholder.jpg"); // Fallback nếu không có ảnh
+    setPrimaryImage(imageUrl || "/placeholder.jpg");
+
+    // Fetch reviews và tính toán rating trung bình chỉ cho sản phẩm hiện tại
+    axios
+      .get(`http://localhost:8000/api/reviews/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        const reviews = response.data;
+        const avgRating = calculateAverageRating(reviews);
+        setAverageRating(avgRating);
+      })
+      .catch((error) => {
+        console.error("Error fetching reviews:", error);
+      });
+
   }, [id, token, images]);
 
   const handleWishlistClick = () => {
@@ -61,11 +82,6 @@ function ProductItem({ product, token }) {
       )
       .then((response) => {
         setIsInWishlist(response.data.is_in_wishlist);
-        if (response.data.is_in_wishlist) {
-          console.log("Sản phẩm đã được thêm vào wishlist.");
-        } else {
-          console.log("Sản phẩm đã được xóa khỏi wishlist.");
-        }
       })
       .catch((error) => console.error(error));
   };
@@ -98,17 +114,20 @@ function ProductItem({ product, token }) {
             className="item-product-img"
             style={{
               backgroundImage: `url(${primaryImage})`,
-            }} // Sử dụng primary image hoặc một ảnh placeholder
+            }}
           ></div>
           <div className="name">
             <h3 className="item-product-name text-center text-wrap">{title}</h3>
           </div>
           <div className="">
-            {/* Hiển thị giá dưới tên sản phẩm */}
             <p className="item-product-price text-danger">
               <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
               {formatPrice(Number(listedPrice))}
             </p>
+          </div>
+          {/* Hiển thị đánh giá trung bình */}
+          <div className="rating">
+            <p>Đánh giá: {averageRating} / 5</p>
           </div>
           <div className="mb-3">
             <Link to={`/product/${id}`} className="buy-now-link">
