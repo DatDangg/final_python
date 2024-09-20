@@ -18,6 +18,7 @@ function ProductList({
     storage: ''
   });
   const token = localStorage.getItem("token");
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
@@ -26,7 +27,7 @@ function ProductList({
   useEffect(() => {
     const fetchProducts = async () => {
       if (token) {
-        let url = `http://localhost:8000/api/products/?category=${selectedCategory?.id || ''}&search=${searchQuery || ''}`;
+        let url = `${apiurl}/api/products/?category=${selectedCategory?.id || ''}&search=${searchQuery || ''}`;
         
         if (filters.brand) url += `&brand=${filters.brand}`;
         if (filters.storage) url += `&variants__storage=${filters.storage}`;

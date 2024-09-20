@@ -15,6 +15,7 @@ function ProductItem({ product, token }) {
   const listedPrice = variants.length > 0 ? parseFloat(variants[0].listed_price) : "N/A"; // Đảm bảo chuyển sang kiểu float
   const discount = variants.length > 0 ? parseFloat(variants[0].discount) : 0; // Chuyển sang kiểu float nếu có discount
   const discountedPrice = discount > 0 ? listedPrice * (1 - discount / 100) : listedPrice; // Tính giá sau khi giảm
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   const primary = images.find((image) => image.is_primary);
   let imageUrl = primary ? primary.image : (images.length > 0 ? images[0].image : null);
@@ -33,7 +34,7 @@ function ProductItem({ product, token }) {
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/wishlist/${id}/`, {
+      .get(`${apiurl}/wishlist/${id}/`, {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",
@@ -49,14 +50,14 @@ function ProductItem({ product, token }) {
       });
 
     if (imageUrl && !imageUrl.startsWith("http")) {
-      imageUrl = `http://localhost:8000${imageUrl}`;
+      imageUrl = `${apiurl}${imageUrl}`;
     }
 
     setPrimaryImage(imageUrl || "/placeholder.jpg");
 
     // Fetch reviews và tính toán rating trung bình chỉ cho sản phẩm hiện tại
     axios
-      .get(`http://localhost:8000/api/reviews/`, {
+      .get(`${apiurl}/api/reviews/`, {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",
@@ -76,7 +77,7 @@ function ProductItem({ product, token }) {
   const handleWishlistClick = () => {
     axios
       .post(
-        `http://127.0.0.1:8000/wishlist/${id}/toggle/`,
+        `${apiurl}/wishlist/${id}/toggle/`,
         {},
         {
           headers: {

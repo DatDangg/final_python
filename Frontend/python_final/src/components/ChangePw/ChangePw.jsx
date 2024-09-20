@@ -9,11 +9,12 @@ function ChangePassword() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const token = localStorage.getItem("token");
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 //   const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post("http://127.0.0.1:8000/change-password/", {
+    axios.post(`${apiurl}/change-password/`, {
         old_password: oldPassword,
         new_password: newPassword
       },

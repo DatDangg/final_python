@@ -6,6 +6,8 @@ import "./step1.css";
 function Step1() {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [hasProfile, setHasProfile] = useState(true);
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   const [newAddress, setNewAddress] = useState({
     full_name: "",
     phone_number: "",
@@ -18,7 +20,24 @@ function Step1() {
   useEffect(() => {
     if (token) {
       axios
-        .get("http://127.0.0.1:8000/api/addresses/", {
+        .get(`${apiurl}/auth/users`, {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          if (!response.data) {
+            setHasProfile(false);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching profile:", error);
+          setHasProfile(false); // Nếu lỗi, coi như không có profile
+        });
+
+      axios
+        .get(`${apiurl}/api/addresses/`, {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -32,8 +51,13 @@ function Step1() {
   }, [token]);
 
   const handleAddAddress = () => {
+    if (!hasProfile) {
+      alert("Bạn cần tạo profile trước khi thêm địa chỉ mới.");
+      return;
+    }
+  
     axios
-      .post("http://127.0.0.1:8000/api/addresses/", newAddress, {
+      .post(`${apiurl}/api/addresses/`, newAddress, {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",
@@ -50,6 +74,7 @@ function Step1() {
       })
       .catch((error) => console.error("Error adding address:", error));
   };
+  
 
   const handleNextStep = () => {
     const selectedAddress = addresses.find(

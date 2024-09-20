@@ -8,6 +8,7 @@ function Aside({ onFilterChange }) {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedStorage, setSelectedStorage] = useState('');
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   // Sử dụng debounce để trì hoãn việc thay đổi giá
   const debouncedPriceChange = useCallback(
@@ -31,7 +32,7 @@ function Aside({ onFilterChange }) {
     // Gọi API để lấy danh sách thương hiệu
     const fetchBrands = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/brands/');
+        const response = await fetch(`${apiurl}/brands/`);
         const data = await response.json();
         setBrands(data); // Lưu danh sách thương hiệu vào state
       } catch (error) {

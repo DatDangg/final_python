@@ -20,6 +20,7 @@ function ProductDetail() {
   const token = localStorage.getItem("token");
   const [categoryName, setCategoryName] = useState(location.state?.categoryName || "Category");
   const { cartItems, setCartItems, addToCart } = useContext(CartContext);
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   // Slides
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -69,13 +70,13 @@ function ProductDetail() {
   useEffect(() => {
     if (token) {
       axios
-        .get(`http://127.0.0.1:8000/api/products/${id}/`)
+        .get(`${apiurl}/api/products/${id}/`)
         .then((response) => {
           const fetchedProduct = response.data;
           setProduct(fetchedProduct);
           
           if (!location.state?.categoryName) {
-            fetch(`http://127.0.0.1:8000/api/categories/${fetchedProduct.category}/`)
+            fetch(`${apiurl}/api/categories/${fetchedProduct.category}/`)
               .then((response) => response.json())
               .then((data) => {
                 setCategoryName(data.name);
@@ -99,7 +100,7 @@ function ProductDetail() {
         .catch((error) => console.error("Error fetching product:", error));
   
       axios
-        .get("http://127.0.0.1:8000/api/cart/", {
+        .get(`${apiurl}/api/cart/`, {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -111,7 +112,7 @@ function ProductDetail() {
         .catch((error) => console.error("Error fetching cart items:", error));
 
       axios
-        .get(`http://127.0.0.1:8000/wishlist/${id}/`, {
+        .get(`${apiurl}/wishlist/${id}/`, {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -127,7 +128,7 @@ function ProductDetail() {
         });
   
         axios
-        .get(`http://127.0.0.1:8000/api/reviews/?product_id=${id}`, {
+        .get(`${apiurl}/api/reviews/?product_id=${id}`, {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -140,7 +141,7 @@ function ProductDetail() {
 
           userIds.forEach((userId) => {
             axios
-              .get(`http://127.0.0.1:8000/auth/users/${userId}/`, {
+              .get(`${apiurl}/auth/users/${userId}/`, {
                 headers: {
                   Authorization: `Token ${token}`,
                 },
@@ -165,7 +166,7 @@ function ProductDetail() {
   const handleWishlistClick = () => {
     axios
       .post(
-        `http://127.0.0.1:8000/wishlist/${id}/toggle/`,
+        `${apiurl}/wishlist/${id}/toggle/`,
         {},
         {
           headers: {

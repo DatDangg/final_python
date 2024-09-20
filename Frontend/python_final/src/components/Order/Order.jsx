@@ -8,9 +8,10 @@ function Order() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const token = localStorage.getItem("token");
-    console.log(orderData)
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
+
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/api/orders/${orderId}/`, {
+    axios.get(`${apiurl}/api/orders/${orderId}/`, {
       headers: {
         Authorization: `Token ${token}`,
         "Content-Type": "application/json",

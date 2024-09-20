@@ -1,7 +1,7 @@
 import requests
 from .models import Product, Category, WishlistItem, CartItem, Address, Order, Review, ProductImage, PhoneDetail, HeadphoneDetail, ComputerDetail, SmartwatchDetail, ProductVariant
 from .serializers import ProductSerializer, CategorySerializer, UserSerializer, CartItemSerializer, AddressSerializer, OrderSerializer, ReviewSerializer, PhoneDetailSerializer, ComputerDetailSerializer, HeadphoneDetailSerializer, SmartwatchDetailSerializer
-from .forms import  ProductForm, CategoryForm, OrderStatusForm, PhoneDetailForm, ComputerDetailForm, SmartwatchDetailForm, HeadphoneDetailForm, ProductVariantForm, ProductImageFormSet, ProductVariantFormSet
+from .forms import  ProductForm, CategoryForm, OrderStatusForm, PhoneDetailForm, ComputerDetailForm, SmartwatchDetailForm, HeadphoneDetailForm, ProductVariantForm, ProductImageFormSet, ProductVariantFormSet, ProductImageForm
 from rest_framework import viewsets, filters, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
@@ -18,6 +18,7 @@ from django.db.models import Sum, Count
 from django.db.models.functions import TruncMonth
 from datetime import datetime, timedelta
 from decimal import Decimal
+from django.forms import modelformset_factory
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  # Yêu cầu phải đăng nhập
@@ -567,6 +568,7 @@ def add_product_view(request):
 def edit_product(request, product_id, variant_id):
     product = get_object_or_404(Product, id=product_id)
     variant = get_object_or_404(ProductVariant, id=variant_id)  
+    ProductImageFormSet = modelformset_factory(ProductImage, form=ProductImageForm, extra=1, can_delete=True)
 
     # Get or create the correct detail form based on the category
     phone_detail_form = None
@@ -593,11 +595,19 @@ def edit_product(request, product_id, variant_id):
     if request.method == 'POST':
         product_form = ProductForm(request.POST, instance=product)
         variant_form = ProductVariantForm(request.POST, instance=variant)
+        image_formset = ProductImageFormSet(request.POST, request.FILES, queryset=ProductImage.objects.filter(product=product))
 
         # Check if all forms are valid
-        if product_form.is_valid() and variant_form.is_valid():
+        if product_form.is_valid() and variant_form.is_valid() and image_formset.is_valid():
             product_form.save()
             variant_form.save()
+
+            for form in image_formset:
+                if form.cleaned_data.get('DELETE') and form.instance.id:  # Ensure the instance has an ID before deleting
+                    form.instance.delete()
+                elif form.cleaned_data.get('image'):  # Check if an image is uploaded before saving
+                    form.instance.product = product
+                    form.save()
 
             # Save the corresponding detail form if it exists and is valid
             if phone_detail_form and phone_detail_form.is_valid():
@@ -614,15 +624,18 @@ def edit_product(request, product_id, variant_id):
     else:
         product_form = ProductForm(instance=product)
         variant_form = ProductVariantForm(instance=variant)
+        image_formset = ProductImageFormSet(queryset=ProductImage.objects.filter(product=product))  # Initialize image_formset for GET requests
 
     return render(request, 'edit_product.html', {
         'product_form': product_form,
         'variant_form': variant_form,
+        'image_formset': image_formset,
         'phone_detail_form': phone_detail_form,
         'computer_detail_form': computer_detail_form,
         'smartwatch_detail_form': smartwatch_detail_form,
         'headphone_detail_form': headphone_detail_form,
     })
+
 
 def delete_product_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)

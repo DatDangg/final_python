@@ -6,6 +6,7 @@ export const CartContext = createContext(); // Đảm bảo export đúng
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const token = localStorage.getItem('token');
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   useEffect(() => {
     if (token) {
@@ -15,7 +16,7 @@ export const CartProvider = ({ children }) => {
 
   const fetchCartItems = () => {
     axios
-      .get('http://127.0.0.1:8000/api/cart/', {
+      .get(`${apiurl}/api/cart/`, {
         headers: {
           Authorization: `Token ${token}`,
           'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ export const CartProvider = ({ children }) => {
     // Sau đó mới thực hiện gọi API để đồng bộ với backend
     axios
       .post(
-        'http://127.0.0.1:8000/api/cart/',
+        `${apiurl}/api/cart/`,
         { product_id, variant_id, quantity },
         {
           headers: {
@@ -75,7 +76,7 @@ export const CartProvider = ({ children }) => {
 
   const removeFromCart = (itemId) => {
     axios
-      .delete(`http://127.0.0.1:8000/api/cart/${itemId}/`, {
+      .delete(`${apiurl}/api/cart/${itemId}/`, {
         headers: {
           Authorization: `Token ${token}`,
           'Content-Type': 'application/json',
@@ -93,7 +94,7 @@ export const CartProvider = ({ children }) => {
     if (quantity > 0 && quantity <= item.variant.quantity) {
       axios
         .patch(
-          `http://127.0.0.1:8000/api/cart/${itemId}/`,
+          `${apiurl}/api/cart/${itemId}/`,
           { quantity },
           {
             headers: {

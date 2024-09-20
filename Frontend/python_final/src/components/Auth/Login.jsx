@@ -11,10 +11,11 @@ function Login() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/auth/login/', {
+      const response = await axios.post(`${apiurl}/auth/login/`, {
         username,
         password,
       });

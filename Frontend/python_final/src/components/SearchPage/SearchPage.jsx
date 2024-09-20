@@ -8,6 +8,7 @@ function SearchPage() {
   const [totalProducts, setTotalProducts] = useState(0); // Tổng số sản phẩm
   const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
   const [productsPerPage] = useState(10); // Số sản phẩm trên mỗi trang
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   const location = useLocation();
   const searchQuery = new URLSearchParams(location.search).get("q");
@@ -15,7 +16,7 @@ function SearchPage() {
   useEffect(() => {
     if (searchQuery) {
       fetch(
-        `http://localhost:8000/api/products/?search=${searchQuery}&page=${currentPage}&page_size=${productsPerPage}`
+        `${apiurl}/api/products/?search=${searchQuery}&page=${currentPage}&page_size=${productsPerPage}`
       )
         .then((response) => response.json())
         .then((data) => {

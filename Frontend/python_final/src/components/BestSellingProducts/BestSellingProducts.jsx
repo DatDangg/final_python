@@ -8,23 +8,35 @@ const BestSellingProducts = () => {
     const token = localStorage.getItem("token");
     const containerRef = useRef(null); // Ref cho container cuộn
     const [scrollPosition, setScrollPosition] = useState(0); // Vị trí cuộn hiện tại
+    const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
     const itemWidth = 240; // Chiều rộng của mỗi sản phẩm
 
     // Fetch dữ liệu từ API
     useEffect(() => {
-        axios.get('http://localhost:8000/best-selling-products/', {
+        axios.get(`${apiurl}/best-selling-products/`, {
             headers: {
                 Authorization: `Token ${token}`,
                 "Content-Type": "application/json",
             },
         })
         .then(response => {
-            setProducts(response.data);
+            // Kiểm tra xem response.data có phải là mảng không
+            if (Array.isArray(response.data)) {
+                setProducts(response.data);
+            } else {
+                console.error('Expected an array, but got:', response.data);
+                setProducts([]); // Hoặc một giá trị mặc định khác
+            }
         })
         .catch(error => {
             console.error('Error fetching best selling products:', error);
+            if (error.response) {
+                console.error('Response data:', error.response.data);
+            }
         });
+        
     }, [token]);
+    
 
     const scrollLeft = () => {
         if (containerRef.current) {

@@ -12,12 +12,14 @@ function CategoryPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(6); // chỉnh sửa số lượng sản phẩm trên 1 trang
   const [totalProducts, setTotalProducts] = useState(0);
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (token) {
       if (!location.state?.categoryName) {
-        fetch(`http://127.0.0.1:8000/api/categories/${id}/`)
+        fetch(`${apiurl}/api/categories/${id}/`)
           .then((response) => response.json())
           .then((data) => {
             setCategoryName(data.name);

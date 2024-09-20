@@ -12,6 +12,7 @@ const ForgotPassword = () => {
   const [verificationCode, setVerificationCode] = useState('');  // Lưu mã xác nhận
   const [newPassword, setNewPassword] = useState('');
   const [step, setStep] = useState(1);  // Quản lý bước hiện tại
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   // Hàm gửi email với EmailJS
   const sendVerificationCode = async (e) => {
@@ -60,7 +61,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       // Gọi API backend để đặt lại mật khẩu mới
-      await axios.post('http://localhost:8000/reset-password/', { username, newPassword });
+      await axios.post(`${apiurl}/reset-password/`, { username, newPassword });
       alert('Password has been reset successfully.');
     } catch (error) {
       console.error('Error resetting password:', error);
