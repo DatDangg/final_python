@@ -159,8 +159,6 @@ function ProductDetail() {
       }
   }, [id, token]);
   
-  
-
   const handleWishlistClick = () => {
     axios
       .post(
@@ -203,7 +201,6 @@ function ProductDetail() {
       return;
     }
   
-    // Cập nhật giỏ hàng trên giao diện trước khi gọi API
     addToCart(product.id, selectedVariant.id, 1);
   };
   
@@ -214,7 +211,7 @@ function ProductDetail() {
   };
 
   const calculateDiscountedPrice = (listedPrice, discount) => {
-    if (!discount) return listedPrice; // Nếu không có giảm giá, trả về giá niêm yết
+    if (!discount) return listedPrice; 
     const discountAmount = (listedPrice * discount) / 100;
     return listedPrice - discountAmount;
   };
@@ -287,39 +284,39 @@ function ProductDetail() {
                 {/* Hiển thị giá của biến thể được chọn */}
                 {selectedVariant && (
                   <p className="product-price pt-1">
-                  {selectedVariant.discount > 0 && (
-                    <span className="current-price fw-bold" style={{ color: "red" }}>
-                      <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
-                      {formatPrice(
-                        Number(
-                          calculateDiscountedPrice(
-                            selectedVariant.listed_price,
-                            selectedVariant.discount
-                          )
-                        ).toFixed(0)
-                      )}
-                    </span>
-                  )}
-                
-                  <span
-                    className="original-price fw-bold"
-                    style={{
-                      color: selectedVariant.discount > 0 ? "gray" : "red",
-                      textDecoration: selectedVariant.discount > 0 ? "line-through" : "none",
-                      fontSize: selectedVariant.discount > 0 ? "15px" : "40px", // Điều chỉnh kích thước font
-                    }}
-                  >
-                    <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
-                    {formatPrice(Number(selectedVariant.listed_price).toFixed(0))}
-                  </span>
+                    {selectedVariant.discount > 0 && (
+                      <span className="current-price fw-bold" style={{ color: "red" }}>
+                        <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
+                        {formatPrice(
+                          Number(
+                            calculateDiscountedPrice(
+                              selectedVariant.listed_price,
+                              selectedVariant.discount
+                            )
+                          ).toFixed(0)
+                        )}
+                      </span>
+                    )}
                   
-                  {selectedVariant.discount > 0 && (
-                    <span className="discount-percentage text-black fw-bold">
-                      {" "} -{selectedVariant.discount}%
+                    <span
+                      className="original-price fw-bold"
+                      style={{
+                        color: selectedVariant.discount > 0 ? "gray" : "red",
+                        textDecoration: selectedVariant.discount > 0 ? "line-through" : "none",
+                        fontSize: selectedVariant.discount > 0 ? "15px" : "40px", // Điều chỉnh kích thước font
+                      }}
+                    >
+                      <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
+                      {formatPrice(Number(selectedVariant.listed_price).toFixed(0))}
                     </span>
-                  )}
-                </p>
-                
+                    
+                    {selectedVariant.discount > 0 && (
+                      <span className="discount-percentage text-black fw-bold">
+                        {" "} -{selectedVariant.discount}%
+                      </span>
+                    )}
+                  </p>
+
                 )}
 
                 {/* Dropdown cho biến thể */}
@@ -330,12 +327,14 @@ function ProductDetail() {
                           onChange={(e) => handleVariantChange(e.target.value)}
                   >
                     {product.variants.map((variant) => (
-                        <option key={variant.id} value={variant.id}>
-                          {variant.color} - {variant.storage}
-                        </option>
+                      <option key={variant.id} value={variant.id}>
+                        {variant.storage && variant.storage == "n/A" ? `${variant.color} - ${variant.storage}` : variant.color}
+                      </option>
                     ))}
                   </select>
                 </div>
+
+
 
                 {/*product-value*/}
                 <div className="product-value">
@@ -360,7 +359,6 @@ function ProductDetail() {
                               <span className="ml-5">CPU</span>
                               <p className="ml-5 fw-bold">{product.phone_details.cpu}</p>
                             </div>
-
                           </div>
                           <div className="col-sm-4 d-flex border-bottom ">
                             <div className="col-4 align-items-center pt-3 ml-2">
@@ -401,8 +399,32 @@ function ProductDetail() {
                         </div>
                       </div>
                   )}
-                  {/*headphone*/}
+                  {/*computer*/}
                   {product.computer_details && (
+                    <div className="container p-0 justify-content-between mb-4">
+                      <div className="row ">
+                        <div className="col-sm-4 d-flex border-bottom">
+                          <div className="col-4 align-items-center pt-3 ml-2">
+                            <img className="icon-value" src="/photos/Screensize.png" alt=""/>
+                          </div>
+                          <div className="col-8 pt-2">
+                            <span className="ml-5">Screen Size</span>
+                            <p className="ml-5 fw-bold">{product.computer_details.screen_size}</p>
+                          </div>
+                        </div>
+                        <div className="col-sm-4 d-flex border-bottom">
+                          <div className="col-4 align-items-center pt-3 ml-2">
+                            <img className="icon-value" src="/photos/cpu.png" alt=""/>
+                          </div>
+                          <div className="col-8 pt-2">
+                            <span className="ml-5">RAM</span>
+                            <p className="ml-5 fw-bold">{product.computer_details.ram}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {product.smartwatch_details && (
                       <div className="container p-0 justify-content-between mb-4">
                         <div className="row ">
                           <div className="col-sm-4 d-flex border-bottom">
@@ -411,22 +433,29 @@ function ProductDetail() {
                             </div>
                             <div className="col-8 pt-2">
                               <span className="ml-5">Screen Size</span>
-                              <p className="ml-5 fw-bold">{product.computer_details.screen_size}</p>
+                              <p className="ml-5 fw-bold">{product.smartwatch_details.screen_size}</p>
                             </div>
                           </div>
                           <div className="col-sm-4 d-flex border-bottom">
                             <div className="col-4 align-items-center pt-3 ml-2">
-                              <img className="icon-value" src="/photos/cpu.png" alt=""/>
+                              <img className="icon-value" src="/photos/battery.png" alt=""/>
                             </div>
                             <div className="col-8 pt-2">
-                              <span className="ml-5">RAM</span>
-                              <p className="ml-5 fw-bold">{product.computer_details.ram}</p>
+                              <span className="ml-5">Battery</span>
+                              <p className="ml-5 fw-bold">{product.smartwatch_details.battery_capacity}</p>
                             </div>
-
+                          </div>
+                          <div className="col-sm-4 d-flex border-bottom ">
+                            <div className="col-4 align-items-center pt-3 ml-2">
+                              <img className="icon-value" src="/photos/strap.png" alt=""/>
+                            </div>
+                            <div className="col-8 pt-2">
+                              <span className="ml-5">Strap type</span>
+                              <p className="ml-5 fw-bold">{product.smartwatch_details.strap_type}</p>
+                            </div>
                           </div>
                         </div>
                       </div>
-
                   )}
                 </div>
 
