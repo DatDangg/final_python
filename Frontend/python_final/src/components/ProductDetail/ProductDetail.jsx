@@ -304,15 +304,15 @@ function ProductDetail() {
                   <span
                     className="original-price fw-bold"
                     style={{
-                      fontSize: "40px",
                       color: selectedVariant.discount > 0 ? "gray" : "red",
                       textDecoration: selectedVariant.discount > 0 ? "line-through" : "none",
+                      fontSize: selectedVariant.discount > 0 ? "15px" : "40px", // Điều chỉnh kích thước font
                     }}
                   >
                     <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
                     {formatPrice(Number(selectedVariant.listed_price).toFixed(0))}
                   </span>
-                
+                  
                   {selectedVariant.discount > 0 && (
                     <span className="discount-percentage text-black fw-bold">
                       {" "} -{selectedVariant.discount}%

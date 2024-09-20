@@ -133,20 +133,23 @@ function ProductItem({ product, token }) {
         <div className="">
           {/* Hiển thị giá gốc và giá giảm */}
           {discount > 0 ? (
-              <>
-                <p className="item-product-price-discount pt-2">
-                  <span className="text-danger" style={{fontSize: "12px", verticalAlign: "super"}}>đ</span>
-                  <span className="fs-4 p-0 m-0 text-danger fw-bold">{formatPrice(Number(discountedPrice))}</span>
-                  <span style={{fontSize: "10px", verticalAlign: "super", marginLeft: "8px"}}>đ</span>
-                  <span style={{textDecoration: "line-through", fontSize: "12px"}}  >{formatPrice(Number(listedPrice))}</span>
-                </p>
-              </>
-          ) : (
-              <p className="item-product-price text-danger">
-                <span style={{fontSize: "12px", verticalAlign: "super"}}>đ</span>
-                {formatPrice(Number(listedPrice))}
-            </p>
-          )}
+  <>
+    <p className="item-product-price-discount pt-2">
+      <span className="text-danger" style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
+      <span className="fs-4 p-0 m-0 text-danger fw-bold">{formatPrice(Number(discountedPrice))}</span>
+      <span style={{ fontSize: "10px", verticalAlign: "super", marginLeft: "8px" }}>đ</span>
+      <span style={{ textDecoration: "line-through", fontSize: "15px" }}>
+        {formatPrice(Number(listedPrice))}
+      </span>
+    </p>
+  </>
+) : (
+  <p className="item-product-price text-danger fw-bold" style={{ fontSize: "25px", paddingTop: ".5rem" }}>
+    <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
+    {formatPrice(Number(listedPrice))}
+  </p>
+)}
+
         </div>
         {/* Hiển thị đánh giá trung bình */}
         <div className="rating m-0 p-0">
