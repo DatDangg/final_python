@@ -59,6 +59,7 @@ function CategoryPage() {
             currentPage={currentPage}
             productsPerPage={productsPerPage}
             setTotalProducts={setTotalProducts} // Đếm tổng số sản phẩm để phân trang
+            isFromCategoryPage={true}
           />
           <Pagination
             currentPage={currentPage}

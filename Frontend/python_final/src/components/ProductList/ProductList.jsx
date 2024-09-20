@@ -3,7 +3,7 @@ import ProductItem from "../ProductItem/ProductItem";
 import Aside from "../Aside/Aside";
 import "./style.css";
 
-function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalProducts, searchQuery }) {
+function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalProducts, searchQuery, isFromCategoryPage }) {
   const [productList, setProductList] = useState([]);
   const [filters, setFilters] = useState({
     brand: '',
@@ -27,7 +27,7 @@ function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalP
         let url = `${apiurl}/api/products/?category=${selectedCategory?.id || ''}&search=${searchQuery || ''}`;
         
         if (filters.brand) url += `&brand=${filters.brand}`;
-        if (filters.categoryId) url += `&category=${filters.categoryId}`; // Sử dụng categoryId trong URL
+        if (!isFromCategoryPage && filters.categoryId) url += `&category=${filters.categoryId}`; // Sử dụng categoryId trong URL
         if (filters.minPrice) url += `&variants__listed_price__gte=${filters.minPrice}`;
         if (filters.maxPrice) url += `&variants__listed_price__lte=${filters.maxPrice}`;
         
@@ -58,7 +58,8 @@ function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalP
     <div className="product-page container-fluid pt-5 mb-5">
       <div className="row d-flex p-0 m-0">
         <div className="col-md-3 aside justify-content-center align-items-center">
-          <Aside onFilterChange={handleFilterChange} />
+          <Aside onFilterChange={handleFilterChange}
+          hideCategoryFilter={isFromCategoryPage} />
         </div>
         <div className="col-md-8">
           <div className="product-container">

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './aside.css';
 import { debounce } from 'lodash';
 
-function Aside({ onFilterChange }) {
+function Aside({ onFilterChange, hideCategoryFilter }) {
   const [brands, setBrands] = useState([]);
   const categories = [
     { id: 1, name: 'Smart Phones' },
@@ -70,7 +70,7 @@ function Aside({ onFilterChange }) {
           ))}
         </select>
       </div>
-
+      {!hideCategoryFilter && (
       <div className="filter-group">
         <label>Danh Mục</label>
         <select value={selectedCategoryId} onChange={handleCategoryChange}>
@@ -82,7 +82,7 @@ function Aside({ onFilterChange }) {
           ))}
         </select>
       </div>
-
+      )}
       <div className="filter-group">
         <label>Giá Tiền (VNĐ)</label>
         <input
