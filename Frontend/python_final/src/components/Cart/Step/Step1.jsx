@@ -7,7 +7,6 @@ function Step1() {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [hasProfile, setHasProfile] = useState(true);
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   const [newAddress, setNewAddress] = useState({
     full_name: "",
     phone_number: "",
@@ -20,7 +19,7 @@ function Step1() {
   useEffect(() => {
     if (token) {
       axios
-        .get(`${apiurl}/auth/users`, {
+        .get("http://127.0.0.1:8000/auth/users", {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -37,7 +36,7 @@ function Step1() {
         });
 
       axios
-        .get(`${apiurl}/api/addresses/`, {
+        .get("http://127.0.0.1:8000/api/addresses/", {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -57,7 +56,7 @@ function Step1() {
     }
   
     axios
-      .post(`${apiurl}/api/addresses/`, newAddress, {
+      .post("http://127.0.0.1:8000/api/addresses/", newAddress, {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",

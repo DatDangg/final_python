@@ -19,7 +19,6 @@ function UserProfile() {
   const [comments, setComments] = useState({}); // State cho comment của từng sản phẩm
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   const formatPrice = (number) => {
     const integerPart = Math.floor(number);
     return integerPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -27,7 +26,7 @@ function UserProfile() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    axios.get(`${apiurl}/api/orders/`, {
+    axios.get("http://localhost:8000/api/orders/", {
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
@@ -50,7 +49,7 @@ function UserProfile() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    axios.get(`${apiurl}/auth/profile/`, {
+    axios.get("http://localhost:8000/auth/profile/", {
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
@@ -72,7 +71,7 @@ function UserProfile() {
 
   const fetchProductDetails = (productId) => {
     const token = localStorage.getItem("token");
-    return axios.get(`${apiurl}/api/products/${productId}/`, {
+    return axios.get(`http://localhost:8000/api/products/${productId}/`, {
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
@@ -101,7 +100,7 @@ function UserProfile() {
   const fetchOrderReviews = async (orderId) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.get(`${apiurl}/reviews/order/${orderId}/`, {
+      const response = await axios.get(`http://localhost:8000/reviews/order/${orderId}/`, {
         headers: {
           'Authorization': `Token ${token}`,
           'Content-Type': 'application/json',
@@ -144,7 +143,7 @@ function UserProfile() {
   const handleCancelOrder = (orderId) => {
     const token = localStorage.getItem("token");
   
-    axios.put(`${apiurl}/orders/${orderId}/cancel/`, {}, {
+    axios.put(`http://localhost:8000/orders/${orderId}/cancel/`, {}, {
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
@@ -202,7 +201,7 @@ function UserProfile() {
       comment: comments[productId],
     };
 
-    axios.post(`${apiurl}/api/reviews/`, payload, {
+    axios.post("http://localhost:8000/api/reviews/", payload, {
       headers: {
         Authorization: `Token ${token}`,
         "Content-Type": "application/json",
@@ -229,7 +228,7 @@ function UserProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put(`${apiurl}/auth/profile/`, userData, {
+    axios.put("http://localhost:8000/auth/profile/", userData, {
       headers: {
         Authorization: `Token ${localStorage.getItem("token")}`,
       },

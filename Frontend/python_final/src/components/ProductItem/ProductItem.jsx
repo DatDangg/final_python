@@ -32,7 +32,7 @@ function ProductItem({ product, token }) {
 
   useEffect(() => {
     axios
-      .get(`${apiurl}/wishlist/${id}/`, {
+      .get(`http://localhost:8000/wishlist/${id}/`, {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",
@@ -48,13 +48,13 @@ function ProductItem({ product, token }) {
       });
 
     if (imageUrl && !imageUrl.startsWith("http")) {
-      imageUrl = `${apiurl}${imageUrl}`;
+      imageUrl = `http://localhost:8000${imageUrl}`;
     }
 
     setPrimaryImage(imageUrl || "/placeholder.jpg");
 
     axios
-      .get(`${apiurl}/api/reviews/`, {
+      .get("http://localhost:8000/api/reviews/", {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",
@@ -74,7 +74,7 @@ function ProductItem({ product, token }) {
   const handleWishlistClick = () => {
     axios
       .post(
-        `${apiurl}/wishlist/${id}/toggle/`,
+        `http://localhost:8000/wishlist/${id}/toggle/`,
         {},
         {
           headers: {

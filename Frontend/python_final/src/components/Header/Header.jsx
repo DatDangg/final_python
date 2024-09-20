@@ -15,7 +15,6 @@ function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showWishList, setShowWishList] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -40,7 +39,7 @@ function Header() {
   useEffect(() => {
     if (token) {
       axios
-        .get(`${apiurl}/api/cart/`, {
+        .get("http://127.0.0.1:8000/api/cart/", {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",

@@ -6,18 +6,12 @@ function Categories() {
   const [categories, setCategories] = useState([]);
   const categoriesRef = useRef(null);
   const navigate = useNavigate();
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (token) {
-    fetch(`${apiurl}/api/categories/`, {
-            headers: {
-                Authorization: `Token ${token}`,
-                "Content-Type": "application/json",
-            },
-        })
+    fetch("http://localhost:8000/api/categories/")
       .then((response) => response.json())
       .then((data) => setCategories(data))
       .catch((error) => console.error("Error fetching categories:", error));

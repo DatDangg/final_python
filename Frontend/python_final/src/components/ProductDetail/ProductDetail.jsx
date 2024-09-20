@@ -70,13 +70,13 @@ function ProductDetail() {
   useEffect(() => {
     if (token) {
       axios
-        .get(`${apiurl}/api/products/${id}/`)
+        .get(`http://localhost:8000/api/products/${id}/`)
         .then((response) => {
           const fetchedProduct = response.data;
           setProduct(fetchedProduct);
           
           if (!location.state?.categoryName) {
-            fetch(`${apiurl}/api/categories/${fetchedProduct.category}/`)
+            fetch(`http://localhost:8000/api/categories/${fetchedProduct.category}/`)
               .then((response) => response.json())
               .then((data) => {
                 setCategoryName(data.name);
@@ -98,7 +98,7 @@ function ProductDetail() {
         .catch((error) => console.error("Error fetching product:", error));
   
       axios
-        .get(`${apiurl}/api/cart/`, {
+        .get("http://localhost:8000/api/cart/", {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -110,7 +110,7 @@ function ProductDetail() {
         .catch((error) => console.error("Error fetching cart items:", error));
 
       axios
-        .get(`${apiurl}/wishlist/${id}/`, {
+        .get(`http://localhost:8000/wishlist/${id}/`, {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -126,7 +126,7 @@ function ProductDetail() {
         });
   
         axios
-        .get(`${apiurl}/api/reviews/?product_id=${id}`, {
+        .get(`http://localhost:8000/api/reviews/?product_id=${id}`, {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -139,7 +139,7 @@ function ProductDetail() {
 
           userIds.forEach((userId) => {
             axios
-              .get(`${apiurl}/auth/users/${userId}/`, {
+              .get(`http://localhost:8000/auth/users/${userId}/`, {
                 headers: {
                   Authorization: `Token ${token}`,
                 },
@@ -162,7 +162,7 @@ function ProductDetail() {
   const handleWishlistClick = () => {
     axios
       .post(
-        `${apiurl}/wishlist/${id}/toggle/`,
+        `http://localhost:8000/wishlist/${id}/toggle/`,
         {},
         {
           headers: {

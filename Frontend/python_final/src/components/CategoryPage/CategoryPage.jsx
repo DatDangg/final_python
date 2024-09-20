@@ -19,7 +19,7 @@ function CategoryPage() {
 
     if (token) {
       if (!location.state?.categoryName) {
-        fetch(`${apiurl}/api/categories/${id}/`)
+        fetch(`http://localhost:8000/api/categories/${id}/`)
           .then((response) => response.json())
           .then((data) => {
             setCategoryName(data.name);

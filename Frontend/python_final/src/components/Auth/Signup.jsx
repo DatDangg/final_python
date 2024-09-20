@@ -14,7 +14,6 @@ function Signup() {
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const { login } = useContext(AuthContext);
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   const navigate = useNavigate();
 
   const validatePassword = (password) => {
@@ -60,7 +59,7 @@ function Signup() {
     }
 
     try {
-      const response = await axios.post(`${apiurl}/auth/register/`, {
+      const response = await axios.post('http://localhost:8000/auth/register/', {
         username,
         password,
         email,

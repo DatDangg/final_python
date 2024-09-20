@@ -13,20 +13,18 @@ const Step3 = () => {
   const [qrCodeVisible, setQrCodeVisible] = useState(false);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   
   const [transactionSuccess, setTransactionSuccess] = useState(false);
 
   // Hàm để định dạng số tiền với dấu phẩy
   const formatPrice = (number) => {
-    const integerPart = Math.floor(number);
-    return integerPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   useEffect(() => {
     // Fetch the cart items from the API
     axios
-      .get(`${apiurl}/api/cart/`, {
+      .get("http://127.0.0.1:8000/api/cart/", {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",
@@ -71,7 +69,7 @@ const Step3 = () => {
     };
 
     axios
-      .post(`${apiurl}/api/orders/`, orderData, {
+      .post("http://127.0.0.1:8000/api/orders/", orderData, {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",
@@ -84,7 +82,7 @@ const Step3 = () => {
         const updateStockPromises = cartItems.map((item) => {
           const newStock = item.variant.quantity - item.quantity;
           return axios.patch(
-            `${apiurl}/api/products/${item.product.id}/update-variant/`,
+            `http://127.0.0.1:8000/api/products/${item.product.id}/update-variant/`,
             {
               variant_id: item.variant.id,
               quantity: newStock,
@@ -104,7 +102,7 @@ const Step3 = () => {
         console.log("Stock updated successfully.");
 
         // Xóa giỏ hàng sau khi đặt hàng
-        return axios.delete(`${apiurl}/api/cart/clear_cart/`, {
+        return axios.delete("http://127.0.0.1:8000/api/cart/clear_cart/", {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -160,7 +158,7 @@ const Step3 = () => {
           return (
             <div key={item.id} className="cart-item">
               <img
-                src={`${apiurl}${primaryImage}`}
+                src={`http://localhost:8000${primaryImage}`}
                 alt={item.product.title}
               />
               <div className="item-details">

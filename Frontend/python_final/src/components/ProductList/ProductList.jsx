@@ -24,7 +24,7 @@ function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalP
   useEffect(() => {
     const fetchProducts = async () => {
       if (token) {
-        let url = `${apiurl}/api/products/?category=${selectedCategory?.id || ''}&search=${searchQuery || ''}`;
+        let url = `http://localhost:8000/api/products/?category=${selectedCategory?.id || ''}&search=${searchQuery || ''}`;
         
         if (filters.brand) url += `&brand=${filters.brand}`;
         if (!isFromCategoryPage && filters.categoryId) url += `&category=${filters.categoryId}`; // Sử dụng categoryId trong URL
