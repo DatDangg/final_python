@@ -19,7 +19,8 @@ const Step3 = () => {
 
   // Hàm để định dạng số tiền với dấu phẩy
   const formatPrice = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const integerPart = Math.floor(number);
+    return integerPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   useEffect(() => {

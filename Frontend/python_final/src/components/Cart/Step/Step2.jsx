@@ -18,7 +18,8 @@ function Step2() {
   const navigate = useNavigate();
 
   const formatPrice = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const integerPart = Math.floor(number);
+    return integerPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   // Tính phí cho giao hàng thường (free)
