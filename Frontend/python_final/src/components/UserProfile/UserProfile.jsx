@@ -393,12 +393,12 @@ function UserProfile() {
                     </div>
 
 
-                    {selectedOrder.status !== 'Cancelled' && (
+                    {selectedOrder.status !== 'Cancelled' && selectedOrder.status !== 'Delivered' && selectedOrder.status !== 'Shipped'(
                         <button
-                            className="btn btn-danger mt-1 mb-3 "
+                            className="btn btn-danger mt-1 mb-3"
                             onClick={() => handleCancelOrder(selectedOrder.id)}
                         >
-                          Hủy đơn hàng
+                            Hủy đơn hàng
                         </button>
                     )}
                     <div className="container">
