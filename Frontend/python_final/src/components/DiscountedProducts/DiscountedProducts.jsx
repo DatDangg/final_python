@@ -21,6 +21,7 @@ const DiscountedProducts = () => {
         })
         .then(response => {
             setProducts(response.data);
+            console.log(response.data)
         })
         .catch(error => {
             console.error('Error fetching discounted products:', error);

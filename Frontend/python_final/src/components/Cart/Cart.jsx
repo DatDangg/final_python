@@ -34,7 +34,8 @@ function Cart() {
 
   // Hàm định dạng số với dấu phẩy
   const formatPrice = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const integerPart = Math.floor(number);
+    return integerPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   const totalAmount = cartItems.reduce(

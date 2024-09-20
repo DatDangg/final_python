@@ -21,7 +21,8 @@ function ProductItem({ product, token }) {
   let imageUrl = primary ? primary.image : (images.length > 0 ? images[0].image : null);
 
   const formatPrice = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const integerPart = Math.floor(number);
+    return integerPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   // Hàm tính trung bình rating từ các đánh giá của sản phẩm hiện tại

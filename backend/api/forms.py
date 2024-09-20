@@ -16,7 +16,7 @@ class ProductForm(forms.ModelForm):
 class ProductVariantForm(forms.ModelForm):
     class Meta:
         model = ProductVariant
-        fields = ['color', 'storage', 'listed_price', 'quantity', 'cost_price', 'SKU']  
+        fields = ['color', 'storage', 'listed_price', 'quantity', 'discount', 'cost_price', 'SKU']  
 
     def clean_SKU(self):
         SKU = self.cleaned_data.get('SKU')

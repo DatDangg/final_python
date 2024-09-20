@@ -21,7 +21,8 @@ function UserProfile() {
   const [error, setError] = useState(null);
   const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   const formatPrice = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const integerPart = Math.floor(number);
+    return integerPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   useEffect(() => {

@@ -20,23 +20,12 @@ const BestSellingProducts = () => {
             },
         })
         .then(response => {
-            // Kiểm tra xem response.data có phải là mảng không
-            if (Array.isArray(response.data)) {
-                setProducts(response.data);
-            } else {
-                console.error('Expected an array, but got:', response.data);
-                setProducts([]); // Hoặc một giá trị mặc định khác
-            }
+            setProducts(response.data);
         })
         .catch(error => {
             console.error('Error fetching best selling products:', error);
-            if (error.response) {
-                console.error('Response data:', error.response.data);
-            }
         });
-        
     }, [token]);
-    
 
     const scrollLeft = () => {
         if (containerRef.current) {
