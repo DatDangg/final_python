@@ -4,8 +4,7 @@
 
 {% block content %}
 <h1 class="mb-4">Add Product</h1>
-
-    <div class="container">
+    <div class="container" style="max-height: 630px; overflow-y: auto; border: 1px solid #ddd; padding: 20px; border-radius: 5px;">
         <form class="row d-flex" method="POST" enctype="multipart/form-data">
             <div class="col-md-5">
                 {% csrf_token %}
@@ -14,19 +13,20 @@
                 {{ variant_formset.management_form }}
 
                 <div id="variant-formset">
-                    {% for form in variant_formset %}
-                        <h1>Variant {{ forloop.counter }}</h1>
-                        <div class="variant-form">
-                            {{ form.as_p }}
-                        </div>
-                    {% endfor %}
+                    <div class="col-md-12">
+                        {% for form in variant_formset %}
+                            <h1 class="text-start">Variant {{ forloop.counter }}</h1>
+                            <div class="variant-form border p-3 mb-3 rounded shadow-sm">
+                                {{ form.as_p }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
 
                 <button class="btn btn-outline-dark mb-4" type="button" id="add-variant">Add Another Variant</button>
-
                 <div id="empty-form-template" style="display: none;">
-                    <h1>Variant __prefix__</h1>
-                    <div class="variant-form">
+                    <h1 class="text-start">Variant __prefix__</h1>
+                    <div class="variant-form border p-3 mb-3 rounded shadow-sm">
                         {{ variant_formset.empty_form.as_p }}
                     </div>
                 </div>
@@ -35,24 +35,24 @@
 
                 <div id="image-formset">
                     {% for form in image_formset %}
-                        <div class="image-form">
+                        <div class="image-form border p-3 mb-3 rounded shadow-sm">
                             {{ form.as_p }}
                         </div>
                     {% endfor %}
                 </div>
 
                 <div id="empty-image-form-template" style="display: none;">
-                    <div class="image-form">
+                    <div class="image-form border p-3 mb-3 rounded shadow-sm">
                         {{ image_formset.empty_form.as_p }}
                     </div>
                 </div>
-
                 <button class="btn btn-outline-dark mb-4" type="button" id="add-image">Add Another Image</button>
             </div>
-            <div class="col-md-3">
-                <div class="info">
-                    <div class="" id="phone-details" style="display: none;">
-                        <h4 class="mb-3 fw-lighter text-primary text-decoration-underline ">Phone Details</h4>
+
+            <div class="col-md-3 " style="margin-left: 100px">
+                <div class="info border p-3" >
+                    <div id="phone-details" style="display: none;">
+                        <h4 class="mb-3 fw-lighter text-primary text-decoration-underline">Phone Details</h4>
                         {{ phone_detail_form.as_p }}
                     </div>
 
@@ -71,16 +71,22 @@
                         {{ headphone_detail_form.as_p }}
                     </div>
                 </div>
+
+            </div>
+            <div class="col-md-12 text-end mb-5" style="height: 100px">
+                <button class="btn btn-outline-dark"  type="submit" style="height: 80px;width: 230px">Save Product</button>
             </div>
 
 
-            <button class="btn btn-outline-dark" type="submit" style="margin-left: 10px;">Save Product</button>
+
         </form>
     </div>
 
 
 
-<script>
+
+
+    <script>
     document.getElementById('id_category').addEventListener('change', function () {
         var category = this.options[this.selectedIndex].text;
 

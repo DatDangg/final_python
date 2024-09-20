@@ -3,89 +3,98 @@
 {% block title %}Edit Product{% endblock %}
 
 {% block content %}
-    <h1 class="mb-2 pt-4">Edit Product</h1>
 
+    <h1 class="mb-2 pt-4">Edit Product</h1>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="container">
-            <div class="row d-flex gap-3">
-                <div class="col-md-6">
-                    <h4 class="fw-lighter text-primary text-decoration-underline mb-3">Product Information</h4>
-                    {{ product_form.as_p }}
+            <div class="row d-flex gap-1 border p-5" style="max-height: 630px; overflow-y: auto; border: 1px solid #ddd; padding: 2px;">
+                <div class="col-md-3 " style="margin-right: 90px">
+                    <h4 class="fw-lighter text-primary text-decoration-underline mb-3 ">Product Information</h4>
+                    <div class="col-10 p-0  ">
+                        {{ product_form.as_p }}
+                    </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3" style="border-right: #1c1c1e;">
                     <h4 class="fw-lighter text-primary text-decoration-underline">Variant Information</h4>
-                    {{ variant_form.as_p }}
-                </div>
-            </div>
-
-            <div class="row mt-4"></div>
-                <h4 class="fw-lighter text-primary text-decoration-underline mb-3">Product Images</h4>
-                
-                <div class="col-md-8">
-                    <h5>Current Images:</h5>
-                    <div class="row">
-                        {% for form in image_formset %}
-    <div class="image-field">
-        {% if form.instance.image %}
-            <img src="{{ form.instance.image.url }}" alt="Product Image" />
-        {% else %}
-            <p>No image available</p>
-        {% endif %}
-        {{ form.as_p }}
-    </div>
-{% endfor %}
-
-                    </div>
-
-                    <h5 class="mt-4">Add New Images:</h5>
-                    {{ image_formset.management_form }}
-                    {{ image_formset.non_form_errors }}
-
-                    <!-- Loop for new images -->
-                    <div class="row">
-                        {% for form in image_formset.extra_forms %}
-                            <div class="col-md-4 mb-3">
-                                {{ form.as_p }}
-                            </div>
-                        {% endfor %}
+                    <div class="col-md-8 pt-2">
+                        {{ variant_form.as_p }}
                     </div>
                 </div>
-            </div>
-
-            <!-- Conditionally show detail forms based on product category -->
-            <div class="row mt-4">
-                {% if phone_detail_form %}
-                    <div class="col-md-8">
+                <!-- Conditionally show detail forms based on product category -->
+                <div class="col-md-3 " style="padding: 0;">
+                    {% if phone_detail_form %}
                         <h4 class="fw-lighter text-primary text-decoration-underline">Phone Details</h4>
-                        {{ phone_detail_form.as_p }}
-                    </div>
-                {% endif %}
+                        <div class="col-md-8 pt-2">
+                            {{ phone_detail_form.as_p }}
+                        </div>
+                    {% endif %}
 
-                {% if computer_detail_form %}
-                    <div class="col-md-8">
+                    {% if computer_detail_form %}
                         <h4 class="fw-lighter text-primary text-decoration-underline">Computer Details</h4>
-                        {{ computer_detail_form.as_p }}
-                    </div>
-                {% endif %}
+                        <div class="col-md-8 pt-2">
+                            {{ computer_detail_form.as_p }}
+                        </div>
+                    {% endif %}
 
-                {% if smartwatch_detail_form %}
-                    <div class="col-md-8">
+                    {% if smartwatch_detail_form %}
                         <h4 class="fw-lighter text-primary text-decoration-underline">Smartwatch Details</h4>
-                        {{ smartwatch_detail_form.as_p }}
-                    </div>
-                {% endif %}
+                        <div class="col-md-8 pt-2">
+                            {{ smartwatch_detail_form.as_p }}
+                        </div>
+                    {% endif %}
 
-                {% if headphone_detail_form %}
-                    <div class="col-md-8">
+                    {% if headphone_detail_form %}
                         <h4 class="fw-lighter text-primary text-decoration-underline">Headphone Details</h4>
-                        {{ headphone_detail_form.as_p }}
-                    </div>
-                {% endif %}
-            </div>
+                        <div class="col-md-8 pt-2">
+                            {{ headphone_detail_form.as_p }}
+                        </div>
+                    {% endif %}
+                </div>
+                <button class="btn btn-outline-dark mt-4" style="height: 50px; width: 150px;" type="submit">Save Changes</button>
 
-            <button class="btn btn-outline-dark mt-4" style="height: 80px; width: 150px;" type="submit">Save Changes</button>
+                <!--Image-->
+                <div class="col-md-12 pt-3" >
+                    <h4 class="fw-lighter text-primary text-decoration-underline mb-3">Product Images</h4>
+                    <div class="">
+                        <!-- Wrap images in a div to apply scroll with inline styles -->
+                        <div class="row" >
+                            {% for form in image_formset %}
+                                <div class="col-md-4 mb-3 image-field" >
+                                    <div class="border p-2 text-start" style="height: 300px; font-size: 14px">
+                                        {% if form.instance.image %}
+                                            <img style="width: 80px; height: 80px;  padding-bottom: 10px;" src="{{ form.instance.image.url }}" alt="Product Image" class="img-fluid mb-2" />
+                                        {% else %}
+                                            <p class="text-danger">No image available!</p>
+                                        {% endif %}
+                                        {{ form.as_p }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <h5 class="mt-4 text-start">Add New Images:</h5>
+                            {{ image_formset.management_form }}
+                            {{ image_formset.non_form_errors }}
+
+                            <!-- Loop for new images -->
+                            <div class="row">
+                                {% for form in image_formset.extra_forms %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="border p-2 text-start"> <!-- Đổi về text-start -->
+                                            {{ form.as_p }}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
         </div>
+
+
     </form>
 
     </script>
