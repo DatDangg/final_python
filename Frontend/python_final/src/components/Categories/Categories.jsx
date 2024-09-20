@@ -12,7 +12,12 @@ function Categories() {
     const token = localStorage.getItem("token");
 
     if (token) {
-    fetch(`${apiurl}/api/categories/`)
+    fetch(`${apiurl}/api/categories/`, {
+            headers: {
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
+            },
+        })
       .then((response) => response.json())
       .then((data) => setCategories(data))
       .catch((error) => console.error("Error fetching categories:", error));
