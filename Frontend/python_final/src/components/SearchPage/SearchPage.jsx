@@ -7,7 +7,7 @@ function SearchPage() {
   const [searchResults, setSearchResults] = useState([]);
   const [totalProducts, setTotalProducts] = useState(0); // Tổng số sản phẩm
   const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
-  const [productsPerPage] = useState(10); // Số sản phẩm trên mỗi trang
+  const [productsPerPage] = useState(2); // Số sản phẩm trên mỗi trang
   const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   const location = useLocation();

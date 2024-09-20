@@ -65,7 +65,6 @@ function ProductList({
       <div className="row d-flex p-0 m-0">
         <div className="col-md-3 aside justify-content-center align-items-center ">
           <Aside onFilterChange={handleFilterChange} />
-
         </div>
         <div className="col-md-8">
           <div className="product-container">
