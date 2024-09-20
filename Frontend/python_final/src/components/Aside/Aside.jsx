@@ -3,52 +3,56 @@ import './aside.css';
 import { debounce } from 'lodash';
 
 function Aside({ onFilterChange }) {
-  const [brands, setBrands] = useState([]); // Tạo state để lưu danh sách thương hiệu
+  const [brands, setBrands] = useState([]);
+  const categories = [
+    { id: 1, name: 'Smart Phones' },
+    { id: 3, name: 'Headphones' },
+    { id: 2, name: 'Computers' },
+    { id: 4, name: 'Smart Watches' },
+  ]; // Danh mục với ID
   const [selectedBrand, setSelectedBrand] = useState('');
+  const [selectedCategoryId, setSelectedCategoryId] = useState(''); // State cho ID danh mục
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
-  const [selectedStorage, setSelectedStorage] = useState('');
   const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
-  // Sử dụng debounce để trì hoãn việc thay đổi giá
   const debouncedPriceChange = useCallback(
     debounce(() => {
       onFilterChange({
         brand: selectedBrand,
+        categoryId: selectedCategoryId, // Gửi categoryId
         minPrice,
         maxPrice,
-        storage: selectedStorage,
       });
-    }, 5),
-    [selectedBrand, minPrice, maxPrice, selectedStorage]
+    }, 300),
+    [selectedBrand, selectedCategoryId, minPrice, maxPrice]
   );
 
   useEffect(() => {
     debouncedPriceChange();
     return () => debouncedPriceChange.cancel();
-  }, [minPrice, maxPrice, selectedBrand, selectedStorage]);
+  }, [minPrice, maxPrice, selectedBrand, selectedCategoryId]);
 
   useEffect(() => {
-    // Gọi API để lấy danh sách thương hiệu
     const fetchBrands = async () => {
       try {
         const response = await fetch(`${apiurl}/brands/`);
         const data = await response.json();
-        setBrands(data); // Lưu danh sách thương hiệu vào state
+        setBrands(data);
       } catch (error) {
         console.error('Error fetching brands:', error);
       }
     };
 
     fetchBrands();
-  }, []);
+  }, [apiurl]);
 
   const handleBrandChange = (e) => {
     setSelectedBrand(e.target.value);
   };
 
-  const handleStorageChange = (e) => {
-    setSelectedStorage(e.target.value);
+  const handleCategoryChange = (e) => {
+    setSelectedCategoryId(e.target.value); // Cập nhật categoryId
   };
 
   return (
@@ -62,6 +66,18 @@ function Aside({ onFilterChange }) {
           {brands.map((brand, index) => (
             <option key={index} value={brand}>
               {brand}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="filter-group">
+        <label>Danh Mục</label>
+        <select value={selectedCategoryId} onChange={handleCategoryChange}>
+          <option value="">Tất Cả</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name} {/* Hiển thị tên danh mục */}
             </option>
           ))}
         </select>
@@ -82,17 +98,6 @@ function Aside({ onFilterChange }) {
           onChange={(e) => setMaxPrice(e.target.value)}
         />
       </div>
-
-      {/* Bạn có thể bật lại bộ lọc bộ nhớ nếu cần */}
-      {/* <div className="filter-group">
-        <label>Bộ nhớ</label>
-        <select value={selectedStorage} onChange={handleStorageChange}>
-          <option value="">Tất Cả</option>
-          <option value="64GB">64GB</option>
-          <option value="128GB">128GB</option>
-          <option value="256GB">256GB</option>
-        </select>
-      </div> */}
     </aside>
   );
 }

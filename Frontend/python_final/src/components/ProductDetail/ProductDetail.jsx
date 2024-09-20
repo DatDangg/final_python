@@ -326,11 +326,17 @@ function ProductDetail() {
                           value={selectedVariant ? selectedVariant.id : ""}
                           onChange={(e) => handleVariantChange(e.target.value)}
                   >
-                    {product.variants.map((variant) => (
-                      <option key={variant.id} value={variant.id}>
-                        {variant.storage && variant.storage == "n/A" ? `${variant.color} - ${variant.storage}` : variant.color}
-                      </option>
-                    ))}
+                    {product.variants.map((variant) => {
+                      const displayText = variant.storage && variant.storage !== "N/A" 
+                        ? `${variant.color} - ${variant.storage}` 
+                        : variant.color;
+                      
+                      return (
+                        <option key={variant.id} value={variant.id}>
+                          {displayText}
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
 
@@ -447,7 +453,7 @@ function ProductDetail() {
                           </div>
                           <div className="col-sm-4 d-flex border-bottom ">
                             <div className="col-4 align-items-center pt-3 ml-2">
-                              <img className="icon-value" src="/photos/strap.png" alt=""/>
+                              <img className="icon-value" src="/photos/watch-strap.png" alt=""/>
                             </div>
                             <div className="col-8 pt-2">
                               <span className="ml-5">Strap type</span>
@@ -486,7 +492,7 @@ function ProductDetail() {
                         </div>
                         <div className="col-8">
                           <span className="ml-5">Free Delivery</span>
-                          <p className="ml-5 fw-bold">1-2 day</p>
+                          <p className="ml-5 fw-bold">Every where</p>
                         </div>
                       </div>
                       <div className="col-md-4 d-flex">

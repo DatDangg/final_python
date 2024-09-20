@@ -7,6 +7,7 @@ function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalP
   const [productList, setProductList] = useState([]);
   const [filters, setFilters] = useState({
     brand: '',
+    categoryId: '', // Đổi tên thành categoryId
     minPrice: '',
     maxPrice: '',
   });
@@ -14,7 +15,10 @@ function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalP
   const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      ...newFilters,
+    }));
   };
 
   useEffect(() => {
@@ -23,6 +27,7 @@ function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalP
         let url = `${apiurl}/api/products/?category=${selectedCategory?.id || ''}&search=${searchQuery || ''}`;
         
         if (filters.brand) url += `&brand=${filters.brand}`;
+        if (filters.categoryId) url += `&category=${filters.categoryId}`; // Sử dụng categoryId trong URL
         if (filters.minPrice) url += `&variants__listed_price__gte=${filters.minPrice}`;
         if (filters.maxPrice) url += `&variants__listed_price__lte=${filters.maxPrice}`;
         
@@ -48,19 +53,18 @@ function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalP
     
     fetchProducts();
   }, [selectedCategory, currentPage, productsPerPage, searchQuery, setTotalProducts, token, filters]);
-  
 
   return (
     <div className="product-page container-fluid pt-5 mb-5">
       <div className="row d-flex p-0 m-0">
-        <div className="col-md-3 aside justify-content-center align-items-center ">
+        <div className="col-md-3 aside justify-content-center align-items-center">
           <Aside onFilterChange={handleFilterChange} />
         </div>
         <div className="col-md-8">
           <div className="product-container">
             <div className="product-list gap-2">
               {productList.map((product, index) => (
-                  <ProductItem key={index} product={product} token={token}/>
+                <ProductItem key={index} product={product} token={token} />
               ))}
             </div>
           </div>
