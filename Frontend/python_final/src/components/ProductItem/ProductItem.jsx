@@ -10,11 +10,9 @@ function ProductItem({ product, token }) {
   const [primaryImage, setPrimaryImage] = useState(null);
   const [averageRating, setAverageRating] = useState(null);
 
-
-  // Lấy giá gốc và giá đã giảm từ variant
-  const listedPrice = variants.length > 0 ? parseFloat(variants[0].listed_price) : "N/A"; // Đảm bảo chuyển sang kiểu float
-  const discount = variants.length > 0 ? parseFloat(variants[0].discount) : 0; // Chuyển sang kiểu float nếu có discount
-  const discountedPrice = discount > 0 ? listedPrice * (1 - discount / 100) : listedPrice; // Tính giá sau khi giảm
+  const listedPrice = variants.length > 0 ? parseFloat(variants[0].listed_price) : "N/A";
+  const discount = variants.length > 0 ? parseFloat(variants[0].discount) : 0; 
+  const discountedPrice = discount > 0 ? listedPrice * (1 - discount / 100) : listedPrice;
   const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   const primary = images.find((image) => image.is_primary);
@@ -25,7 +23,6 @@ function ProductItem({ product, token }) {
     return integerPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  // Hàm tính trung bình rating từ các đánh giá của sản phẩm hiện tại
   const calculateAverageRating = (reviews) => {
     const filteredReviews = reviews.filter((review) => review.product === id);
     if (filteredReviews.length === 0) return "Chưa có đánh giá";
@@ -56,7 +53,6 @@ function ProductItem({ product, token }) {
 
     setPrimaryImage(imageUrl || "/placeholder.jpg");
 
-    // Fetch reviews và tính toán rating trung bình chỉ cho sản phẩm hiện tại
     axios
       .get(`${apiurl}/api/reviews/`, {
         headers: {
@@ -95,7 +91,6 @@ function ProductItem({ product, token }) {
 
   return (
     <div className="product-item">
-      {/*wishlist*/}
       {!loading && (
         <div className="wishlist-icon" onClick={handleWishlistClick}>
           <svg
@@ -139,7 +134,6 @@ function ProductItem({ product, token }) {
           {/* Hiển thị giá gốc và giá giảm */}
           {discount > 0 ? (
               <>
-
                 <p className="item-product-price-discount pt-2">
                   <span className="text-danger" style={{fontSize: "12px", verticalAlign: "super"}}>đ</span>
                   <span className="fs-4 p-0 m-0 text-danger fw-bold">{formatPrice(Number(discountedPrice))}</span>

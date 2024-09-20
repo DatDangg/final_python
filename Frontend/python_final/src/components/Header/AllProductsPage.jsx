@@ -7,12 +7,11 @@ function AllProductsPage() {
   const [totalProducts, setTotalProducts] = useState(0); 
   const [currentPage, setCurrentPage] = useState(1); 
   const [productsPerPage] = useState(6); 
+  const totalPages = Math.ceil(totalProducts / productsPerPage); 
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber); 
   };
-
-  const totalPages = Math.ceil(totalProducts / productsPerPage); 
 
   return (
     <div>
@@ -24,7 +23,7 @@ function AllProductsPage() {
         setTotalProducts={setTotalProducts}
       />
       
-      {totalProducts > 0 && (
+      {totalProducts > productsPerPage && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
