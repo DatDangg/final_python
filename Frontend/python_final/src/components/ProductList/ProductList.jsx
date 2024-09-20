@@ -3,19 +3,12 @@ import ProductItem from "../ProductItem/ProductItem";
 import Aside from "../Aside/Aside";
 import "./style.css";
 
-function ProductList({
-  selectedCategory,
-  currentPage,
-  productsPerPage,
-  setTotalProducts,
-  searchQuery,
-}) {
+function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalProducts, searchQuery }) {
   const [productList, setProductList] = useState([]);
   const [filters, setFilters] = useState({
     brand: '',
     minPrice: '',
     maxPrice: '',
-    storage: ''
   });
   const token = localStorage.getItem("token");
   const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
@@ -30,11 +23,8 @@ function ProductList({
         let url = `${apiurl}/api/products/?category=${selectedCategory?.id || ''}&search=${searchQuery || ''}`;
         
         if (filters.brand) url += `&brand=${filters.brand}`;
-        if (filters.storage) url += `&variants__storage=${filters.storage}`;
         if (filters.minPrice) url += `&variants__listed_price__gte=${filters.minPrice}`;
         if (filters.maxPrice) url += `&variants__listed_price__lte=${filters.maxPrice}`;
-        
-        console.log("Request URL:", url);  // Log URL để debug
         
         const response = await fetch(url, {
           headers: {
@@ -76,7 +66,6 @@ function ProductList({
           </div>
         </div>
       </div>
-
     </div>
   );
 }

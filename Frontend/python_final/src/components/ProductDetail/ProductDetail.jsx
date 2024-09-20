@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useContext  } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CartContext } from "../../context/CartContext";
+import Slider from "react-slick";
 import axios from "axios";
 import "./style.css";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -14,14 +14,13 @@ function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState("");
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(true);
-  // const [cartItems, setCartItems] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [selectedVariant, setSelectedVariant] = useState(null); // Thêm trạng thái cho biến thể được chọn
+  const [selectedVariant, setSelectedVariant] = useState(null); 
   const token = localStorage.getItem("token");
   const [categoryName, setCategoryName] = useState(location.state?.categoryName || "Category");
   const { cartItems, setCartItems, addToCart } = useContext(CartContext);
   const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
-  // Slides
+  
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
   const slider1 = useRef(null);
@@ -85,17 +84,15 @@ function ProductDetail() {
               .catch((error) => console.error('Error fetching category name:', error));
           }
 
-          // Set biến thể đầu tiên làm mặc định nếu có
           if (fetchedProduct.variants && fetchedProduct.variants.length > 0) {
             setSelectedVariant(fetchedProduct.variants[0]);
           }
   
-          // Set the primary image as the default selected image
           const primaryImage = fetchedProduct.images.find((img) => img.is_primary);
           if (primaryImage) {
             setSelectedImage(primaryImage.image);
           } else if (fetchedProduct.images.length > 0) {
-            setSelectedImage(fetchedProduct.images[0].image); // Fallback to the first image
+            setSelectedImage(fetchedProduct.images[0].image); 
           }
         })
         .catch((error) => console.error("Error fetching product:", error));
@@ -289,9 +286,9 @@ function ProductDetail() {
                 <p className="brand p-0 mb-1">Brand: {product.brand}</p>
                 {/* Hiển thị giá của biến thể được chọn */}
                 {selectedVariant && (
-                    <p className="product-price pt-1">
-                    {selectedVariant.discount > 0 && (
-                    <span className="current-price fw-bold">
+                  <p className="product-price pt-1">
+                  {selectedVariant.discount > 0 && (
+                    <span className="current-price fw-bold" style={{ color: "red" }}>
                       <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
                       {formatPrice(
                         Number(
@@ -301,31 +298,28 @@ function ProductDetail() {
                           )
                         ).toFixed(0)
                       )}
-
                     </span>
-                    )}
-
-            {/* Hiển thị giá niêm yết với dấu gạch ngang nếu có giảm giá */}
-            <span
-              className={`original-price ${
-                selectedVariant.discount > 0 ? "line-through" : ""
-              }`}
-              style={{
-                textDecoration: selectedVariant.discount > 0 ? "line-through" : "none",
-              }}
-            >
-              <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
-              {formatPrice(Number(selectedVariant.listed_price).toFixed(0))}
-            </span>
-
-            {/* Hiển thị phần trăm giảm giá nếu có */}
-            {selectedVariant.discount > 0 && (
-              <span className="discount-percentage text-black fw-bold">
-                {" "}
-                -{selectedVariant.discount}%
-              </span>
-            )}
-                  </p>
+                  )}
+                
+                  <span
+                    className="original-price fw-bold"
+                    style={{
+                      fontSize: "40px",
+                      color: selectedVariant.discount > 0 ? "gray" : "red",
+                      textDecoration: selectedVariant.discount > 0 ? "line-through" : "none",
+                    }}
+                  >
+                    <span style={{ fontSize: "15px", verticalAlign: "super" }}>đ</span>
+                    {formatPrice(Number(selectedVariant.listed_price).toFixed(0))}
+                  </span>
+                
+                  {selectedVariant.discount > 0 && (
+                    <span className="discount-percentage text-black fw-bold">
+                      {" "} -{selectedVariant.discount}%
+                    </span>
+                  )}
+                </p>
+                
                 )}
 
                 {/* Dropdown cho biến thể */}
