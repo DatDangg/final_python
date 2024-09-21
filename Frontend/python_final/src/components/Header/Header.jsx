@@ -75,7 +75,9 @@ function Header() {
 
   return (
     <header className="header container-fluid">
-      <img className="logo" alt="Logo" src="../../../logo.jpg" />
+      <Link to="/">
+        <img className="logo" alt="Logo" src="../../../logo.jpg" />
+      </Link>
       <form className="search-field" onSubmit={handleSearch}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
