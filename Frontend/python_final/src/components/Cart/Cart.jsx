@@ -36,9 +36,10 @@ function Cart() {
   };
 
   const totalAmount = cartItems.reduce(
-    (acc, item) => acc + Number(item.variant?.listed_price) * item.quantity,
+    (acc, item) => acc + Number(item.variant?.discounted_price || item.variant?.listed_price) * item.quantity,
     0
   );
+  
 
   const handleCheckout = () => {
     navigate("/checkout/address");
@@ -97,10 +98,11 @@ function Cart() {
                     </button>
                   </div>
                   <div className="cart-item-price m-3">
-                    <span>
-                      <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
-                      {formatPrice(Number(item.variant.listed_price))}
-                    </span>
+                  <span>
+                    <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
+                    {formatPrice(Number(item.variant.discounted_price || item.variant.listed_price))}
+                  </span>
+
                   </div>
                   <div className="cart-item-remove m-3">
                     <button

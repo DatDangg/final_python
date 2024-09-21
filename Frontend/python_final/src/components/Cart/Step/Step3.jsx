@@ -46,9 +46,9 @@ const Step3 = () => {
 
   const calculateTotal = () => {
     const subtotal = cartItems.reduce(
-      (total, item) => total + item.variant.listed_price * item.quantity,
+      (total, item) => total + (item.variant.discounted_price || item.variant.listed_price) * item.quantity,
       0
-    );
+    );    
     return subtotal + shippingCost;
   };
 
@@ -159,8 +159,9 @@ const Step3 = () => {
                 <p>
                   {item.quantity} x{" "}
                   <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>
-                  {formatPrice(item.variant.listed_price)}
+                  {formatPrice(item.variant.discounted_price || item.variant.listed_price)}
                 </p>
+
               </div>
             </div>
           );
@@ -192,7 +193,7 @@ const Step3 = () => {
               {formatPrice(
                 cartItems.reduce(
                   (total, item) =>
-                    total + item.variant.listed_price * item.quantity,
+                    total + (item.variant.discounted_price || item.variant.listed_price) * item.quantity,
                   0
                 )
               )}

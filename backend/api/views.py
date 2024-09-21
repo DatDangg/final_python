@@ -456,10 +456,20 @@ def dashboard_view(request):
 def product_list_view(request):
     search_query = request.GET.get('search', '')  # Nhận tham số tìm kiếm
     products = Product.objects.prefetch_related('variants').all()
+    sort_field = request.GET.get('sort', '')
+    sort_order = request.GET.get('order', 'asc')
 
     # Nếu có tham số tìm kiếm, lọc sản phẩm
     if search_query:
         products = products.filter(title__icontains=search_query)
+
+    if sort_field == 'title':
+        products = products.order_by('title' if sort_order == 'asc' else '-title')
+    elif sort_field == 'price':
+        products = products.order_by('variants__listed_price' if sort_order == 'asc' else '-variants__listed_price')
+    elif sort_field == 'quantity':
+        products = products.order_by('variants__quantity' if sort_order == 'asc' else '-variants__quantity')
+
 
     product_data = []
     counter = 1  # Khởi tạo biến đếm cho số thứ tự
@@ -509,6 +519,7 @@ def product_list_view(request):
                 'product': product,
                 'variant': variant,
                 'details': product_detail,
+                'order': sort_order,
             })
             counter += 1  # Tăng biến đếm sau mỗi biến thể
 
