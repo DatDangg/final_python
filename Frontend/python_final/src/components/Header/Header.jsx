@@ -12,9 +12,11 @@ function Header() {
   const navigate = useNavigate();
   const uniqueItemCount = cartItems.length;
   const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showWishList, setShowWishList] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
+  const BASE_URL = "http://localhost:8000/";
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -52,6 +54,22 @@ function Header() {
     }
   }, [token]);
 
+  // Fetch product suggestions based on search input
+  useEffect(() => {
+    if (searchQuery) {
+      axios
+        .get(`http://127.0.0.1:8000/products/suggestions/?q=${searchQuery}`)
+        .then((response) => {
+          setSuggestions(response.data); 
+          console.log(response.data)
+        })
+        .catch((error) => console.error("Error fetching suggestions:", error));
+    } else {
+      setSuggestions([]); 
+      
+    }
+  }, [searchQuery]);
+
   return (
     <header className="header">
       <img className="logo" alt="Logo" src="../../../logo.jpg" />
@@ -78,6 +96,29 @@ function Header() {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </form>
+
+      {/* Suggestions Dropdown */}
+      {suggestions.length > 0 && (
+        <div className="suggestions-dropdown">
+          {suggestions.map((product) => (
+            <div className="suggestion-item" key={product.id}>
+              <img
+                src={
+                  product.images.find((img) => img.is_primary)?.image
+                    ? `${BASE_URL}${product.images.find((img) => img.is_primary).image}`
+                    : product.images.length > 0
+                    ? `${BASE_URL}${product.images[0].image}`
+                    : ''
+                }
+                alt={product.title}
+                className="suggestion-image"
+              />
+              <span>{product.title}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="navbar">
         <Link
           to="/"
@@ -149,7 +190,7 @@ function Header() {
               fill="none"
             >
               <path
-                d="M24 27V24.3333C24 22.9188 23.5224 21.5623 22.6722 20.5621C21.8221 19.5619 20.669 19 19.4667 19H11.5333C10.331 19 9.17795 19.5619 8.32778 20.5621C7.47762 21.5623 7 22.9188 7 24.3333V27M21 9.5C21 11.9853 18.9853 14 16.5 14C14.0147 14 12 11.9853 12 9.5C12 7.01472 14.0147 5 16.5 5C18.9853 5 21 7.01472 21 9.5Z"
+                d="M24 27V24.3333C24 22.9188 23.5224 21.5623 22.6613 20.518C21.8003 19.4738 20.6133 18.8333 19.3333 18.8333H12.6667C11.3867 18.8333 10.1997 19.4738 9.33868 20.518C8.47761 21.5623 8 22.9188 8 24.3333V27M19.3333 9.66667C19.3333 11.5076 17.841 13 16 13C14.159 13 12.6667 11.5076 12.6667 9.66667C12.6667 7.82571 14.159 6.33333 16 6.33333C17.841 6.33333 19.3333 7.82571 19.3333 9.66667Z"
                 stroke="black"
                 strokeWidth="1.5"
                 strokeLinecap="round"
@@ -157,17 +198,9 @@ function Header() {
               />
             </svg>
           </Link>
-          <div className="dropdown-menu">
-            <Link to="/profile" className="dropdown-item">
-              Tài khoản của tôi
-            </Link>
-            <Link to="/change-password" className="dropdown-item">
-              Đổi mật khẩu
-            </Link>
-            <div className="dropdown-item" onClick={handleLogout}>
-              Đăng xuất
-            </div>
-          </div>
+          <button className="logout-button" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
       </div>
     </header>

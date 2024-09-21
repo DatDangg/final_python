@@ -43,7 +43,7 @@ urlpatterns = [
     path('best-selling-products/', views.best_selling_products, name='best-selling-products'),
     path('discounted-products/', views.discounted_products, name='discounted-products'),
     path('brands/', views.brand_list, name='brand-list'),
-
+    path('products/suggestions/', views.product_suggestions, name='product-suggestions'),
 ]
 
 # Serve media files during development

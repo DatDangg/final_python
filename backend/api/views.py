@@ -135,6 +135,18 @@ def brand_list(request):
     brand_list = [brand['brand'] for brand in brands if brand['brand']]
 
     return Response(brand_list)
+@api_view(['GET'])
+def product_suggestions(request):
+    query = request.GET.get('q', '')
+    
+    if query:
+        # Filter products based on the title or description
+        products = Product.objects.filter(title__icontains=query)  # Adjust based on your field
+    else:
+        products = Product.objects.none()  # No products if no query
+
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def upload_product_images(request, product_id):
