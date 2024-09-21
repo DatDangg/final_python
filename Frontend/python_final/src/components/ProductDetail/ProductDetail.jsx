@@ -666,7 +666,6 @@ function ProductDetail() {
                                     style={{width: '20px', height: '20px', marginRight: '5px'}}
                                 />
                             ))}
-                            {/* rated {review.rating} stars */}
                           </div>
                           <small>Ngày đánh giá: {new Date(review.created_at).toLocaleDateString()}</small>
                           <p className="pt-3">Comments: {review.comment}</p>

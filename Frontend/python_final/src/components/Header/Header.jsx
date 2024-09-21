@@ -10,12 +10,11 @@ function Header() {
   const currentPath = location.pathname;
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const uniqueItemCount = cartItems.length;
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showWishList, setShowWishList] = useState(false);
-  const [cartItemCount, setCartItemCount] = useState(0);
+  const [cartItemCount, setCartItemCount] = useState(cartItems.length); // Lấy số lượng ban đầu từ cartItems
   const BASE_URL = "http://localhost:8000/";
 
   const handleSearch = (e) => {
@@ -55,17 +54,19 @@ function Header() {
   }, [token]);
 
   useEffect(() => {
+    setCartItemCount(cartItems.length); // Cập nhật lại số lượng giỏ hàng khi cartItems thay đổi
+  }, [cartItems]); // Thêm cartItems vào dependency
+
+  useEffect(() => {
     if (searchQuery) {
       axios
         .get(`http://127.0.0.1:8000/products/suggestions/?q=${searchQuery}`)
         .then((response) => {
-          setSuggestions(response.data); 
-          console.log(response.data)
+          setSuggestions(response.data);
         })
         .catch((error) => console.error("Error fetching suggestions:", error));
     } else {
-      setSuggestions([]); 
-      
+      setSuggestions([]);
     }
   }, [searchQuery]);
 
@@ -99,25 +100,29 @@ function Header() {
       {/* Suggestions Dropdown */}
       {suggestions.length > 0 && (
         <div className="suggestions-dropdown">
-            {suggestions.map((product) => (
-                <div className="suggestion-item" key={product.id} onClick={() => {
-                        navigate(`/product/${product.id}`);
-                        setSearchQuery(''); 
-                }}>
-                  <img
-                    src={
-                      product.images.find((img) => img.is_primary)?.image
-                        ? `${BASE_URL}${product.images.find((img) => img.is_primary).image}`
-                        : product.images.length > 0
-                        ? `${BASE_URL}${product.images[0].image}`
-                        : ''
-                    }
-                    alt={product.title}
-                    className="suggestion-image"
-                  />
-                  <span>{product.title}</span>
-                </div>
-            ))}
+          {suggestions.map((product) => (
+            <div
+              className="suggestion-item"
+              key={product.id}
+              onClick={() => {
+                navigate(`/product/${product.id}`);
+                setSearchQuery("");
+              }}
+            >
+              <img
+                src={
+                  product.images.find((img) => img.is_primary)?.image
+                    ? `${BASE_URL}${product.images.find((img) => img.is_primary).image}`
+                    : product.images.length > 0
+                    ? `${BASE_URL}${product.images[0].image}`
+                    : ""
+                }
+                alt={product.title}
+                className="suggestion-image"
+              />
+              <span>{product.title}</span>
+            </div>
+          ))}
         </div>
       )}
       <div className="navbar">
@@ -176,33 +181,53 @@ function Header() {
                 strokeLinejoin="round"
               />
             </svg>
-            {uniqueItemCount > 0 && (
-              <span className="cart-count">{uniqueItemCount}</span>
+            {cartItemCount > 0 && (
+              <span className="cart-count">{cartItemCount}</span>
             )}
           </div>
         </Link>
-        <div className="profile-dropdown">
-          <Link to="/profile">
+        {token ? (
+          <div className="dropdown">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 32 32"
               fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="user-icon"
+              onClick={toggleDropdown}
             >
               <path
-                d="M24 27V24.3333C24 22.9188 23.5224 21.5623 22.6613 20.518C21.8003 19.4738 20.6133 18.8333 19.3333 18.8333H12.6667C11.3867 18.8333 10.1997 19.4738 9.33868 20.518C8.47761 21.5623 8 22.9188 8 24.3333V27M19.3333 9.66667C19.3333 11.5076 17.841 13 16 13C14.159 13 12.6667 11.5076 12.6667 9.66667C12.6667 7.82571 14.159 6.33333 16 6.33333C17.841 6.33333 19.3333 7.82571 19.3333 9.66667Z"
-                stroke="black"
-                strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                d="M15.75 7.5a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM5.25 18.75A6.75 6.75 0 0 1 12 15a6.75 6.75 0 0 1 6.75 3.75"
+              />
+            </svg>
+            {isDropdownOpen && (
+              <div className="dropdown-content">
+                <Link to="/profile">Profile</Link>
+                <button onClick={handleLogout}>Logout</button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <Link to="/login">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="user-icon"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6A2.25 2.25 0 0 0 5.25 5.25V9m6 4.5V21m0 0 3-3m-3 3-3-3"
               />
             </svg>
           </Link>
-          <button className="logout-button" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
+        )}
       </div>
     </header>
   );

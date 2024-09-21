@@ -383,7 +383,7 @@ def check_transaction(request):
     
     # Lấy thời gian hiện tại và trừ đi 2 phút
     current_time = datetime.now()
-    two_minutes_ago = current_time - timedelta(minutes=2)
+    time_delay = current_time - timedelta(minutes=4500)
 
     try:
         response = requests.get(url, headers=headers)
@@ -394,7 +394,7 @@ def check_transaction(request):
             matching_transaction = None
             for transaction in transactions:
                 transaction_time = datetime.strptime(transaction["transaction_date"], '%Y-%m-%d %H:%M:%S')
-                if float(transaction["amount_in"]) == float(total_amount) and two_minutes_ago <= transaction_time <= current_time:
+                if float(transaction["amount_in"]) == float(total_amount) and time_delay <= transaction_time <= current_time:
                     matching_transaction = transaction
                     break
 
