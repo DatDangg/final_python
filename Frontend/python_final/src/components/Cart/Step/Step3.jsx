@@ -63,7 +63,7 @@ const Step3 = () => {
       items: cartItems.map((item) => ({
         product: item.product.id,
         quantity: item.quantity,
-        price: item.variant.listed_price,
+        price: item.variant.discounted_price || item.variant.listed_price, // Lưu giá đã giảm
       })),
     };
 
@@ -198,6 +198,7 @@ const Step3 = () => {
                 )
               )}
             </p>
+
             <p>
               Phí vận chuyển:{" "}
               <span style={{ fontSize: "12px", verticalAlign: "super" }}>đ</span>

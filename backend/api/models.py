@@ -84,8 +84,8 @@ class ProductVariant(models.Model):
     product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE)
     color = models.CharField(max_length=100)
     storage = models.CharField(max_length=100, blank=True, null=True)
-    cost_price = models.DecimalField(max_digits=10, decimal_places=2)
-    listed_price = models.DecimalField(max_digits=10, decimal_places=2)
+    cost_price = models.DecimalField(max_digits=15, decimal_places=2)
+    listed_price = models.DecimalField(max_digits=15, decimal_places=2)
     discount = models.PositiveIntegerField(default=0)  # Tỉ lệ giảm giá, lưu dưới dạng phần trăm
     quantity = models.PositiveIntegerField()
     SKU = models.CharField(max_length=100, unique=True)
@@ -146,7 +146,7 @@ class Order(models.Model):
     full_name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=20)
     address = models.TextField()
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    total_price = models.DecimalField(max_digits=15, decimal_places=2)
     payment_method = models.CharField(max_length=50)
     order_time = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
@@ -158,7 +158,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)  # ForeignKey đến Product
     quantity = models.IntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=14, decimal_places=2)
 
     def __str__(self):
         return f"{self.quantity} of {self.product.title} in order {self.order.id}"

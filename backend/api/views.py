@@ -1,5 +1,5 @@
 import requests
-from .models import Product, Category, WishlistItem, CartItem, Address, Order, Review, ProductImage, PhoneDetail, HeadphoneDetail, ComputerDetail, SmartwatchDetail, ProductVariant
+from .models import Product, Category, WishlistItem, CartItem, Address, Order, Review, ProductImage, PhoneDetail, HeadphoneDetail, ComputerDetail, SmartwatchDetail, ProductVariant, OrderItem
 from .serializers import ProductSerializer, CategorySerializer, UserSerializer, CartItemSerializer, AddressSerializer, OrderSerializer, ReviewSerializer, PhoneDetailSerializer, ComputerDetailSerializer, HeadphoneDetailSerializer, SmartwatchDetailSerializer
 from .forms import  ProductForm, CategoryForm, OrderStatusForm, PhoneDetailForm, ComputerDetailForm, SmartwatchDetailForm, HeadphoneDetailForm, ProductVariantForm, ProductImageFormSet, ProductVariantFormSet, ProductImageForm
 from rest_framework import viewsets, filters, generics, status
@@ -429,14 +429,22 @@ def check_transaction(request):
             "message": "Lỗi khi kết nối với API SePay.",
             "error": str(e)
         }, status=500)
+from django.db.models import Sum, F, DecimalField, ExpressionWrapper
+from django.db.models.functions import TruncMonth
 
 def dashboard_view(request):
     total_orders = Order.objects.filter(status='delivered').count()
+    
     total_sales = Order.objects.filter(status='delivered').aggregate(total_sales=Sum('total_price'))['total_sales'] or 0  
-    # Tính lợi nhuận dựa trên tổng doanh thu (giả sử lợi nhuận là 10%)
-    total_profit = total_sales * Decimal('0.1')
 
-    # Lấy dữ liệu doanh thu theo tháng (chỉ đơn hàng 'delivered')
+    order_items = OrderItem.objects.filter(order__status='delivered')
+
+    total_profit = 0
+    for item in order_items:
+        cost_price = item.product.variants.first().cost_price
+        profit = item.price - cost_price
+        total_profit += profit
+
     sales_data = (Order.objects.filter(status='delivered')
                   .annotate(month=TruncMonth('order_time'))  
                   .values('month')  
@@ -459,10 +467,6 @@ def product_list_view(request):
     products = Product.objects.prefetch_related('variants').all()
     sort_field = request.GET.get('sort', '')
     sort_order = request.GET.get('order', 'asc')
-
-
-    print("Sort field:", sort_field)
-    print("Sort order:", sort_order)
 
     # Nếu có tham số tìm kiếm, lọc sản phẩm
     if search_query:
