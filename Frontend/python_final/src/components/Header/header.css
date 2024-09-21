@@ -43,7 +43,7 @@
 .suggestions-dropdown {
   position: absolute; /* Position dropdown relative to the search field */
   top: 100%; /* Position it below the search field */
-  left: 0;
+  left: 20%;
   right: 0; /* Make it full width */
   background-color: white;
   border: 1px solid #ddd;
@@ -53,6 +53,7 @@
   max-height: 150px; /* Decreased max height */
   overflow-y: auto; /* Add scroll if overflow */
   padding: 4px 0; /* Reduced padding */
+  width: 400px;
 }
 
 .suggestion-item {
@@ -110,10 +111,17 @@
 
 .profile-dropdown {
   position: relative;
+  display: inline-block;
 }
 
 .profile-dropdown:hover .dropdown-menu {
   display: block;
+}
+.user-icon {
+  cursor: pointer;
+
+    pointer-events: all;
+
 }
 
 .dropdown-menu {
