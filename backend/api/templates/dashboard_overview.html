@@ -10,20 +10,20 @@
 
 <div class="dashboard-stats">
     <div class="stat-box">
-        <h3>Total Delivered Orders</h3>
+        <h3>Số lượng đơn hàng</h3>
         <p>{{ total_orders }}</p>
     </div>
     <div class="stat-box">
-        <h3>Total Sales</h3>
+        <h3>Doanh Thu</h3>
         <p>{{ total_sales|floatformat:0|intcomma }} VNĐ</p>  <!-- Sử dụng intcomma để thêm dấu phẩy -->
     </div>
     <div class="stat-box">
-        <h3>Total Profit</h3>
+        <h3>Lợi nhuận</h3>
         <p>{{ total_profit|floatformat:0|intcomma }} VNĐ</p> <!-- Sử dụng intcomma để thêm dấu phẩy -->
     </div>
     
 </div>
-
+    
 <div class="chart-container">
     <canvas id="salesChart"></canvas>
 </div>
@@ -33,25 +33,46 @@
     var salesData = JSON.parse(document.getElementById('sales-data').textContent);
     var ctx = document.getElementById('salesChart').getContext('2d');
     var chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: salesData.map(data => new Date(data.month).toLocaleString('en-US', { month: 'long', year: 'numeric' })),  
-            datasets: [{
-                label: 'Monthly Sales',
-                data: salesData.map(data => data.sales),  
-                backgroundColor: 'rgba(75, 192, 192, 0.2)', 
-                borderColor: 'rgba(75, 192, 192, 1)',  
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true  
-                }
+    type: 'bar',
+    data: {
+        labels: salesData.map(data => new Date(data.month).toLocaleString('en-US', { month: 'long', year: 'numeric' })),  
+        datasets: [{
+            label: 'Doanh thu tháng',
+            data: salesData.map(data => data.sales),  
+            backgroundColor: salesData.map((_, index) => {  
+                const colors = [
+                    'rgba(75, 192, 192, 0.2)',  // Màu cho thanh 1
+                    'rgba(255, 99, 132, 0.2)',  // Màu cho thanh 2
+                    'rgba(54, 162, 235, 0.2)',  // Màu cho thanh 3
+                    'rgba(255, 206, 86, 0.2)',  // Màu cho thanh 4
+                    'rgba(153, 102, 255, 0.2)', // Màu cho thanh 5
+                    'rgba(255, 159, 64, 0.2)'   // Màu cho thanh 6
+                ];
+                return colors[index % colors.length];  // Lặp lại màu nếu số lượng thanh lớn hơn số màu
+            }),
+            borderColor: salesData.map((_, index) => {  
+                const borderColors = [
+                    'rgba(75, 192, 192, 1)',  // Màu viền cho thanh 1
+                    'rgba(255, 99, 132, 1)',  // Màu viền cho thanh 2
+                    'rgba(54, 162, 235, 1)',  // Màu viền cho thanh 3
+                    'rgba(255, 206, 86, 1)',  // Màu viền cho thanh 4
+                    'rgba(153, 102, 255, 1)', // Màu viền cho thanh 5
+                    'rgba(255, 159, 64, 1)'   // Màu viền cho thanh 6
+                ];
+                return borderColors[index % borderColors.length];  // Lặp lại màu viền
+            }),
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true  
             }
         }
-    });
+    }
+});
+
 </script> 
 
 {% endblock %}
