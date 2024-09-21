@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-export const CartContext = createContext(); // Đảm bảo export đúng
+export const CartContext = createContext(); 
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -22,17 +22,15 @@ export const CartProvider = ({ children }) => {
         },
       })
       .then((response) => {
-        setCartItems(response.data); // Cập nhật cartItems
+        setCartItems(response.data); 
       })
       .catch((error) => console.error('Error fetching cart items:', error));
   };
 
   const addToCart = (product_id, variant_id, quantity) => {
-    // Cập nhật giỏ hàng ngay lập tức trên giao diện
     const existingItem = cartItems.find(item => item.product.id === product_id && item.variant.id === variant_id);
     
     if (existingItem) {
-      // Nếu sản phẩm đã có trong giỏ hàng, chỉ tăng số lượng
       setCartItems(prevItems =>
         prevItems.map(item =>
           item.product.id === product_id && item.variant.id === variant_id
@@ -41,16 +39,14 @@ export const CartProvider = ({ children }) => {
         )
       );
     } else {
-      // Nếu sản phẩm chưa có, thêm mới sản phẩm vào giỏ hàng ngay trên giao diện
       const newItem = {
-        product: { id: product_id }, // Giả lập thông tin sản phẩm
-        variant: { id: variant_id }, // Giả lập thông tin biến thể
+        product: { id: product_id },
+        variant: { id: variant_id }, 
         quantity: quantity,
       };
       setCartItems(prevItems => [...prevItems, newItem]);
     }
   
-    // Sau đó mới thực hiện gọi API để đồng bộ với backend
     axios
       .post(
         'http://127.0.0.1:8000/api/cart/',
@@ -64,8 +60,7 @@ export const CartProvider = ({ children }) => {
       )
       .then(response => {
         console.log("Product added to cart:", response.data);
-        // Đồng bộ lại giỏ hàng từ API sau khi API trả về thành công
-        fetchCartItems(); // Gọi lại hàm này để cập nhật dữ liệu từ API
+        fetchCartItems();
       })
       .catch(error => {
         console.error('Error adding to cart:', error);
@@ -114,7 +109,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const clearCart = () => {
-    setCartItems([]); // Xóa giỏ hàng trong UI
+    setCartItems([]); 
   };
 
   return (

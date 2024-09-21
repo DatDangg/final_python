@@ -1,5 +1,5 @@
 import React from "react";
-import "./Pagination.css"; // Import file CSS mới
+import "./Pagination.css";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const renderPageNumbers = () => {
@@ -17,7 +17,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         );
       }
     } else {
-      // Render số trang với dấu "..."
       pageNumbers.push(
         <button
           key={1}
@@ -35,7 +34,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           </span>
         );
       }
-
       for (let i = Math.max(2, currentPage - 1); i <= Math.min(currentPage + 1, totalPages - 1); i++) {
         pageNumbers.push(
           <button
@@ -47,7 +45,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           </button>
         );
       }
-
       if (currentPage < totalPages - 2) {
         pageNumbers.push(
           <span key="end-ellipsis" className="pagination-dots">
@@ -55,7 +52,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           </span>
         );
       }
-
       pageNumbers.push(
         <button
           key={totalPages}
@@ -66,7 +62,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         </button>
       );
     }
-
     return pageNumbers;
   };
 

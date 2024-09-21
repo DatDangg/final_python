@@ -21,8 +21,11 @@ function Header() {
     e.preventDefault();
     if (searchQuery) {
       navigate(`/search?q=${searchQuery}`);
+      setSearchQuery(""); // Clear the search input
+      setSuggestions([]); // Clear the suggestions dropdown
     }
   };
+  
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -199,48 +202,7 @@ function Header() {
             <div className="dropdown-item" onClick={handleLogout}>Đăng Xuất</div>
           </div>
         </div>
-        {/*{token ? (*/}
-        {/*    <div className="dropdown bg-danger">*/}
-        {/*      <svg*/}
-        {/*          xmlns="http://www.w3.org/2000/svg"*/}
-        {/*          fill="none"*/}
-        {/*          viewBox="0 0 24 24"*/}
-        {/*          strokeWidth="1.5"*/}
-        {/*          stroke="currentColor"*/}
-        {/*          className="user-icon"*/}
-        {/*          onClick={toggleDropdown}*/}
-        {/*      >*/}
-        {/*        <path*/}
-        {/*            strokeLinecap="round"*/}
-        {/*            strokeLinejoin="round"*/}
-        {/*            d="M15.75 7.5a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM5.25 18.75A6.75 6.75 0 0 1 12 15a6.75 6.75 0 0 1 6.75 3.75"*/}
-        {/*        />*/}
-        {/*      </svg>*/}
-        {/*      {isDropdownOpen && (*/}
-        {/*          <div className="dropdown-content">*/}
-        {/*            <Link to="/profile">Profile</Link>*/}
-        {/*            <button onClick={handleLogout}>Logout</button>*/}
-        {/*          </div>*/}
-        {/*      )}*/}
-        {/*    </div>*/}
-        {/*) : (*/}
-        {/*    <Link to="/login">*/}
-        {/*      <svg*/}
-        {/*          xmlns="http://www.w3.org/2000/svg"*/}
-        {/*          fill="none"*/}
-        {/*          viewBox="0 0 24 24"*/}
-        {/*          strokeWidth="1.5"*/}
-        {/*          stroke="currentColor"*/}
-        {/*          className="user-icon"*/}
-        {/*      >*/}
-        {/*        <path*/}
-        {/*            strokeLinecap="round"*/}
-        {/*            strokeLinejoin="round"*/}
-        {/*            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6A2.25 2.25 0 0 0 5.25 5.25V9m6 4.5V21m0 0 3-3m-3 3-3-3"*/}
-        {/*        />*/}
-        {/*      </svg>*/}
-        {/*    </Link>*/}
-        {/*)}*/}
+
       </div>
     </header>
   );

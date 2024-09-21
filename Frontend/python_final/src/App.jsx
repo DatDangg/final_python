@@ -19,7 +19,6 @@ import Cart from "./components/Cart/Cart";
 import Step1 from "./components/Cart/Step/Step1";
 import Step2 from "./components/Cart/Step/Step2";
 import Step3 from "./components/Cart/Step/Step3";
-import Order from "./components/Order/Order";
 import Footer from "./components/Footer/Footer.jsx";
 import Banner2 from "./components/Banner/Banner2.jsx";
 import ChangePassword from './components/ChangePw/ChangePw.jsx';
@@ -47,15 +46,11 @@ function App() {
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/signup" element={<Signup />} />
               <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-              <Route
-                path="/*"
-                element={
+              <Route path="/*"element={
                   <ProtectedRoute>
                     <Header />
                     <Routes>
-                      <Route
-                        path="/"
-                        element={
+                      <Route path="/" element={
                           <>
                             <Banner />
                             <Categories />
@@ -76,11 +71,9 @@ function App() {
                       <Route path="/checkout/address" element={<Step1 />} />
                       <Route path="/checkout/shipping" element={<Step2 />} />
                       <Route path="/checkout/payment" element={<Step3 />} />
-                      <Route path="/order/:orderId" element={<Order />} />
                       <Route path="/change-password" element={<ChangePassword />} />
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/product" element={<AllProductsPage />} />
-
                     </Routes>
                     <Footer/>
                   </ProtectedRoute>

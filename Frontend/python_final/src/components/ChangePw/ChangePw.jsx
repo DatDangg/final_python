@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-// import { useHistory } from "react-router-dom";
 import "./ChangePw.css"
 
 function ChangePassword() {
@@ -9,7 +8,6 @@ function ChangePassword() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const token = localStorage.getItem("token");
-//   const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,8 +24,6 @@ function ChangePassword() {
     .then((response) => {
       setSuccess(response.data.success);
       setError("");
-      // Điều hướng người dùng đến trang khác nếu cần
-      // history.push('/profile');
     })
     .catch((error) => {
       setError(error.response.data.error);

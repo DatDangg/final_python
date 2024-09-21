@@ -65,7 +65,6 @@ function Login() {
               <p className="text-white text-uppercase f-prata p-0">to our website !</p>
               <img className="text-center" src="/photos/giohang.png" alt=""/>
             </div>
-
           </div>
         </div>
       </div>

@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import './discount.css';
-import ProductItem from '../ProductItem/ProductItem'; // Import ProductItem component
+import ProductItem from '../ProductItem/ProductItem'; 
 
 const DiscountedProducts = () => {
     const [products, setProducts] = useState([]);
     const token = localStorage.getItem("token");
-    const containerRef = useRef(null); // Ref cho container cuộn
-    const [scrollPosition, setScrollPosition] = useState(0); // Vị trí cuộn hiện tại
-    const itemWidth = 240; // Chiều rộng của mỗi sản phẩm
+    const containerRef = useRef(null); 
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const itemWidth = 240; 
 
     // Fetch dữ liệu từ API sản phẩm có giảm giá > 50%
     useEffect(() => {
@@ -49,7 +49,7 @@ const DiscountedProducts = () => {
             <div className="header-container container">
                 <div className="item row d-flex justify-content-center align-items-center">
                     <div className="col">
-                        <h4 className="fw-bold">Sản phẩm giảm giá trên 50%</h4>
+                        <h4 className="fw-bold">Sản phẩm giảm giá trên 20%</h4>
                     </div>
                     <div className="col">
                         <div className="scroll-buttons-container">

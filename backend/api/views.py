@@ -40,7 +40,6 @@ def change_password(request):
 
     return Response({"success": "Đổi mật khẩu thành công!"}, status=status.HTTP_200_OK)
 
-
 class ProductListView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -116,7 +115,7 @@ def best_selling_products(request):
 @api_view(['GET'])
 def discounted_products(request):
     # Lấy những sản phẩm có discount > 50%
-    discounted_variants = ProductVariant.objects.filter(discount__gt=50)
+    discounted_variants = ProductVariant.objects.filter(discount__gt=20)
     
     # Lấy danh sách sản phẩm unique từ các variant
     discounted_products = set([variant.product for variant in discounted_variants])
@@ -135,6 +134,7 @@ def brand_list(request):
     brand_list = [brand['brand'] for brand in brands if brand['brand']]
 
     return Response(brand_list)
+
 @api_view(['GET'])
 def product_suggestions(request):
     query = request.GET.get('q', '')
@@ -189,6 +189,17 @@ class UserListView(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+
+@api_view(['POST'])
+def check_username_email(request):
+    username = request.data.get('username')
+    email = request.data.get('email')
+    
+    try:
+        user = User.objects.get(username=username, email=email)
+        return Response({'exists': True})
+    except User.DoesNotExist:
+        return Response({'exists': False})
 
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
@@ -647,7 +658,6 @@ def edit_product(request, product_id, variant_id):
         'smartwatch_detail_form': smartwatch_detail_form,
         'headphone_detail_form': headphone_detail_form,
     })
-
 
 def delete_product_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)

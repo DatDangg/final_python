@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, Link } from "react-router-dom";
-// import BreadCrumb from "../BreadCrumb/BreadCrumb";
 import ProductList from "../ProductList/ProductList";
-import Pagination from "../Pagination/Pagination"; // Import Pagination
+import Pagination from "../Pagination/Pagination"; 
 import "./catepage.css";
 
 function CategoryPage() {
@@ -10,9 +9,8 @@ function CategoryPage() {
   const location = useLocation();
   const [categoryName, setCategoryName] = useState(location.state?.categoryName || "Category");
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(6); // chỉnh sửa số lượng sản phẩm trên 1 trang
+  const [productsPerPage] = useState(6); 
   const [totalProducts, setTotalProducts] = useState(0);
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -32,7 +30,6 @@ function CategoryPage() {
   }, [id, location.state]);
 
   useEffect(() => {
-    // Reset về trang 1 khi thay đổi danh mục
     setCurrentPage(1);
   }, [id]);
 
@@ -55,10 +52,10 @@ function CategoryPage() {
       <div className="content-container flex">
         <div className="main-content">
           <ProductList
-            selectedCategory={{ id: parseInt(id) }} // Truyền ID category để lọc sản phẩm
+            selectedCategory={{ id: parseInt(id) }} 
             currentPage={currentPage}
             productsPerPage={productsPerPage}
-            setTotalProducts={setTotalProducts} // Đếm tổng số sản phẩm để phân trang
+            setTotalProducts={setTotalProducts} 
             isFromCategoryPage={true}
           />
           <Pagination

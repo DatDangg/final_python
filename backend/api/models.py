@@ -26,7 +26,6 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
-
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='products/')
@@ -49,7 +48,6 @@ class PhoneDetail(models.Model):
     def __str__(self):
         return f"Details for {self.product.title}"
 
-
 class ComputerDetail(models.Model):
     product = models.OneToOneField(Product, on_delete=models.CASCADE)
     processor = models.CharField(max_length=255)
@@ -60,7 +58,6 @@ class ComputerDetail(models.Model):
 
     def __str__(self):
         return f"Details for {self.product.title}"
-
 
 class HeadphoneDetail(models.Model):
     product = models.OneToOneField(Product, on_delete=models.CASCADE)
@@ -101,7 +98,6 @@ class ProductVariant(models.Model):
     def __str__(self):
         return f"{self.product.title} - {self.color} - {self.storage} - {self.SKU}"
 
-
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     date_of_birth = models.DateField(null=True, blank=True)
@@ -127,7 +123,6 @@ class CartItem(models.Model):
 
     class Meta:
         unique_together = ('user', 'product', 'variant')  # Modify the unique constraint
-
 
 class Address(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="addresses")

@@ -15,7 +15,7 @@ function Step1() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-    useEffect(() => {
+  useEffect(() => {
     if (token) {
       axios
         .get("http://127.0.0.1:8000/api/addresses/", {
@@ -51,7 +51,6 @@ function Step1() {
       .catch((error) => alert('Bạn cần tạo profile trước!'));
 
   };
-  
 
   const handleNextStep = () => {
     const selectedAddress = addresses.find(
@@ -79,17 +78,17 @@ function Step1() {
                 <li
                     key={address.id}
                     className="address-item"
-                    onClick={() => setSelectedAddressId(address.id)} // Chọn radio khi click vào li
-                    style={{cursor: "pointer"}} // Thêm con trỏ để biểu thị rằng phần tử có thể được click
+                    onClick={() => setSelectedAddressId(address.id)} 
+                    style={{cursor: "pointer"}}
                 >
                   <div>
                     <input
                         type="radio"
                         name="selectedAddress"
                         value={address.id}
-                        checked={selectedAddressId === address.id} // Kiểm tra xem radio có được chọn không
+                        checked={selectedAddressId === address.id}
                         onChange={() => setSelectedAddressId(address.id)}
-                        onClick={(e) => e.stopPropagation()} // Ngăn việc click vào input làm trigger sự kiện click ở li
+                        onClick={(e) => e.stopPropagation()} 
                     />
                     <span className="fw-bold">{address.full_name}</span>
                     <ul className="pt-1">
@@ -101,7 +100,6 @@ function Step1() {
                 </li>
             ))}
           </ul>
-
         </div>
         <div className="col-md-7">
           <div className="add-address-form">

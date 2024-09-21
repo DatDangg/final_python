@@ -14,11 +14,13 @@ function UserProfile() {
     },
     orders: []
   });
-  const [selectedOrder, setSelectedOrder] = useState(null); // State để lưu đơn hàng được chọn
-  const [ratings, setRatings] = useState({}); // State cho rating của từng sản phẩm
-  const [comments, setComments] = useState({}); // State cho comment của từng sản phẩm
+  const [selectedOrder, setSelectedOrder] = useState(null); 
+  const [ratings, setRatings] = useState({}); 
+  const [comments, setComments] = useState({}); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+
   const formatPrice = (number) => {
     const integerPart = Math.floor(number);
     return integerPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -44,7 +46,7 @@ function UserProfile() {
       setError(error);
       setLoading(false);
     });
-}, []);
+  }, []);
 
 
   useEffect(() => {
@@ -79,16 +81,11 @@ function UserProfile() {
     }).then(response => {
       const product = response.data;
   
-      // Đảm bảo rằng chúng ta có dữ liệu về hình ảnh
-      const primaryImage = product.images.find(img => img.is_primary) || {}; // Chỉ lấy ảnh chính
-  
-      // Kiểm tra thông tin về ảnh sản phẩm
-      console.log('Product Data:', product);
-      console.log('Primary Image URL:', primaryImage.image);
-  
+      const primaryImage = product.images.find(img => img.is_primary) || {}; 
+
       return {
         ...product,
-        image_url: primaryImage.image || '', // URL của ảnh chính hoặc để rỗng nếu không có
+        image_url: primaryImage.image || '', 
       };
     })
     .catch(error => {
@@ -150,20 +147,16 @@ function UserProfile() {
       },
     })
     .then(response => {
-      // Sau khi hủy đơn hàng thành công, cập nhật trạng thái đơn hàng trong local state
       setSelectedOrder(prevOrder => ({
         ...prevOrder,
         status: 'Cancelled'
       }));
   
-      // Thông báo cho người dùng biết rằng đơn hàng đã được hủy
       alert("Đơn hàng đã được hủy thành công!");
-  
-      // Đóng modal
+
       const orderModal = window.bootstrap.Modal.getInstance(document.getElementById('orderModal'));
       orderModal.hide();
   
-      // Cập nhật danh sách đơn hàng
       setUserData(prevData => ({
         ...prevData,
         orders: prevData.orders.map(order => 
@@ -339,7 +332,6 @@ function UserProfile() {
                         <thead className="thead-dark text-white">
                         <tr className="text-uppercase">
                           <th scope="col">STT</th>
-                          <th scope="col">Mã đơn hàng</th>
                           <th scope="col">Tên khách hàng</th>
                           <th scope="col">Tổng tiền</th>
                           <th scope="col">Trạng thái</th>
@@ -349,7 +341,6 @@ function UserProfile() {
                           {userData.orders.map((order, index) => (
                             <tr key={order.id} onClick={() => handleOrderClick(order, index)}>
                               <th scope="row">Đơn hàng {index + 1}</th>
-                              <td>{order.id}</td>
                               <td>{order.full_name}</td>
                               <td>{formatPrice(Number(order.total_price).toFixed(0))}đ</td>
                               <td>{order.status}</td>
@@ -391,7 +382,6 @@ function UserProfile() {
                       <p><strong>Trạng thái đơn hàng:</strong> <a className="text-danger fw-bold">{selectedOrder.status}</a></p>
                     </div>
 
-
                     {selectedOrder.status !== 'Cancelled' && selectedOrder.status !== 'Delivered' && selectedOrder.status !== 'Shipped' &&(
                         <button
                             className="btn btn-danger mt-1 mb-3"
@@ -406,7 +396,6 @@ function UserProfile() {
                         <ul>
                           {selectedOrder.items.map(item => (
                               <li key={item.product} className="d-flex align-items-center mb-3">
-                                {/* Hiển thị ảnh sản phẩm */}
                                 <div className="col d-flex justify-content-center">
                                   <img
                                       src={item.product_image}
@@ -416,17 +405,12 @@ function UserProfile() {
                                   />
                                 </div>
                                 <div className="col">
-                                  {/* Hiển thị tên và giá sản phẩm */}
                                   <div className="flex-grow-1">
                                     <p><strong>{item.product_name}</strong></p>
                                   </div>
-
-                                  {/* Hiển thị số lượng */}
                                   <div>
                                     <p>Số lượng: {item.quantity}</p>
                                   </div>
-
-                                  {/* Hiển thị tổng giá */}
                                   <div className="">
                                     <p>Tổng: {formatPrice(item.price * item.quantity)}đ</p>
                                   </div>
@@ -465,11 +449,6 @@ function UserProfile() {
                                     )}
                                   </div>
                                 </div>
-
-
-
-
-
                               </li>
                           ))}
                         </ul>

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import ProductItem from "../ProductItem/ProductItem";
-import Pagination from "../Pagination/Pagination"; // Import Pagination component
+import Pagination from "../Pagination/Pagination";
 import axios from "axios";
 import "./style.css";
 
 function WishList() {
   const [wishListProducts, setWishListProducts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1); // State cho trang hiện tại
-  const [productsPerPage] = useState(8); // Số sản phẩm trên mỗi trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(8); 
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -27,12 +27,10 @@ function WishList() {
     }
   }, [token]);
 
-  // Tính toán sản phẩm sẽ hiển thị dựa trên trang hiện tại
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = wishListProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  // Tính tổng số trang
   const totalPages = Math.ceil(wishListProducts.length / productsPerPage);
 
   const handlePageChange = (pageNumber) => {

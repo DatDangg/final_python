@@ -1,4 +1,4 @@
-import "./style.css";
+import "./banner.css";
 
 function Banner() {
   return (
@@ -6,20 +6,20 @@ function Banner() {
       <div className="banner-content">
         <div className="text-column">
           <h2 className="headline">
-            <span className="type">IPhone 14</span>
-            <span className="subtype">Pro</span>
+            <span className="type">IPhone 16</span>
+            <span className="subtype">Plus</span>
           </h2>
           <p className="description">
             Luôn luôn lắng nghe, luôn luôn thấu hiểu
           </p>
-          <a href="/product" className="shop-button">
+          <a href="/product/1" className="shop-button">
             Mua ngay
           </a>
         </div>
         <div className="image-column">
           <img
-            src="../../../banner.png"
-            alt="IPhone 14 Pro"
+            src="../../../iphone16.png"
+            alt="IPhone 16 Plus"
             className="product-image"
           />
         </div>

@@ -18,11 +18,11 @@ const Step3 = () => {
 
   // Hàm để định dạng số tiền với dấu phẩy
   const formatPrice = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const integerPart = Math.floor(number);
+    return integerPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   useEffect(() => {
-    // Fetch the cart items from the API
     axios
       .get("http://127.0.0.1:8000/api/cart/", {
         headers: {
@@ -37,7 +37,6 @@ const Step3 = () => {
         console.error("Error fetching cart items:", error);
       });
 
-    // Fetch the selected address and shipping cost from local storage
     const storedAddress = JSON.parse(localStorage.getItem("selectedAddress"));
     const storedShipping = JSON.parse(localStorage.getItem("selectedShipping"));
 
@@ -76,9 +75,6 @@ const Step3 = () => {
         },
       })
       .then((response) => {
-        console.log("Order saved successfully:", response.data);
-
-        // Giảm số lượng sản phẩm trong kho
         const updateStockPromises = cartItems.map((item) => {
           const newStock = item.variant.quantity - item.quantity;
           return axios.patch(
@@ -95,13 +91,10 @@ const Step3 = () => {
             }
           );
         });
-
         return Promise.all(updateStockPromises);
       })
       .then(() => {
         console.log("Stock updated successfully.");
-
-        // Xóa giỏ hàng sau khi đặt hàng
         return axios.delete("http://127.0.0.1:8000/api/cart/clear_cart/", {
           headers: {
             Authorization: `Token ${token}`,
@@ -220,21 +213,6 @@ const Step3 = () => {
         {/*payment*/}
         <div className="right-bottom mb-4">
           <h2 className="mb-4 fw-bold">Thanh toán</h2>
-          <div className="payment-methods">
-            <button
-              className={paymentMethod === "qrCode" ? "active" : ""}
-              onClick={() => setPaymentMethod("qrCode")}
-            >
-              QR Code
-            </button>
-            <button
-              className={paymentMethod === "cashOnDelivery" ? "active" : ""}
-              onClick={() => setPaymentMethod("cashOnDelivery")}
-            >
-              Tiền mặt khi giao hàng
-            </button>
-          </div>
-
           {paymentMethod === "qrCode" && !qrCodeVisible && (
             <div className="qr-code-prompt pt-3">
               <button onClick={() => setQrCodeVisible(true)}>
@@ -259,24 +237,6 @@ const Step3 = () => {
               </button>
             </div>
           )}
-
-          {paymentMethod === "cashOnDelivery" && (
-            <div className="cash-on-delivery-details">
-              <p className="pt-4">
-                Bạn sẽ thanh toán bằng tiền mặt khi nhận được đơn hàng.
-              </p>
-              <button className="pay-button" onClick={handleConfirmOrder}>
-                Xác nhận đơn hàng
-              </button>
-            </div>
-          )}
-          {/*<div className="actions">*/}
-          {/*  {transactionSuccess ? (*/}
-          {/*    <button className="pay-button" onClick={handleConfirmOrder}>*/}
-          {/*      Xác nhận đơn hàng*/}
-          {/*    </button>*/}
-          {/*  ) : null}*/}
-          {/*</div>*/}
         </div>
         <button
           className="back btn btn-outline-dark"

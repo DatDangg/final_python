@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import ProductList from "../ProductList/ProductList";
-import Pagination from "../Pagination/Pagination"; // Import Pagination component
+import Pagination from "../Pagination/Pagination"; 
 import { useLocation } from "react-router-dom";
 
 function SearchPage() {
   const [searchResults, setSearchResults] = useState([]);
-  const [totalProducts, setTotalProducts] = useState(0); // Tổng số sản phẩm
-  const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
-  const [productsPerPage] = useState(10); // Số sản phẩm trên mỗi trang
+  const [totalProducts, setTotalProducts] = useState(0); 
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [productsPerPage] = useState(10);
 
   const location = useLocation();
   const searchQuery = new URLSearchParams(location.search).get("q");
+  const totalPages = Math.ceil(totalProducts / productsPerPage);
 
   useEffect(() => {
     if (searchQuery) {
@@ -19,18 +20,16 @@ function SearchPage() {
       )
         .then((response) => response.json())
         .then((data) => {
-          setSearchResults(data.results); // Giả sử API trả về 'results' chứa danh sách sản phẩm
-          setTotalProducts(data.count); // Giả sử API trả về 'count' là tổng số sản phẩm
+          setSearchResults(data.results); 
+          setTotalProducts(data.count); 
         })
         .catch((error) => console.error("Error fetching search results:", error));
     }
   }, [searchQuery, currentPage, productsPerPage]);
 
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber); // Cập nhật trang khi chuyển trang
+    setCurrentPage(pageNumber); 
   };
-
-  const totalPages = Math.ceil(totalProducts / productsPerPage); // Tính tổng số trang
 
   return (
     <div>
@@ -42,7 +41,6 @@ function SearchPage() {
         setTotalProducts={setTotalProducts}
       />
       
-      {/* Hiển thị phân trang nếu có kết quả tìm kiếm */}
       {totalProducts > 0 && (
         <Pagination
           currentPage={currentPage}

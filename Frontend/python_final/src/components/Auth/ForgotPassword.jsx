@@ -1,56 +1,61 @@
-// src/components/Auth/ForgotPassword.jsx
 import React, { useState } from 'react';
 import emailjs from 'emailjs-com';
 import axios from 'axios';
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import "./fw.css"
 
 const ForgotPassword = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');  // Lưu mã xác nhận
+  const [verificationCode, setVerificationCode] = useState('');  
   const [newPassword, setNewPassword] = useState('');
-  const [step, setStep] = useState(1);  // Quản lý bước hiện tại
+  const [step, setStep] = useState(1);  
+  const navigate = useNavigate();
 
-  // Hàm gửi email với EmailJS
   const sendVerificationCode = async (e) => {
     e.preventDefault();
-
-    // Tạo mã xác nhận ngẫu nhiên
-    const generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
-    setVerificationCode(generatedCode);
-
-    // Cấu hình thông tin để gửi email qua EmailJS
-    const templateParams = {
-      to_email: email,
-      username: username,
-      verification_code: `${generatedCode}`
-    };
-
+  
     try {
-      // Gửi email sử dụng EmailJS
-      await emailjs.send(
-        'service_n57axpe',  // Thay bằng Service ID từ EmailJS
-        'template_c5nvl8w',  // Thay bằng Template ID từ EmailJS
-        templateParams,
-        'S55P341Zxv_KDoxYg'       // Thay bằng User ID từ EmailJS
-      );
-
-      alert('Verification code sent to your email.');
-      setStep(2);  // Chuyển sang bước nhập mã xác nhận
-
+      const response = await axios.post('http://localhost:8000/check-username-email/', {
+        username,
+        email,
+      });
+  
+      if (response.data.exists) {
+        const generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+        setVerificationCode(generatedCode);
+  
+        const templateParams = {
+          to_email: email,
+          username: username,
+          verification_code: `${generatedCode}`,
+        };
+  
+        await emailjs.send(
+          'service_n57axpe',
+          'template_c5nvl8w',
+          templateParams,
+          'S55P341Zxv_KDoxYg'
+        );
+  
+        alert('Verification code sent to your email.');
+        setStep(2);
+      } else {
+        alert('Username and email do not match. Please check and try again.');
+      }
     } catch (error) {
-      console.error('Failed to send email:', error);
-      alert('Failed to send email. Please try again.');
+      console.error('Failed to send verification code:', error);
+      alert('Failed to check username and email. Please try again.');
     }
   };
+  
 
   const handleVerifyCode = (e) => {
     e.preventDefault();
     if (code === verificationCode) {
       alert('Code verified. You can now reset your password.');
-      setStep(3);  // Chuyển sang bước nhập mật khẩu mới
+      setStep(3); 
     } else {
       alert('Incorrect verification code.');
     }
@@ -59,9 +64,9 @@ const ForgotPassword = () => {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     try {
-      // Gọi API backend để đặt lại mật khẩu mới
       await axios.post('http://localhost:8000/reset-password/', { username, newPassword });
       alert('Password has been reset successfully.');
+      navigate("/auth/login"); 
     } catch (error) {
       console.error('Error resetting password:', error);
       alert('Failed to reset password.');
@@ -122,9 +127,7 @@ const ForgotPassword = () => {
                       <button type="submit">Reset Password</button>
                     </form>
                 )}
-                <Link className="f-inter back text-end text-decoration-underline" to="/auth/login">
-                  Back
-                </Link>
+
               </div>
 
             </div>

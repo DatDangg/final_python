@@ -1,4 +1,3 @@
-// src/components/Auth/Signup.jsx
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import {Link, useNavigate} from 'react-router-dom';
@@ -45,14 +44,12 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate password
     const passwordValidationMessage = validatePassword(password);
     if (passwordValidationMessage) {
       setPasswordError(passwordValidationMessage);
       return;
     }
     
-    // Validate password confirmation
     if (password !== confirmPassword) {
       setConfirmPasswordError('Passwords do not match.');
       return;
@@ -80,34 +77,32 @@ function Signup() {
               <div className="signup f-inter">
                 <form onSubmit={handleSubmit}>
                   <input
-                      type="text"
-                      placeholder="Username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                   <input
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                        setPasswordError(validatePassword(e.target.value));
-                      }}
-                  />
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setPasswordError(validatePassword(e.target.value));
+                  }}/>
                   {passwordError && <p className="error">{passwordError}</p>}
                   <input
-                      type="password"
-                      placeholder="Confirm Password"
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value);
-                        if (password !== e.target.value) {
-                          setConfirmPasswordError('Passwords do not match.');
-                        } else {
-                          setConfirmPasswordError('');
-                        }
-                      }}
-                  />
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                      if (password !== e.target.value) {
+                        setConfirmPasswordError('Passwords do not match.');
+                      } else {
+                        setConfirmPasswordError('');
+                      }
+                  }}/>
                   {confirmPasswordError && <p className="error">{confirmPasswordError}</p>}
                   <input
                       type="email"
@@ -132,7 +127,6 @@ function Signup() {
               <p className="text-white text-uppercase f-prata p-0">to our website !</p>
               <img className="text-center" src="/photos/giohang.png" alt=""/>
             </div>
-
           </div>
         </div>
       </div>

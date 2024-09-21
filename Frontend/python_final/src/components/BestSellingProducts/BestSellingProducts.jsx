@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import './bestsell.css';
-import ProductItem from '../ProductItem/ProductItem'; // Import ProductItem component
+import ProductItem from '../ProductItem/ProductItem';
 
 const BestSellingProducts = () => {
     const [products, setProducts] = useState([]);
     const token = localStorage.getItem("token");
-    const containerRef = useRef(null); // Ref cho container cuộn
-    const [scrollPosition, setScrollPosition] = useState(0); // Vị trí cuộn hiện tại
-    const itemWidth = 240; // Chiều rộng của mỗi sản phẩm
+    const containerRef = useRef(null); 
+    const [scrollPosition, setScrollPosition] = useState(0); 
+    const itemWidth = 240; 
 
     // Fetch dữ liệu từ API
     useEffect(() => {

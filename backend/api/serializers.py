@@ -131,7 +131,6 @@ class CartItemSerializer(serializers.ModelSerializer):
         model = CartItem
         fields = ['id', 'product', 'variant', 'quantity']  # Include variant in fields
 
-
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address

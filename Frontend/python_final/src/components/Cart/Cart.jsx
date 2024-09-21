@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CartContext } from "../../context/CartContext"; // Import CartContext
+import { CartContext } from "../../context/CartContext"; 
 import "./style.css";
 
 function Cart() {
-  const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext); // Sử dụng cartItems, removeFromCart và updateQuantity từ context
+  const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext); 
   const navigate = useNavigate();
 
   const handleQuantityChange = (itemId, newQuantity) => {
@@ -12,7 +12,7 @@ function Cart() {
     const item = cartItems.find((item) => item.id === itemId);
 
     if (quantity > 0 && quantity <= item.variant.quantity) {
-      updateQuantity(itemId, quantity); // Sử dụng hàm updateQuantity từ context để cập nhật số lượng
+      updateQuantity(itemId, quantity);
     } else if (quantity > item.variant.quantity) {
       alert("You cannot add more than the available stock.");
     }
@@ -31,7 +31,6 @@ function Cart() {
     );
   }
 
-  // Hàm định dạng số với dấu phẩy
   const formatPrice = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -92,7 +91,7 @@ function Cart() {
                       onClick={() =>
                         handleQuantityChange(item.id, item.quantity + 1)
                       }
-                      disabled={item.quantity >= item.variant.quantity} // Không tăng quá tồn kho
+                      disabled={item.quantity >= item.variant.quantity} 
                     >
                       +
                     </button>
@@ -106,7 +105,7 @@ function Cart() {
                   <div className="cart-item-remove m-3">
                     <button
                       className="checkout-button"
-                      onClick={() => removeFromCart(item.id)} // Sử dụng removeFromCart từ context để xóa sản phẩm
+                      onClick={() => removeFromCart(item.id)} 
                     >
                       x
                     </button>

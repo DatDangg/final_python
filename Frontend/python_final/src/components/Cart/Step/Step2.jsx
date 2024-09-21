@@ -6,8 +6,7 @@ const distanceInKm = 5; // Giả sử là 5km.
 const baseFee = 20000; // Phí cơ bản cố định.
 const distanceFeePerKm = 5000; // Phí tính theo khoảng cách (5,000 VND/km).
 const expressAdditionalFee = 0.3; // Phí giao nhanh tăng thêm 30%.
-const discountPerDayLate = 0.1; // Giảm 10% mỗi ngày giao chậm hơn 4 ngày.
-const extraPerDayEarly = 0.1; // Tăng 10% mỗi ngày giao sớm hơn 4 ngày.
+const discountPerDayLate = 0.1; // Tăng/giảm 10% với mỗi ngày giao nhanh/chậm hơn 4 ngày.
 
 function Step2() {
   const [selectedOption, setSelectedOption] = useState("free");
@@ -24,7 +23,7 @@ function Step2() {
 
   // Tính phí cho giao hàng thường (free)
   const calculateFreeShippingCost = () => {
-    setFreeShippingCost(0); // Miễn phí
+    setFreeShippingCost(0); 
   };
 
   // Tính phí cho giao hàng nhanh (express)
@@ -47,7 +46,7 @@ function Step2() {
       totalCost = costadjust
     } else {
       const additionalDays = deliveryDays - 4;
-      let adjustmentFactor =  Math.round(discountPerDayLate * additionalDays * 10) / 10;;
+      let adjustmentFactor =  Math.round(discountPerDayLate * additionalDays * 10) / 10;
       totalCost = costadjust - costadjust * adjustmentFactor;
     }
 
@@ -60,7 +59,7 @@ function Step2() {
     calculateFreeShippingCost();
     calculateExpressShippingCost();
     calculateScheduledShippingCost();
-  }, []); // Chạy một lần khi component được mount
+  }, []); 
 
   // Cập nhật phí ship khi người dùng chọn một tùy chọn khác
   useEffect(() => {
@@ -71,7 +70,7 @@ function Step2() {
     } else if (selectedOption === "schedule") {
       calculateScheduledShippingCost();
     }
-  }, [selectedOption, deliveryDays]); // Chỉ chạy khi tùy chọn hoặc ngày giao hàng thay đổi
+  }, [selectedOption, deliveryDays]); 
 
   // Hàm điều hướng và lưu phí ship vào localStorage.
   const handleNextStep = () => {
@@ -130,7 +129,7 @@ function Step2() {
             checked={selectedOption === "express"}
             onChange={(e) => {
               setSelectedOption(e.target.value);
-              setDeliveryDays(4); // Giao hàng nhanh trong 4 ngày
+              setDeliveryDays(4); 
             }}
           />
           <label htmlFor="express">

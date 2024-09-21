@@ -14,8 +14,6 @@ router.register(r'addresses', views.AddressView, basename='address')
 router.register(r'orders', views.OrderView, basename='order')
 router.register(r'reviews', views.ReviewView, basename='reviews')
 
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('change-password/', views.change_password, name='change_password'),
@@ -44,6 +42,7 @@ urlpatterns = [
     path('discounted-products/', views.discounted_products, name='discounted-products'),
     path('brands/', views.brand_list, name='brand-list'),
     path('products/suggestions/', views.product_suggestions, name='product-suggestions'),
+    path('check-username-email/', views.check_username_email, name='check_username_email'),
 ]
 
 # Serve media files during development

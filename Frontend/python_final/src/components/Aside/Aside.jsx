@@ -6,10 +6,10 @@ function Aside({ onFilterChange, hideCategoryFilter }) {
   const [brands, setBrands] = useState([]);
   const categories = [
     { id: 1, name: 'Smart Phones' },
-    { id: 3, name: 'Headphones' },
     { id: 2, name: 'Computers' },
+    { id: 3, name: 'Headphones' },
     { id: 4, name: 'Smart Watches' },
-  ]; // Danh mục với ID
+  ];
   const [selectedBrand, setSelectedBrand] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState(''); // State cho ID danh mục
   const [minPrice, setMinPrice] = useState('');
@@ -20,11 +20,11 @@ function Aside({ onFilterChange, hideCategoryFilter }) {
     debounce(() => {
       onFilterChange({
         brand: selectedBrand,
-        categoryId: selectedCategoryId, // Gửi categoryId
+        categoryId: selectedCategoryId, 
         minPrice,
         maxPrice,
       });
-    }, 300),
+    }, 1),
     [selectedBrand, selectedCategoryId, minPrice, maxPrice]
   );
 
@@ -58,7 +58,6 @@ function Aside({ onFilterChange, hideCategoryFilter }) {
   return (
     <aside className="filter-aside">
       <h4 className="text-primary">Lọc Sản Phẩm</h4>
-
       <div className="filter-group">
         <label>Thương Hiệu</label>
         <select value={selectedBrand} onChange={handleBrandChange}>
@@ -77,7 +76,7 @@ function Aside({ onFilterChange, hideCategoryFilter }) {
           <option value="">Tất Cả</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
-              {category.name} {/* Hiển thị tên danh mục */}
+              {category.name} 
             </option>
           ))}
         </select>
