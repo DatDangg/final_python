@@ -10,11 +10,23 @@
         <input type="text" name="search" placeholder="Tìm kiếm sản phẩm theo tên" class="form-control" />
         <button type="submit" class="btn btn-primary mt-2">Tìm kiếm</button>
     </form>    
-    <div>
-        <a href="?search={{ search_query }}&sort=title&order={% if sort_field == 'title' and sort_order == 'asc' %}desc{% else %}asc{% endif %}">Sắp xếp theo Tên sản phẩm</a>
-        <a href="?search={{ search_query }}&sort=price&order={% if sort_field == 'price' and sort_order == 'asc' %}desc{% else %}asc{% endif %}">Sắp xếp theo Giá</a>
-        <a href="?search={{ search_query }}&sort=quantity&order={% if sort_field == 'quantity' and sort_order == 'asc' %}desc{% else %}asc{% endif %}">Sắp xếp theo Số lượng</a>
-    </div>
+    <form method="GET" action="{% url 'product_list' %}" class="sort-form">
+        <input type="hidden" name="search" value="{{ search_query }}" /> <!-- Giữ lại giá trị tìm kiếm -->
+    
+        <label for="sort">Sắp xếp theo:</label>
+        <select name="sort" id="sort" onchange="this.form.submit()">
+            <option value="title" {% if sort_field == 'title' %}selected{% endif %}>Tên sản phẩm</option>
+            <option value="price" {% if sort_field == 'price' %}selected{% endif %}>Giá</option>
+            <option value="quantity" {% if sort_field == 'quantity' %}selected{% endif %}>Số lượng</option>
+        </select>
+    
+        <label for="order">Thứ tự:</label>
+        <select name="order" id="order" onchange="this.form.submit()">
+            <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Tăng dần</option>
+            <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Giảm dần</option>
+        </select>
+    </form>
+    
     
     <div class="table-responsive" style="max-height: 520px; overflow-y: auto;">
         <table class="table table-bordered">

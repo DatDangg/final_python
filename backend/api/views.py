@@ -453,11 +453,16 @@ def dashboard_view(request):
     }
 
     return render(request, 'dashboard_overview.html', context)
+
 def product_list_view(request):
     search_query = request.GET.get('search', '')  # Nhận tham số tìm kiếm
     products = Product.objects.prefetch_related('variants').all()
     sort_field = request.GET.get('sort', '')
     sort_order = request.GET.get('order', 'asc')
+
+
+    print("Sort field:", sort_field)
+    print("Sort order:", sort_order)
 
     # Nếu có tham số tìm kiếm, lọc sản phẩm
     if search_query:
@@ -519,7 +524,8 @@ def product_list_view(request):
                 'product': product,
                 'variant': variant,
                 'details': product_detail,
-                'order': sort_order,
+                'sort_field': sort_field,
+                'sort_order': sort_order,
             })
             counter += 1  # Tăng biến đếm sau mỗi biến thể
 
