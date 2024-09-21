@@ -19,7 +19,6 @@ function ProductDetail() {
   const token = localStorage.getItem("token");
   const [categoryName, setCategoryName] = useState(location.state?.categoryName || "Category");
   const { cartItems, setCartItems, addToCart } = useContext(CartContext);
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -339,9 +338,6 @@ function ProductDetail() {
                     })}
                   </select>
                 </div>
-
-
-
                 {/*product-value*/}
                 <div className="product-value">
                   {/*smartphone*/}

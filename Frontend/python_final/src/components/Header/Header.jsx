@@ -54,7 +54,6 @@ function Header() {
     }
   }, [token]);
 
-  // Fetch product suggestions based on search input
   useEffect(() => {
     if (searchQuery) {
       axios
@@ -100,25 +99,27 @@ function Header() {
       {/* Suggestions Dropdown */}
       {suggestions.length > 0 && (
         <div className="suggestions-dropdown">
-          {suggestions.map((product) => (
-            <div className="suggestion-item" key={product.id}>
-              <img
-                src={
-                  product.images.find((img) => img.is_primary)?.image
-                    ? `${BASE_URL}${product.images.find((img) => img.is_primary).image}`
-                    : product.images.length > 0
-                    ? `${BASE_URL}${product.images[0].image}`
-                    : ''
-                }
-                alt={product.title}
-                className="suggestion-image"
-              />
-              <span>{product.title}</span>
-            </div>
-          ))}
+            {suggestions.map((product) => (
+                <div className="suggestion-item" key={product.id} onClick={() => {
+                        navigate(`/product/${product.id}`);
+                        setSearchQuery(''); 
+                }}>
+                  <img
+                    src={
+                      product.images.find((img) => img.is_primary)?.image
+                        ? `${BASE_URL}${product.images.find((img) => img.is_primary).image}`
+                        : product.images.length > 0
+                        ? `${BASE_URL}${product.images[0].image}`
+                        : ''
+                    }
+                    alt={product.title}
+                    className="suggestion-image"
+                  />
+                  <span>{product.title}</span>
+                </div>
+            ))}
         </div>
       )}
-
       <div className="navbar">
         <Link
           to="/"

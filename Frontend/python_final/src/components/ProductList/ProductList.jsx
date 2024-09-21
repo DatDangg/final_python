@@ -12,7 +12,6 @@ function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalP
     maxPrice: '',
   });
   const token = localStorage.getItem("token");
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   const handleFilterChange = (newFilters) => {
     setFilters((prevFilters) => ({
@@ -27,7 +26,7 @@ function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalP
         let url = `http://localhost:8000/api/products/?category=${selectedCategory?.id || ''}&search=${searchQuery || ''}`;
         
         if (filters.brand) url += `&brand=${filters.brand}`;
-        if (!isFromCategoryPage && filters.categoryId) url += `&category=${filters.categoryId}`; // Sử dụng categoryId trong URL
+        if (!isFromCategoryPage && filters.categoryId) url += `&category=${filters.categoryId}`; 
         if (filters.minPrice) url += `&variants__listed_price__gte=${filters.minPrice}`;
         if (filters.maxPrice) url += `&variants__listed_price__lte=${filters.maxPrice}`;
         
