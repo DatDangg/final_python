@@ -453,9 +453,13 @@ def dashboard_view(request):
     }
 
     return render(request, 'dashboard_overview.html', context)
-
 def product_list_view(request):
-    products = Product.objects.prefetch_related('variants').all()  # Lấy sản phẩm và biến thể
+    search_query = request.GET.get('search', '')  # Nhận tham số tìm kiếm
+    products = Product.objects.prefetch_related('variants').all()
+
+    # Nếu có tham số tìm kiếm, lọc sản phẩm
+    if search_query:
+        products = products.filter(title__icontains=search_query)
 
     product_data = []
     counter = 1  # Khởi tạo biến đếm cho số thứ tự
@@ -508,7 +512,7 @@ def product_list_view(request):
             })
             counter += 1  # Tăng biến đếm sau mỗi biến thể
 
-    return render(request, 'product_list.html', {'product_data': product_data})
+    return render(request, 'product_list.html', {'product_data': product_data, 'search_query': search_query})
 
 def add_product_view(request):
     if request.method == 'POST':
