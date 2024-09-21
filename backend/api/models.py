@@ -17,10 +17,9 @@ class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
 
     def primary_image(self):
-        # Kiểm tra nếu có ảnh chính
         primary_image = self.images.filter(is_primary=True).first()
         if primary_image:
-            return primary_image.image.url  # Trả về URL của trường image
+            return primary_image.image.url  
         return None
 
     def __str__(self):
@@ -29,7 +28,7 @@ class Product(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='products/')
-    is_primary = models.BooleanField(default=False)  # New field to indicate the primary image
+    is_primary = models.BooleanField(default=False)  
 
     def __str__(self):
         return f"Image for {self.product.title}"
@@ -71,11 +70,11 @@ class HeadphoneDetail(models.Model):
 
 class SmartwatchDetail(models.Model):
     product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    strap_type = models.CharField(max_length=255)  # Loại dây đeo
-    screen_size = models.CharField(max_length=255)  # Kích thước màn hình
-    battery_capacity = models.CharField(max_length=255)  # Dung lượng pin
-    water_resistance = models.BooleanField(default=False)  # Chống nước
-    heart_rate_monitor = models.BooleanField(default=False)  # Có theo dõi nhịp tim hay không
+    strap_type = models.CharField(max_length=255)  
+    screen_size = models.CharField(max_length=255) 
+    battery_capacity = models.CharField(max_length=255)
+    water_resistance = models.BooleanField(default=False)
+    heart_rate_monitor = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Details for {self.product.title}"
@@ -86,12 +85,11 @@ class ProductVariant(models.Model):
     storage = models.CharField(max_length=100, blank=True, null=True)
     cost_price = models.DecimalField(max_digits=15, decimal_places=2)
     listed_price = models.DecimalField(max_digits=15, decimal_places=2)
-    discount = models.PositiveIntegerField(default=0)  # Tỉ lệ giảm giá, lưu dưới dạng phần trăm
+    discount = models.PositiveIntegerField(default=0)  
     quantity = models.PositiveIntegerField()
     SKU = models.CharField(max_length=100, unique=True)
 
     def discounted_price(self):
-        """Tính toán giá sau khi giảm giá"""
         discount_amount = (Decimal(self.discount) / Decimal(100)) * self.listed_price
         return self.listed_price - discount_amount
 
@@ -118,11 +116,11 @@ class WishlistItem(models.Model):
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, null=True, blank=True)  # Add variant here
+    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, null=True, blank=True)  
     quantity = models.PositiveIntegerField(default=1)
 
     class Meta:
-        unique_together = ('user', 'product', 'variant')  # Modify the unique constraint
+        unique_together = ('user', 'product', 'variant')
 
 class Address(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="addresses")
@@ -156,7 +154,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)  # ForeignKey đến Product
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)  
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=14, decimal_places=2)
 

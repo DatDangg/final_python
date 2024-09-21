@@ -30,8 +30,8 @@ class ProductVariantForm(forms.ModelForm):
 ProductVariantFormSet = modelformset_factory(
     ProductVariant,
     form=ProductVariantForm,
-    extra=0,  # Không tạo thêm form tự động
-    can_delete=True  # Cho phép xóa biến thể
+    extra=0, 
+    can_delete=True  
 )
 
 class ProductImageForm(forms.ModelForm):
@@ -42,16 +42,16 @@ class ProductImageForm(forms.ModelForm):
 ProductImageFormSet = modelformset_factory(
     ProductImage,
     form=ProductImageForm,
-    extra=1,  # Số form trống ban đầu
-    can_delete=True  # Cho phép xóa ảnh
+    extra=1,  
+    can_delete=True  
 )        
 
 class OrderStatusForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['status']  # Chỉ cần cập nhật trường trạng thái
+        fields = ['status'] 
         widgets = {
-            'status': forms.Select(choices=Order.STATUS_CHOICES)  # Dropdown cho các trạng thái
+            'status': forms.Select(choices=Order.STATUS_CHOICES)  
         }
 
 class PhoneDetailForm(forms.ModelForm):

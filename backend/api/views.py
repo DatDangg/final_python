@@ -429,8 +429,6 @@ def check_transaction(request):
             "message": "Lỗi khi kết nối với API SePay.",
             "error": str(e)
         }, status=500)
-from django.db.models import Sum, F, DecimalField, ExpressionWrapper
-from django.db.models.functions import TruncMonth
 
 def dashboard_view(request):
     total_orders = Order.objects.filter(status='delivered').count()
