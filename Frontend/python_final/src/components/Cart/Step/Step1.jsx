@@ -15,38 +15,38 @@ function Step1() {
   });
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+console.log("Token from localStorage:", token);
+
 
   useEffect(() => {
-    if (token) {
-      axios
-        .get("http://127.0.0.1:8000/auth/users", {
-          headers: {
-            Authorization: `Token ${token}`,
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          if (!response.data) {
-            setHasProfile(false);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching profile:", error);
-          setHasProfile(false); // Nếu lỗi, coi như không có profile
-        });
+    axios.
+      get('http://localhost:8000/auth/users/', {
+        headers: {
+          'Authorization': `Token ${localStorage.getItem("token")}`,
+          'Content-Type': 'application/json',
+        }
+      })
+      .then((response) => {
+        if (!response.data) {
+          setHasProfile(false);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching profile:", error);
+        setHasProfile(false); // Nếu lỗi, coi như không có profile
+      });
 
-      axios
-        .get("http://127.0.0.1:8000/api/addresses/", {
-          headers: {
-            Authorization: `Token ${token}`,
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          setAddresses(response.data);
-        })
-        .catch((error) => console.error("Error fetching addresses:", error));
-    }
+    axios
+      .get("http://127.0.0.1:8000/api/addresses/", {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        setAddresses(response.data);
+      })
+      .catch((error) => console.error("Error fetching addresses:", error));
   }, [token]);
 
   const handleAddAddress = () => {
