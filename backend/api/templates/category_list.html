@@ -22,7 +22,8 @@
             <td class="pt-4">{{ category.name }}</td>
             <td class="pt-3"><img src="{{ category.image.url }}" alt="{{ category.name }}" width="50"></td>
             <td class="pt-4"><a href="{% url 'edit_category' category.id %}">Sửa</a></td>
-            <td class="pt-4"><a href="{% url 'delete_category' category.id %}" class="text-danger" onclick="return confirm('Bạn có chắc muốn xóa danh mục này?')">Xóa</a></td>
+            <td class="pt-4"><a href="{% url 'delete_category' category.id %}" class="text-danger"
+                                onclick="return confirm('Bạn có chắc muốn xóa danh mục này?')">Xóa</a></td>
         </tr>
         {% endfor %}
     </tbody>

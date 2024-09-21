@@ -63,7 +63,9 @@
                                 <div class="col-md-4 mb-3 image-field" >
                                     <div class="border p-2 text-start" style="height: 300px; font-size: 14px">
                                         {% if form.instance.image %}
-                                            <img style="width: 80px; height: 80px;  padding-bottom: 10px;" src="{{ form.instance.image.url }}" alt="Product Image" class="img-fluid mb-2" />
+                                            <img style="width: 80px; height: 80px;  padding-bottom: 10px;"
+                                                 src="{{ form.instance.image.url }}" alt="Product Image"
+                                                 class="img-fluid mb-2" />
                                         {% else %}
                                             <p class="text-danger">No image available!</p>
                                         {% endif %}
