@@ -6,7 +6,6 @@ import "./step1.css";
 function Step1() {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
-  const [hasProfile, setHasProfile] = useState(true);
   const [newAddress, setNewAddress] = useState({
     full_name: "",
     phone_number: "",
@@ -15,46 +14,24 @@ function Step1() {
   });
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-console.log("Token from localStorage:", token);
 
-
-  useEffect(() => {
-    axios.
-      get('http://localhost:8000/auth/users/', {
-        headers: {
-          'Authorization': `Token ${localStorage.getItem("token")}`,
-          'Content-Type': 'application/json',
-        }
-      })
-      .then((response) => {
-        if (!response.data) {
-          setHasProfile(false);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching profile:", error);
-        setHasProfile(false); // Nếu lỗi, coi như không có profile
-      });
-
-    axios
-      .get("http://127.0.0.1:8000/api/addresses/", {
-        headers: {
-          Authorization: `Token ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        setAddresses(response.data);
-      })
-      .catch((error) => console.error("Error fetching addresses:", error));
+    useEffect(() => {
+    if (token) {
+      axios
+        .get("http://127.0.0.1:8000/api/addresses/", {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          setAddresses(response.data);
+        })
+        .catch((error) => console.error("Error fetching addresses:", error));
+    }
   }, [token]);
 
   const handleAddAddress = () => {
-    if (!hasProfile) {
-      alert("Bạn cần tạo profile trước khi thêm địa chỉ mới.");
-      return;
-    }
-  
     axios
       .post("http://127.0.0.1:8000/api/addresses/", newAddress, {
         headers: {
@@ -71,7 +48,8 @@ console.log("Token from localStorage:", token);
           address_type: "home",
         });
       })
-      .catch((error) => console.error("Error adding address:", error));
+      .catch((error) => alert('Bạn cần tạo profile trước!'));
+
   };
   
 

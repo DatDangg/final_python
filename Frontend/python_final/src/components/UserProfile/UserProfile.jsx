@@ -392,7 +392,7 @@ function UserProfile() {
                     </div>
 
 
-                    {selectedOrder.status !== 'Cancelled' && selectedOrder.status !== 'Delivered' && selectedOrder.status !== 'Shipped'(
+                    {selectedOrder.status !== 'Cancelled' && selectedOrder.status !== 'Delivered' && selectedOrder.status !== 'Shipped' &&(
                         <button
                             className="btn btn-danger mt-1 mb-3"
                             onClick={() => handleCancelOrder(selectedOrder.id)}

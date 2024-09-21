@@ -488,7 +488,7 @@ function ProductDetail() {
                         </div>
                         <div className="col-8">
                           <span className="ml-5">Free Delivery</span>
-                          <p className="ml-5 fw-bold">Every where</p>
+                          <p className="ml-5 fw-bold">More Offers</p>
                         </div>
                       </div>
                       <div className="col-md-4 d-flex">
@@ -562,8 +562,6 @@ function ProductDetail() {
                       </tr>
                       </tbody>
                     </table>
-
-
                 )}
 
                 {product.computer_details && (
@@ -663,12 +661,12 @@ function ProductDetail() {
                             {[...Array(review.rating)].map((_, i) => (
                                 <img
                                     key={i}
-                                    src="https://salt.tikicdn.com/ts/upload/e3/f0/86/efd76e1d41c00ad8ebb7287c66b559fd.png"
+                                    src="/photos/star.png"
                                     alt={`${review.rating} stars`}
                                     style={{width: '20px', height: '20px', marginRight: '5px'}}
                                 />
                             ))}
-                            rated {review.rating} stars
+                            {/* rated {review.rating} stars */}
                           </div>
                           <small>Ngày đánh giá: {new Date(review.created_at).toLocaleDateString()}</small>
                           <p className="pt-3">Comments: {review.comment}</p>
