@@ -10,7 +10,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ['id', 'image', 'is_primary']  # Include is_primary
+        fields = ['id', 'image', 'is_primary']  
 
 class PhoneDetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,16 +27,16 @@ class HeadphoneDetailSerializer(serializers.ModelSerializer):
         model = HeadphoneDetail
         fields = '__all__'
 
+class SmartwatchDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SmartwatchDetail
+        fields = '__all__'
+
 class ProductVariantSerializer(serializers.ModelSerializer):
     discounted_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     class Meta:
         model = ProductVariant
         fields = ['id', 'color', 'storage', 'cost_price', 'listed_price', 'discount', 'discounted_price', 'quantity','SKU']
-
-class SmartwatchDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SmartwatchDetail
-        fields = '__all__'
 
 class ProductSerializer(serializers.ModelSerializer):
     phone_details = PhoneDetailSerializer(required=False)
@@ -55,11 +55,7 @@ class ProductSerializer(serializers.ModelSerializer):
         computer_data = validated_data.pop('computer_details', None)
         headphone_data = validated_data.pop('headphone_details', None)
         smartwatch_data = validated_data.pop('smartwatch_details', None)
-
-        # Tạo sản phẩm trước
         product = Product.objects.create(**validated_data)
-
-        # Tạo chi tiết sản phẩm dựa trên category (trước đây là product_type)
         if product.category.name == "Phone" and phone_data:
             PhoneDetail.objects.create(product=product, **phone_data)
         elif product.category.name == "Computer" and computer_data:
@@ -68,7 +64,6 @@ class ProductSerializer(serializers.ModelSerializer):
             HeadphoneDetail.objects.create(product=product, **headphone_data)
         elif product.category.name == "Smartwatch" and smartwatch_data:
             SmartwatchDetail.objects.create(product=product, **smartwatch_data)
-
         return product
 
     def update(self, instance, validated_data):
@@ -76,11 +71,7 @@ class ProductSerializer(serializers.ModelSerializer):
         computer_data = validated_data.pop('computer_details', None)
         headphone_data = validated_data.pop('headphone_details', None)
         smartwatch_data = validated_data.pop('smartwatch_details', None)
-
-        # Cập nhật thông tin sản phẩm
         instance = super().update(instance, validated_data)
-
-        # Cập nhật chi tiết sản phẩm dựa trên category
         if instance.category.name == "Smart Phones" and phone_data:
             PhoneDetail.objects.update_or_create(product=instance, defaults=phone_data)
         elif instance.category.name == "Computers" and computer_data:
@@ -89,7 +80,6 @@ class ProductSerializer(serializers.ModelSerializer):
             HeadphoneDetail.objects.update_or_create(product=instance, defaults=headphone_data)
         elif instance.category.name == "Smart Watches" and smartwatch_data:
             SmartwatchDetail.objects.update_or_create(product=instance, defaults=smartwatch_data)
-
         return instance
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -125,11 +115,11 @@ class WishlistItemSerializer(serializers.ModelSerializer):
     
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
-    variant = ProductVariantSerializer()  # Add the variant serializer
+    variant = ProductVariantSerializer()  
 
     class Meta:
         model = CartItem
-        fields = ['id', 'product', 'variant', 'quantity']  # Include variant in fields
+        fields = ['id', 'product', 'variant', 'quantity'] 
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
@@ -153,7 +143,6 @@ class OrderSerializer(serializers.ModelSerializer):
         items_data = validated_data.pop('items')
         order = Order.objects.create(**validated_data)
         
-        # Thay thế tìm kiếm product bằng id thay vì title
         for item_data in items_data:
             product_id = item_data['product'].id
             product = Product.objects.get(id=product_id)
