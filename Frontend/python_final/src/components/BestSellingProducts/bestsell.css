@@ -1,8 +1,8 @@
 .best-selling-products-container {
-  width: 720px; /* 240px x 3 sản phẩm */
+  width: 1150px; /* 240px x 3 sản phẩm */
   overflow: hidden; /* Ẩn phần sản phẩm ngoài màn hình */
   margin: 0 auto;
-
+    padding-left: 40px;
 }
 
 .best-selling-products {
