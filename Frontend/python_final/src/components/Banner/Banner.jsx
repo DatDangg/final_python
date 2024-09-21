@@ -12,7 +12,7 @@ function Banner() {
           <p className="description">
             Luôn luôn lắng nghe, luôn luôn thấu hiểu
           </p>
-          <a href="/product/1" className="shop-button">
+          <a href="/product/44" className="shop-button">
             Mua ngay
           </a>
         </div>
