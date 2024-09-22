@@ -1,45 +1,48 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-// import "./footer.css"
-
-function Footer(){
-    return(
-        <div className="footer">
+function Footer() {
+    return (
+        <div className="footer" style={{
+            height: "100%",
+            backgroundColor: "black",
+            boxShadow: "0 5px 20px #dddde357",
+            padding: "20px"
+        }}>
             <div className="container-fluid gap-5 pt-3 justify-content-between">
-                <div className="row content1 ">
+                <div className="row content1" style={{ paddingLeft: "150px", justifyContent: "center" }}>
                     <div className="col-4 gap-1 text-start">
                         <h5 className="font-medium text-lg text-white mb-4 text-uppercase">
                             Hỗ trợ khách hàng
                         </h5>
-                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Các câu hỏi thường gặp</Link>
-                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Gửi yêu cầu hỗ trợ</Link>
-                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Hướng dẫn đặt hàng</Link>
-                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Phương thức vận chuyển</Link>
-                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Chính sách đổi trả</Link>
-                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2"> Hướng dẫn trả góp</Link>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2" style={{ color: "white", fontSize: "13px" }}>Các câu hỏi thường gặp</Link>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2" style={{ color: "white", fontSize: "13px" }}>Gửi yêu cầu hỗ trợ</Link>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2" style={{ color: "white", fontSize: "13px" }}>Hướng dẫn đặt hàng</Link>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2" style={{ color: "white", fontSize: "13px" }}>Phương thức vận chuyển</Link>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2" style={{ color: "white", fontSize: "13px" }}>Chính sách đổi trả</Link>
+                        <Link to="/contact" className="text-decoration-none d-block text-footer my-2" style={{ color: "white", fontSize: "13px" }}>Hướng dẫn trả góp</Link>
                     </div>
-                    <div className="col-4  gap-1">
+                    <div className="col-4 gap-1">
                         <h5 className="font-medium text-lg text-white mb-4 text-uppercase">
                             Dịch vụ giao hàng
                         </h5>
                         <div className="d-flex">
                             <div className="d-block">
-                                <div className="col-4 ">
-                                    <img className="giaohangnhanh" src="/photos/shipnhanh.png" alt=""/>
+                                <div className="col-4">
+                                    <img className="giaohangnhanh" src="/photos/shipnhanh.png" alt="" style={{ width: "150px", height: "100px" }} />
                                 </div>
-                                <div className=" text-white">
+                                <div className="text-white">
                                     <span className="ml-5 fs-6">Giao hàng nhanh mọi lúc</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="col-4 gap-1">
-                        <h5 className=" text-white mb-2 text-uppercase">
+                        <h5 className="text-white mb-2 text-uppercase">
                             Kết nối với chúng tôi
                         </h5>
                         <div className="flex gap-2">
-                            <a className="p-2" href="https://www.facebook.com/">
+                        <a className="p-2" href="https://www.facebook.com/">
                                 <svg
                                     width="30"
                                     height="30"
@@ -102,8 +105,6 @@ function Footer(){
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     )
