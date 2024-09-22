@@ -12,12 +12,13 @@ const ForgotPassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [step, setStep] = useState(1);  
   const navigate = useNavigate();
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   const sendVerificationCode = async (e) => {
     e.preventDefault();
   
     try {
-      const response = await axios.post('http://localhost:8000/check-username-email/', {
+      const response = await axios.post(`${apiurl}/check-username-email/`, {
         username,
         email,
       });
@@ -64,7 +65,7 @@ const ForgotPassword = () => {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8000/reset-password/', { username, newPassword });
+      await axios.post(`${apiurl}/reset-password/`, { username, newPassword });
       alert('Password has been reset successfully.');
       navigate("/auth/login"); 
     } catch (error) {

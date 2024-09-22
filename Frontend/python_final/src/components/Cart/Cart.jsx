@@ -6,6 +6,7 @@ import "./style.css";
 function Cart() {
   const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext); 
   const navigate = useNavigate();
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   const handleQuantityChange = (itemId, newQuantity) => {
     const quantity = parseInt(newQuantity, 10);
@@ -59,7 +60,7 @@ function Cart() {
                 <li key={item.id} className="cart-item">
                   <div className="cart-item-image">
                     <img
-                      src={`http://127.0.0.1:8000${primaryImage}`}
+                      src={`${apiurl}${primaryImage}`}
                       alt={item.product.title}
                     />
                   </div>

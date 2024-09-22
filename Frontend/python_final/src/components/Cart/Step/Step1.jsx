@@ -14,11 +14,12 @@ function Step1() {
   });
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   useEffect(() => {
     if (token) {
       axios
-        .get("http://127.0.0.1:8000/api/addresses/", {
+        .get(`${apiurl}/api/addresses/`, {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -33,7 +34,7 @@ function Step1() {
 
   const handleAddAddress = () => {
     axios
-      .post("http://127.0.0.1:8000/api/addresses/", newAddress, {
+      .post(`${apiurl}/api/addresses/`, newAddress, {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",

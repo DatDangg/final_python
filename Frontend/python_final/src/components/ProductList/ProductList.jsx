@@ -5,6 +5,7 @@ import "./style.css";
 
 function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalProducts, searchQuery, isFromCategoryPage }) {
   const [productList, setProductList] = useState([]);
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   const [filters, setFilters] = useState({
     brand: '',
     categoryId: '', // Đổi tên thành categoryId
@@ -23,7 +24,7 @@ function ProductList({ selectedCategory, currentPage, productsPerPage, setTotalP
   useEffect(() => {
     const fetchProducts = async () => {
       if (token) {
-        let url = `http://localhost:8000/api/products/?category=${selectedCategory?.id || ''}&search=${searchQuery || ''}`;
+        let url = `${apiurl}/api/products/?category=${selectedCategory?.id || ''}&search=${searchQuery || ''}`;
         
         if (filters.brand) url += `&brand=${filters.brand}`;
         if (!isFromCategoryPage && filters.categoryId) url += `&category=${filters.categoryId}`; 

@@ -19,6 +19,7 @@ function UserProfile() {
   const [comments, setComments] = useState({}); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
 
   const formatPrice = (number) => {
@@ -28,7 +29,7 @@ function UserProfile() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    axios.get("http://localhost:8000/api/orders/", {
+    axios.get(`${apiurl}/api/orders/`, {
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
@@ -51,7 +52,7 @@ function UserProfile() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    axios.get("http://localhost:8000/auth/profile/", {
+    axios.get(`${apiurl}/auth/profile/`, {
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
@@ -73,7 +74,7 @@ function UserProfile() {
 
   const fetchProductDetails = (productId) => {
     const token = localStorage.getItem("token");
-    return axios.get(`http://localhost:8000/api/products/${productId}/`, {
+    return axios.get(`${apiurl}/api/products/${productId}/`, {
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
@@ -97,7 +98,7 @@ function UserProfile() {
   const fetchOrderReviews = async (orderId) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.get(`http://localhost:8000/reviews/order/${orderId}/`, {
+      const response = await axios.get(`${apiurl}/reviews/order/${orderId}/`, {
         headers: {
           'Authorization': `Token ${token}`,
           'Content-Type': 'application/json',
@@ -140,7 +141,7 @@ function UserProfile() {
   const handleCancelOrder = (orderId) => {
     const token = localStorage.getItem("token");
   
-    axios.put(`http://localhost:8000/orders/${orderId}/cancel/`, {}, {
+    axios.put(`${apiurl}/orders/${orderId}/cancel/`, {}, {
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
@@ -194,7 +195,7 @@ function UserProfile() {
       comment: comments[productId],
     };
 
-    axios.post("http://localhost:8000/api/reviews/", payload, {
+    axios.post(`${apiurl}/api/reviews/`, payload, {
       headers: {
         Authorization: `Token ${token}`,
         "Content-Type": "application/json",
@@ -221,7 +222,7 @@ function UserProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put("http://localhost:8000/auth/profile/", userData, {
+    axios.put(`${apiurl}/auth/profile/`, userData, {
       headers: {
         Authorization: `Token ${localStorage.getItem("token")}`,
       },

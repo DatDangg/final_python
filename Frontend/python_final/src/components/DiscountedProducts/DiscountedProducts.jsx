@@ -9,10 +9,10 @@ const DiscountedProducts = () => {
     const containerRef = useRef(null); 
     const [scrollPosition, setScrollPosition] = useState(0);
     const itemWidth = 360; 
-
+    const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
     // Fetch dữ liệu từ API sản phẩm có giảm giá > 50%
     useEffect(() => {
-        axios.get('http://localhost:8000/discounted-products/', {
+        axios.get(`${apiurl}/discounted-products/`, {
             headers: {
                 Authorization: `Token ${token}`,
                 "Content-Type": "application/json",

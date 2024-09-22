@@ -15,7 +15,8 @@ function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showWishList, setShowWishList] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(cartItems.length); // Lấy số lượng ban đầu từ cartItems
-  const BASE_URL = "http://localhost:8000/";
+  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
+  const BASE_URL = `${apiurl}`;
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -43,7 +44,7 @@ function Header() {
   useEffect(() => {
     if (token) {
       axios
-        .get("http://127.0.0.1:8000/api/cart/", {
+        .get(`${apiurl}/api/cart/`, {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
@@ -63,7 +64,7 @@ function Header() {
   useEffect(() => {
     if (searchQuery) {
       axios
-        .get(`http://127.0.0.1:8000/products/suggestions/?q=${searchQuery}`)
+        .get(`${apiurl}/products/suggestions/?q=${searchQuery}`)
         .then((response) => {
           setSuggestions(response.data);
         })
