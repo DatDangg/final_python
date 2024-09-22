@@ -11,7 +11,7 @@ function ProductItem({ product, token }) {
   const [averageRating, setAverageRating] = useState(null);
 
   const listedPrice = variants.length > 0 ? parseFloat(variants[0].listed_price) : "N/A";
-  const discount = variants.length > 0 ? parseFloat(variants[0].discount) : 0; 
+  const discount = variants.length > 0 ? Math.max(...variants.map(variant => parseFloat(variant.discount))) : 0;
   const discountedPrice = discount > 0 ? listedPrice * (1 - discount / 100) : listedPrice;
 
   const primary = images.find((image) => image.is_primary);

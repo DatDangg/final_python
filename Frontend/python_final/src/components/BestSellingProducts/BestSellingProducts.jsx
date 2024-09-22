@@ -8,7 +8,7 @@ const BestSellingProducts = () => {
     const token = localStorage.getItem("token");
     const containerRef = useRef(null); 
     const [scrollPosition, setScrollPosition] = useState(0); 
-    const itemWidth = 240; 
+    const itemWidth = 360; 
 
     // Fetch dữ liệu từ API
     useEffect(() => {
@@ -29,7 +29,7 @@ const BestSellingProducts = () => {
     const scrollLeft = () => {
         if (containerRef.current) {
             const maxScrollLeft = 0;
-            const newPosition = Math.max(scrollPosition - itemWidth * 3, maxScrollLeft);
+            const newPosition = Math.max(scrollPosition - itemWidth * 1, maxScrollLeft);
             setScrollPosition(newPosition);
             containerRef.current.style.transform = `translateX(-${newPosition}px)`;
         }
@@ -37,8 +37,8 @@ const BestSellingProducts = () => {
 
     const scrollRight = () => {
         if (containerRef.current) {
-            const maxScrollRight = (products.length * itemWidth) - itemWidth * 3;
-            const newPosition = Math.min(scrollPosition + itemWidth * 3, maxScrollRight);
+            const maxScrollRight = (products.length * itemWidth) - itemWidth * 1;
+            const newPosition = Math.min(scrollPosition + itemWidth * 1, maxScrollRight);
             setScrollPosition(newPosition);
             containerRef.current.style.transform = `translateX(-${newPosition}px)`;
         }
