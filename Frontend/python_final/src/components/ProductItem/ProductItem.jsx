@@ -13,7 +13,6 @@ function ProductItem({ product, token }) {
   const listedPrice = variants.length > 0 ? parseFloat(variants[0].listed_price) : "N/A";
   const discount = variants.length > 0 ? Math.max(...variants.map(variant => parseFloat(variant.discount))) : 0;
   const discountedPrice = discount > 0 ? listedPrice * (1 - discount / 100) : listedPrice;
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   const primary = images.find((image) => image.is_primary);
   let imageUrl = primary ? primary.image : (images.length > 0 ? images[0].image : null);
@@ -32,7 +31,7 @@ function ProductItem({ product, token }) {
 
   useEffect(() => {
     axios
-      .get(`${apiurl}/wishlist/${id}/`, {
+      .get(`http://localhost:8000/wishlist/${id}/`, {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",
@@ -48,13 +47,13 @@ function ProductItem({ product, token }) {
       });
 
     if (imageUrl && !imageUrl.startsWith("http")) {
-      imageUrl = `${apiurl}${imageUrl}`;
+      imageUrl = `http://localhost:8000${imageUrl}`;
     }
 
     setPrimaryImage(imageUrl || "/placeholder.jpg");
 
     axios
-      .get(`${apiurl}/api/reviews/`, {
+      .get("http://localhost:8000/api/reviews/", {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",
@@ -74,7 +73,7 @@ function ProductItem({ product, token }) {
   const handleWishlistClick = () => {
     axios
       .post(
-        `${apiurl}/wishlist/${id}/toggle/`,
+        `http://localhost:8000/wishlist/${id}/toggle/`,
         {},
         {
           headers: {

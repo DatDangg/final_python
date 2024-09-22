@@ -14,7 +14,6 @@ function Aside({ onFilterChange, hideCategoryFilter }) {
   const [selectedCategoryId, setSelectedCategoryId] = useState(''); // State cho ID danh mục
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
 
   const debouncedPriceChange = useCallback(
@@ -37,7 +36,7 @@ function Aside({ onFilterChange, hideCategoryFilter }) {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const response = await fetch(`${apiurl}/brands/`);
+        const response = await fetch('http://127.0.0.1:8000/brands/');
         const data = await response.json();
         setBrands(data);
       } catch (error) {

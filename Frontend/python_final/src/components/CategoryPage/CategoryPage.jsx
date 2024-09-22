@@ -11,14 +11,13 @@ function CategoryPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(6); 
   const [totalProducts, setTotalProducts] = useState(0);
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
   
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (token) {
       if (!location.state?.categoryName) {
-        fetch(`${apiurl}/api/categories/${id}/`)
+        fetch(`http://localhost:8000/api/categories/${id}/`)
           .then((response) => response.json())
           .then((data) => {
             setCategoryName(data.name);

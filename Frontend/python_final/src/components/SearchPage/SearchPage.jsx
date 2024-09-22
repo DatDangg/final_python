@@ -12,12 +12,11 @@ function SearchPage() {
   const location = useLocation();
   const searchQuery = new URLSearchParams(location.search).get("q");
   const totalPages = Math.ceil(totalProducts / productsPerPage);
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   useEffect(() => {
     if (searchQuery) {
       fetch(
-        `${apiurl}/api/products/?search=${searchQuery}&page=${currentPage}&page_size=${productsPerPage}`
+        `http://localhost:8000/api/products/?search=${searchQuery}&page=${currentPage}&page_size=${productsPerPage}`
       )
         .then((response) => response.json())
         .then((data) => {

@@ -9,12 +9,11 @@ function WishList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(8); 
   const token = localStorage.getItem("token");
-  const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
   useEffect(() => {
     if (token) {
       axios
-        .get(`${apiurl}/wishlist/`, {
+        .get("http://localhost:8000/wishlist/", {
           headers: {
             Authorization: `Token ${token}`,
           },

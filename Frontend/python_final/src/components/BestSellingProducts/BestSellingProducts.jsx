@@ -9,11 +9,10 @@ const BestSellingProducts = () => {
     const containerRef = useRef(null); 
     const [scrollPosition, setScrollPosition] = useState(0); 
     const itemWidth = 360; 
-    const apiurl = import.meta.env.VITE_REACT_APP_API_URL;
 
     // Fetch dữ liệu từ API
     useEffect(() => {
-        axios.get(`${apiurl}/best-selling-products/`, {
+        axios.get('http://localhost:8000/best-selling-products/', {
             headers: {
                 Authorization: `Token ${token}`,
                 "Content-Type": "application/json",
